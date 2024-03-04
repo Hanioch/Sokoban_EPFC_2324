@@ -10,9 +10,7 @@ public class SokobanApp extends Application  {
 
     @Override
     public void start(Stage primaryStage) {
-        Board board = new Board();
-        BoardViewModel vm = new BoardViewModel(board);
-        new BoardView(primaryStage, vm);
+
     }
 
     public static void main(String[] args) {
