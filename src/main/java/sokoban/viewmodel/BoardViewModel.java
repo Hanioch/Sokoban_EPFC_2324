@@ -6,5 +6,13 @@ import javafx.beans.binding.LongBinding;
 import sokoban.model.Board;
 
 public class BoardViewModel {
+    private GridViewModel gridViewModel;
 
+    public BoardViewModel(Grid grid) {
+        this.gridViewModel = new GridViewModel(grid);
+    }
+
+    public GridViewModel getGridViewModel() {
+        return gridViewModel;
+    }
 }
