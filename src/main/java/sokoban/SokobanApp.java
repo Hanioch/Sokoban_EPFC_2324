@@ -14,8 +14,8 @@ public class SokobanApp extends Application  {
 
     @Override
     public void start(Stage primaryStage) {
-        Grid grid = new Grid();
-        BoardViewModel boardViewModel = new BoardViewModel(grid);
+        Board board = new Board();
+        BoardViewModel boardViewModel = new BoardViewModel(board);
         BoardView boardView = new BoardView(boardViewModel);
 
         Scene scene = new Scene(boardView, 700, 600);

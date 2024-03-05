@@ -8,8 +8,6 @@ import javafx.collections.ObservableList;
 import java.util.Arrays;
 
 public class Grid {
-
-    // Déclaration de la largeur et de la hauteur de la grille
     public static final int GRID_WIDTH = 15;
     public static final int GRID_HEIGHT = 10;
 
