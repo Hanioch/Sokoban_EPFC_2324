@@ -1,11 +1,7 @@
 package sokoban.model;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.LongBinding;
 import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.collections.ObservableList;
 
-import java.util.Arrays;
 
 public class Grid {
     public static final int GRID_WIDTH = 15;
@@ -21,20 +17,26 @@ public class Grid {
                 matrix[i][j] = new Cell();
             }
         }}
-    public static int getGridWidth() {
+    public static int getWidth() {
         return GRID_WIDTH;
     }
-
+    public static int getHeight() {
+        return GRID_HEIGHT;
+    }
     public ReadOnlyObjectProperty<CellValue> valueProperty(int line, int col) {
         return matrix[line][col].valueProperty();
     }
 
-    CellValue getValue(int line, int col) {
+    public CellValue getValue(int line, int col) {
         return matrix[line][col].getValue();
     }
 
     public boolean isEmpty(int line, int col) {
         return matrix[line][col].isEmpty();
     }
-
+    public void setValue(int line, int col, CellValue value) {
+        if (line >= 0 && line < GRID_WIDTH && col >= 0 && col < GRID_HEIGHT) {
+            matrix[line][col].setValue(value);
+        }
+    }
 }

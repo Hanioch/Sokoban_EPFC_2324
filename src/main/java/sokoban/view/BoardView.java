@@ -1,33 +1,29 @@
 package sokoban.view;
 
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import sokoban.model.CellValue;
 import sokoban.viewmodel.BoardViewModel;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
+
 
 import java.util.Objects;
 
 
 public class BoardView extends BorderPane {
-    private GridView gridView;
-    private VBox toolbox;
-    private HBox contentArea;
+    private final VBox toolbox;
 
-    private String selectedElement = "wall.png";
     private StackPane selectedTool;
 
     public BoardView(BoardViewModel boardViewModel) {
-        gridView = new GridView(boardViewModel.getGridViewModel());
+        GridView gridView = new GridView(boardViewModel.getGridViewModel());
         toolbox = new VBox(15);
-        contentArea = new HBox(5);
+        HBox contentArea = new HBox(5);
         initializeToolbox();
 
         contentArea.getChildren().addAll(toolbox, gridView);
@@ -35,8 +31,6 @@ public class BoardView extends BorderPane {
         toolbox.setPadding(new Insets(0, 0, 0, 10));
         gridView.setAlignment(Pos.CENTER);
         HBox.setHgrow(gridView, Priority.ALWAYS);
-       // contentArea.setAlignment(Pos.CENTER_LEFT);
-
         this.setCenter(contentArea);
     }
     private void initializeToolbox() {
@@ -47,11 +41,6 @@ public class BoardView extends BorderPane {
             StackPane imageContainer = new StackPane(imageView);
             imageContainer.setUserData(elementPath);
 
-            if ("wall.png".equals(elementPath)) {
-                imageContainer.getStyleClass().add("selected-tool");
-                selectedTool = imageContainer;
-            }
-
             imageContainer.setOnMouseClicked(e -> {
                 if (selectedTool != null) {
                     selectedTool.getStyleClass().remove("selected-tool");
@@ -59,10 +48,30 @@ public class BoardView extends BorderPane {
                 }
                 imageContainer.getStyleClass().add("selected-tool");
                 selectedTool = imageContainer;
+
+                CellValue tool = convertPathToCellValue(elementPath);
+                CellView.setSelectedTool(tool);
             });
+            imageContainer.setOnDragDetected(event -> {
+                Dragboard db = imageContainer.startDragAndDrop(TransferMode.ANY);
+                ClipboardContent content = new ClipboardContent();
+                content.putString(convertPathToCellValue(elementPath).name());
+                db.setContent(content);
+                event.consume();
+            });
+
 
             toolbox.getChildren().add(imageContainer);
         }
+    }
+    private CellValue convertPathToCellValue(String imagePath) {
+        return switch (imagePath) {
+            case "wall.png" -> CellValue.WALL;
+            case "box.png" -> CellValue.BOX;
+            case "player.png" -> CellValue.PLAYER;
+            case "goal.png" -> CellValue.TARGET;
+            default -> CellValue.GROUND;
+        };
     }
 
 }

@@ -4,11 +4,8 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sokoban.model.Board;
-import sokoban.model.Grid;
 import sokoban.view.BoardView;
-import sokoban.view.GridView;
 import sokoban.viewmodel.BoardViewModel;
-import sokoban.viewmodel.GridViewModel;
 
 import java.util.Objects;
 
