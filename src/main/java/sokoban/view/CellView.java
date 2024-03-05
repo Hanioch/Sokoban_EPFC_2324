@@ -1,5 +1,6 @@
 package sokoban.view;
 
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import sokoban.model.CellValue;
@@ -16,15 +17,25 @@ import javafx.scene.layout.*;
 
 public class CellView extends StackPane {
     private ImageView imageView = new ImageView();
-
+    private ColorAdjust colorAdjust = new ColorAdjust();
     public CellView() {
         Image groundImage = new Image("ground.png");
 
         imageView = new ImageView(groundImage);
         imageView.setFitWidth(40);
         imageView.setFitHeight(40);
+        imageView.setEffect(colorAdjust);
 
         this.getChildren().add(imageView);
+
+        setupMouseEvents();
+    }
+
+    private void setupMouseEvents() {
+        this.setOnMouseEntered(e -> colorAdjust.setBrightness(-0.2));
+
+        this.setOnMouseExited(e -> colorAdjust.setBrightness(0));
+
     }
 
     public void updateImage(CellValue value) {

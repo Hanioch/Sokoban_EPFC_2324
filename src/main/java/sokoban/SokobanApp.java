@@ -10,6 +10,8 @@ import sokoban.view.GridView;
 import sokoban.viewmodel.BoardViewModel;
 import sokoban.viewmodel.GridViewModel;
 
+import java.util.Objects;
+
 public class SokobanApp extends Application  {
 
     @Override
@@ -19,6 +21,8 @@ public class SokobanApp extends Application  {
         BoardView boardView = new BoardView(boardViewModel);
 
         Scene scene = new Scene(boardView, 700, 600);
+        String css = Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm();
+        scene.getStylesheets().add(css);
         primaryStage.setTitle("Sokoban");
         primaryStage.setScene(scene);
         primaryStage.show();
