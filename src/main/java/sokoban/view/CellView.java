@@ -38,12 +38,24 @@ public class CellView extends StackPane {
         selectedTool.set(tool);
     }
     private void setupMouseEvents() {
-
-        this.setOnDragDetected(event -> this.startFullDrag());
+        this.setOnDragDetected(e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                this.startFullDrag();
+            }
+            if (e.getButton() == MouseButton.SECONDARY) {
+                this.startFullDrag();
+                e.consume();
+            }
+        });
         this.setOnMouseDragOver(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
                 cellValue.set(selectedTool.get());
                 updateImage(cellValue.get());
+                e.consume();
+            }
+            if (e.getButton() == MouseButton.SECONDARY) {
+                cellValue.set(CellValue.GROUND);
+                updateImage(CellValue.GROUND);
                 e.consume();
             }
         });
