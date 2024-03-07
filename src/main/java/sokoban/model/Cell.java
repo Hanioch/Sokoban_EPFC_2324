@@ -1,6 +1,8 @@
 package sokoban.model;
 
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,12 +10,42 @@ import javafx.collections.ObservableList;
 import java.util.List;
 
 public class Cell {
-    private ListProperty<Element> elements;
+    private IntegerProperty row;
+    private IntegerProperty column;
 
-    public Cell() {
-        this.elements = new SimpleListProperty<>(FXCollections.observableArrayList());
+    public Cell(int row, int column) {
+        this.row = new SimpleIntegerProperty(row);
+        this.column = new SimpleIntegerProperty(column);
+    }
+    public int getRow() {
+        return row.get();
     }
 
+    public IntegerProperty rowProperty() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row.set(row);
+    }
+
+    public int getColumn() {
+        return column.get();
+    }
+
+    public IntegerProperty columnProperty() {
+        return column;
+    }
+
+    public void setColumn(int column) {
+        this.column.set(column);
+    }
+
+
+
+
+
+    /*
     public ObservableList<Element> getElements() {
         return elements.get();
     }
@@ -35,8 +67,7 @@ public class Cell {
         elements.remove(element);
         element.setCell(null);
     }
-
-
+    */
 
     /*void addValue(CellValue value){
         switch (value){

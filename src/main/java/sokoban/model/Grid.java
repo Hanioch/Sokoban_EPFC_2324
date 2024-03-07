@@ -4,20 +4,17 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Cell;
 
 import java.util.Arrays;
 
 public class Grid {
-
-
     int gridWidth = 10;
-     int gridHeight = 15;
+    int gridHeight = 15;
 
     static int MIN_HEIGHT = 15;
-     static int MIN_WIDTH = 15;
-     static int MAX_WIDTH = 15;
-     static int MAX_HEIGHT = 15;
+    static int MIN_WIDTH = 15;
+    static int MAX_WIDTH = 15;
+    static int MAX_HEIGHT = 15;
 
 
     //liste avec chaque celulle et son contenu (pas sur)
@@ -26,11 +23,11 @@ public class Grid {
     private final LongBinding filledCellsCount;
 
     Grid(){
-        matrix= new Cell[gridWidth][gridHeight];
-        for (int i =0; i<gridWidth; i++){
+        matrix = new Cell[gridWidth][gridHeight];
+        for (int i = 0; i < gridWidth; i++){
             matrix[i] = new Cell[gridWidth];
-            for (int j = 0; j<gridHeight; j++){
-                matrix[i][j] = new Cell();
+            for (int j = 0; j < gridHeight; j++){
+                matrix[i][j] = new Cell(i, j);
             }
         }
 
@@ -97,6 +94,4 @@ public class Grid {
     public boolean isEmpty(int line, int col) {
         return matrix[line][col].isEmpty();
     }
-
-
 }

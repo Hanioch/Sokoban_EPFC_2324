@@ -25,6 +25,6 @@ public class BoardViewModel {
         return board.filledCellsCountProperty();
     }
     public int maxFilledCells() {
-        return Board.maxFilledCells();
+        return this.board.maxFilledCells();
     }
 }

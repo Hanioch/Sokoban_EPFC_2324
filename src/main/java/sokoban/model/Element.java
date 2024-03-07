@@ -11,8 +11,6 @@ public abstract class Element {
     private IntegerProperty column;
 
     public Element(int row, int column) {
-        this.row = new SimpleIntegerProperty(row);
-        this.column = new SimpleIntegerProperty(column);
         this.cell = new SimpleObjectProperty<>();
     }
     public Cell getCell() {
@@ -23,27 +21,5 @@ public abstract class Element {
     }
     public void setCell(Cell cell) {
         this.cell.set(cell);
-    }
-    public int getRow() {
-        return row.get();
-    }
-    public IntegerProperty rowProperty() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row.set(row);
-    }
-
-    public int getColumn() {
-        return column.get();
-    }
-
-    public IntegerProperty columnProperty() {
-        return column;
-    }
-
-    public void setColumn(int column) {
-        this.column.set(column);
     }
 }
