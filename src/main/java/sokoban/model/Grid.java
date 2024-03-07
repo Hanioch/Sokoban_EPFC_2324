@@ -22,7 +22,7 @@ public class Grid {
     //Le nombre de celulle utilisé.
     private final LongBinding filledCellsCount;
 
-    Grid(){
+    Grid() {
         matrix = new Cell[gridWidth][gridHeight];
         for (int i = 0; i < gridWidth; i++){
             matrix[i] = new Cell[gridWidth];
@@ -36,7 +36,6 @@ public class Grid {
                 .flatMap(Arrays::stream)
                 .filter(cell -> !cell.isEmpty())
                 .count());
-
     }
     public static int getMinHeight() {
         return MIN_HEIGHT;

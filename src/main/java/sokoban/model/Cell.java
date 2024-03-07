@@ -40,6 +40,9 @@ public class Cell {
     public void setColumn(int column) {
         this.column.set(column);
     }
+    boolean isEmpty(){
+        return false;
+    }
 
 
 
@@ -114,10 +117,7 @@ public class Cell {
     /*boolean containsWall(){
         return elements.contains(CellValue.WALL);
     }
-
-    boolean isEmpty(){
-        return elements.size() == 1 && elements.get(0) == CellValue.GROUND;
-    }*/
+    */
 
     /*
     ReadOnlyObjectProperty<CellValue> valueProperty(){
