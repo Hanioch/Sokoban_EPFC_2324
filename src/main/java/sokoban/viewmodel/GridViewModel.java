@@ -5,8 +5,11 @@ import sokoban.model.*;
 public class GridViewModel {
     private final Grid grid;
 
-    public GridViewModel(Grid grid) {
+    private final Board board;
+
+    public GridViewModel(Grid grid, Board board) {
         this.grid = grid;
+        this.board = board;
     }
 
     public ReadOnlyObjectProperty<CellValue> valueProperty(int line, int col) {
@@ -16,6 +19,7 @@ public class GridViewModel {
     public void setValue(int i, int j, CellValue value) {
         if (i >= 0 && i < Grid.getWidth() && j >= 0 && j < Grid.getHeight()) {
             grid.setValue(i, j, value);
+            board.isModifiedProperty().set(true);
         }
     }
 }

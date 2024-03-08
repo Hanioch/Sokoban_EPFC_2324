@@ -1,5 +1,6 @@
 package sokoban.viewmodel;
 
+import javafx.beans.property.BooleanProperty;
 import sokoban.model.Board;
 
 
@@ -11,7 +12,11 @@ public class BoardViewModel {
     }
 
     public GridViewModel getGridViewModel() {
+        return new GridViewModel(board.getGrid(),board);
+    }
 
-        return new GridViewModel(board.getGrid());
+    public BooleanProperty isModifiedProperty() {
+        return board.isModifiedProperty();
     }
 }
+

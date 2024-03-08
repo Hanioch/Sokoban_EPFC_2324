@@ -17,10 +17,11 @@ import java.util.Objects;
 
 public class BoardView extends BorderPane {
     private final VBox toolbox;
-
+    private final BoardViewModel boardViewModel;
     private StackPane selectedTool;
 
     public BoardView(BoardViewModel boardViewModel) {
+        this.boardViewModel = boardViewModel;
         GridView gridView = new GridView(boardViewModel.getGridViewModel());
         toolbox = new VBox(15);
         HBox contentArea = new HBox(5);

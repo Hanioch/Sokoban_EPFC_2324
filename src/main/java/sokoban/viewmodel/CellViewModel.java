@@ -13,6 +13,7 @@ public class CellViewModel {
     public CellViewModel(Cell cell) {
         this.valueProperty = cell.valueProperty();
         this.overlayProperty = new SimpleObjectProperty<>();
+        valueProperty.addListener((obs, oldVal, newVal) -> updateOverlay());
     }
 
     public ObjectProperty<CellValue> valueProperty() {
@@ -22,4 +23,14 @@ public class CellViewModel {
     public ObjectProperty<CellValue> overlayProperty() {
         return overlayProperty;
     }
+
+    private void updateOverlay() {
+        CellValue cellValue = valueProperty.get();
+        if (cellValue == CellValue.TARGET) {
+            overlayProperty.set(CellValue.TARGET);
+        } else {
+            overlayProperty.set(null);
+        }
+    }
 }
+
