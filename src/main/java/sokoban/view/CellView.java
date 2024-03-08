@@ -97,20 +97,17 @@ public class CellView extends StackPane {
     }
     private void processCellUpdate(CellValue newCellValue, CellValue currentCellValue) {
         if (newCellValue != currentCellValue) {
-            if (newCellValue == CellValue.TARGET) {
+            if (Objects.requireNonNull(newCellValue) == CellValue.TARGET) {
                 if (currentCellValue != CellValue.WALL) {
                     overlayImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/goal.png"))));
-                }
-            } else if (currentCellValue == CellValue.TARGET) {
-                if (newCellValue != CellValue.BOX && newCellValue != CellValue.PLAYER) {
-                    overlayImageView.setImage(null);
                 } else {
-                    overlayImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/goal.png"))));
+                    cellValue.set(newCellValue);
+                    updateImage(newCellValue);
                 }
             } else {
+                overlayImageView.setImage(null);
                 cellValue.set(newCellValue);
                 updateImage(newCellValue);
-                overlayImageView.setImage(null);
             }
         }
     }
