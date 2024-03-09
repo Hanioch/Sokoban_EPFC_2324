@@ -119,6 +119,9 @@ public class Grid {
     }
 
     public Cell getCell(int x, int y) {
+        if (matrix[x][y] == null) {
+            matrix[x][y] = new Cell(x,y); // Crée une nouvelle cellule si elle n'existe pas encore
+        }
         return matrix[x][y];
     }
 

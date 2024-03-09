@@ -16,6 +16,7 @@ public class Cell {
         this.row = new SimpleIntegerProperty(row);
         this.column = new SimpleIntegerProperty(column);
         this.stack = FXCollections.observableArrayList();
+        stack.add(new Ground());
     }
 
     public int getRow() {

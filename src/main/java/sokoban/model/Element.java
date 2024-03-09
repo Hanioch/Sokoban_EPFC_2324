@@ -10,7 +10,7 @@ public abstract class Element {
     private IntegerProperty row;
     private IntegerProperty column;
 
-    public Element(int row, int column) {
+    public Element() {
         this.cell = new SimpleObjectProperty<>();
     }
     public Cell getCell() {
