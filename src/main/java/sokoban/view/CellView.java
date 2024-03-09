@@ -14,34 +14,32 @@ import java.util.Objects;
 
 public class CellView extends StackPane {
 
-    private final ObjectProperty<CellValue> cellValue = new SimpleObjectProperty<>();
-    private final ImageView toolImageView;
-    private final ImageView overlayImageView;
     private final ColorAdjust colorAdjust = new ColorAdjust();
-
+    private final ObjectProperty<CellValue> cellValue = new SimpleObjectProperty<>();
+    private final ImageView toolImageView = new ImageView();
+    private final ImageView overlayImageView = new ImageView();
     private static final ObjectProperty<CellValue> selectedTool = new SimpleObjectProperty<>(CellValue.GROUND);
 
     public CellView() {
-        Image groundImage = new Image("ground.png");
+        Image groundImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/ground.png")));
         ImageView backgroundImageView = new ImageView(groundImage);
-        backgroundImageView.setFitWidth(40);
-        backgroundImageView.setFitHeight(40);
-        backgroundImageView.setEffect(colorAdjust);
 
-        toolImageView = new ImageView();
-        toolImageView.setFitWidth(40);
-        toolImageView.setFitHeight(40);
-        toolImageView.setEffect(colorAdjust);
 
-        overlayImageView = new ImageView();
-        overlayImageView.setFitWidth(40);
-        overlayImageView.setFitHeight(40);
-        overlayImageView.setEffect(colorAdjust);
+        bindImageViewSize(backgroundImageView);
+        bindImageViewSize(toolImageView);
+        bindImageViewSize(overlayImageView);
+
         this.getChildren().addAll(backgroundImageView, toolImageView, overlayImageView);
 
         setupMouseEvents();
-    }
 
+        setupMouseEvents();
+    }
+    private void bindImageViewSize(ImageView imageView) {
+        imageView.fitWidthProperty().bind(this.widthProperty());
+        imageView.fitHeightProperty().bind(this.heightProperty());
+        imageView.setPreserveRatio(true);
+    }
     public static void setSelectedTool(CellValue tool) {
         selectedTool.set(tool);
     }

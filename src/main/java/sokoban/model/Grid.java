@@ -6,24 +6,27 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 public class Grid {
     public static final int GRID_WIDTH = 15;
     public static final int GRID_HEIGHT = 10;
-
-    private final Cell[][] matrix = new Cell[GRID_WIDTH][GRID_HEIGHT];
-
-    public Grid() {
-        for (int i = 0; i < GRID_WIDTH; ++i) {
-            for (int j = 0; j < GRID_HEIGHT; ++j) {
+    private final Cell[][] matrix ;
+    private final int width;
+    private final int height;
+    public Grid(int width, int height) {
+        this.width = width;
+        this.height = height;
+        matrix = new Cell[width][height];
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < height; ++j) {
                 matrix[i][j] = new Cell();
             }
         }
     }
-
-    public static int getWidth() {
-        return GRID_WIDTH;
+    public int getWidth() {
+        return width;
     }
 
-    public static int getHeight() {
-        return GRID_HEIGHT;
+    public int getHeight() {
+        return height;
     }
+
 
     public ReadOnlyObjectProperty<CellValue> valueProperty(int line, int col) {
         return matrix[line][col].valueProperty();
@@ -38,7 +41,7 @@ public class Grid {
     }
 
     public void setValue(int line, int col, CellValue value) {
-        if (line >= 0 && line < GRID_WIDTH && col >= 0 && col < GRID_HEIGHT) {
+        if (line >= 0 && line < this.width && col >= 0 && col < this.height) {
             matrix[line][col].setValue(value);
         }
     }

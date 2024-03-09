@@ -1,41 +1,105 @@
 package sokoban.view;
-
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.geometry.Insets;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import sokoban.model.Board;
 import sokoban.model.CellValue;
 import sokoban.viewmodel.BoardViewModel;
 import javafx.geometry.Pos;
 
 
+import java.awt.*;
 import java.util.Objects;
+import java.util.Optional;
 
 
 public class BoardView extends BorderPane {
+
+    private final VBox mainVBox;
+    private final MenuBar menuBar;
+    private final VBox errorVBox;
+    private final Label errorLabel;
+    private final HBox contentArea;
     private final VBox toolbox;
-    private final BoardViewModel boardViewModel;
+    private BoardViewModel boardViewModel;
+    private GridView gridView;
     private StackPane selectedTool;
 
     public BoardView(BoardViewModel boardViewModel) {
         this.boardViewModel = boardViewModel;
-        GridView gridView = new GridView(boardViewModel.getGridViewModel());
-        toolbox = new VBox(15);
-        HBox contentArea = new HBox(5);
-        initializeToolbox();
+        this.mainVBox = new VBox();
+        this.menuBar = createMenuBar();
+        this.errorVBox = new VBox();
+        this.errorLabel = new Label();
+        this.contentArea = new HBox();
+        this.toolbox = initializeToolbox();
+        this.gridView = new GridView(boardViewModel.getGridViewModel());
+
+        setupLayout();
+        setupStyles();
+        updateBoardView(boardViewModel);
+    }
+
+    private void setupLayout() {
+        errorLabel.setText("Message d'erreur ici");
+        errorLabel.setVisible(false);
+        errorVBox.getChildren().add(errorLabel);
+        errorVBox.setAlignment(Pos.CENTER);
+
+        mainVBox.getChildren().addAll(menuBar, errorVBox, contentArea);
+        VBox.setVgrow(contentArea, Priority.ALWAYS);
+        mainVBox.setAlignment(Pos.CENTER);
 
         contentArea.getChildren().addAll(toolbox, gridView);
-        toolbox.setAlignment(Pos.CENTER);
-        toolbox.setPadding(new Insets(0, 0, 0, 10));
-        gridView.setAlignment(Pos.CENTER);
+        contentArea.setSpacing(10);
+
         HBox.setHgrow(gridView, Priority.ALWAYS);
-        this.setCenter(contentArea);
+        contentArea.setAlignment(Pos.CENTER);
+        HBox.setMargin(toolbox, new Insets(0, 10, 0, 0));
+        HBox.setMargin(gridView, new Insets(0, 0, 0, 10));
+        this.setCenter(mainVBox);
     }
-    private void initializeToolbox() {
+
+    private void setupStyles() {
+        mainVBox.setAlignment(Pos.CENTER);
+        errorVBox.setStyle("-fx-spacing: 10");
+        contentArea.setAlignment(Pos.CENTER);
+        toolbox.setAlignment(Pos.CENTER);
+        gridView.setStyle("-fx-spacing: 5");
+        gridView.setAlignment(Pos.CENTER);
+    }
+
+    private MenuBar createMenuBar() {
+        MenuBar menuBar = new MenuBar();
+        Menu fileMenu = new Menu("Fichiers");
+        MenuItem newMenuItem = new MenuItem("Nouveau...");
+        MenuItem openMenuItem = new MenuItem("Ouvrir...");
+        MenuItem saveAsMenuItem = new MenuItem("Enregistrer sous...");
+        MenuItem exitMenuItem = new MenuItem("Quitter");
+        fileMenu.getItems().addAll(newMenuItem, openMenuItem, saveAsMenuItem, exitMenuItem);
+        menuBar.getMenus().add(fileMenu);
+        newMenuItem.setOnAction(event -> {
+            NewGameDialog newGameDialog = new NewGameDialog();
+            Dimension dimension = newGameDialog.showDimension();
+            if (dimension != null) {
+                createBoard(dimension.width, dimension.height);
+            }
+        });
+        return menuBar;
+    }
+
+    private VBox initializeToolbox() {
         String[] elements = {"ground.png", "goal.png", "wall.png", "player.png", "box.png"};
+        VBox toolbox = new VBox(15);
         for (String elementPath : elements) {
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/" + elementPath)), 50, 50, true, true);
             ImageView imageView = new ImageView(image);
@@ -61,9 +125,9 @@ public class BoardView extends BorderPane {
                 event.consume();
             });
 
-
             toolbox.getChildren().add(imageContainer);
         }
+        return toolbox;
     }
     private CellValue convertPathToCellValue(String imagePath) {
         return switch (imagePath) {
@@ -74,5 +138,41 @@ public class BoardView extends BorderPane {
             default -> CellValue.GROUND;
         };
     }
+    private void createBoard(int width, int height) {
+        Board newBoard = new Board(width, height);
+        BoardViewModel newBoardViewModel = new BoardViewModel(newBoard);
+        GridView newGridView = new GridView(newBoardViewModel.getGridViewModel());
+        newGridView.setStyle("-fx-spacing: 0;");
+        newGridView.setAlignment(Pos.CENTER);
 
+        contentArea.getChildren().set(1, newGridView);
+        contentArea.requestLayout();
+
+        this.gridView = newGridView;
+    }
+
+
+
+    private void updateBoardView(BoardViewModel newBoardViewModel) {
+        this.boardViewModel = newBoardViewModel;
+        GridView newGridView = new GridView(boardViewModel.getGridViewModel());
+        newGridView.setAlignment(Pos.CENTER);
+
+
+        if (contentArea.getChildren().size() > 1 && contentArea.getChildren().get(1) instanceof GridView) {
+            contentArea.getChildren().remove(1);
+        }
+        contentArea.getChildren().add(1, newGridView);
+        this.gridView = newGridView;
+    }
+
+    public void showError(String errorMessage) {
+        errorLabel.setText(errorMessage);
+        errorLabel.setVisible(true);
+    }
+
+    public void hideError() {
+        errorLabel.setText("");
+        errorLabel.setVisible(false);
+    }
 }
