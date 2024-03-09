@@ -23,7 +23,7 @@ public class CellView extends StackPane {
     public CellView() {
         Image groundImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/ground.png")));
         ImageView backgroundImageView = new ImageView(groundImage);
-
+        cellValue.addListener((obs, oldVal, newVal) -> updateImage(newVal));
 
         bindImageViewSize(backgroundImageView);
         bindImageViewSize(toolImageView);

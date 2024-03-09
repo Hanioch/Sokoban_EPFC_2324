@@ -12,9 +12,9 @@ public class GridViewModel {
         this.board = board;
     }
 
-    public ReadOnlyObjectProperty<CellValue> valueProperty(int line, int col) {
-        return grid.valueProperty(line, col);
-    }
+   public ReadOnlyObjectProperty<CellValue> valueProperty(int line, int col) {
+       return grid.valueProperty(line, col);
+   }
 
     public void setValue(int i, int j, CellValue value) {
         if (i >= 0 && i < grid.getWidth() && j >= 0 && j < grid.getHeight()) {

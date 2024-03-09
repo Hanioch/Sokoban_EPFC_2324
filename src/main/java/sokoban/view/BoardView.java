@@ -44,7 +44,6 @@ public class BoardView extends BorderPane {
         this.contentArea = new HBox();
         this.toolbox = initializeToolbox();
         this.gridView = new GridView(boardViewModel.getGridViewModel());
-
         setupLayout();
         setupStyles();
         updateBoardView(boardViewModel);
