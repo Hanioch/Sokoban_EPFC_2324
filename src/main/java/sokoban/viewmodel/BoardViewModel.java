@@ -15,8 +15,8 @@ public class BoardViewModel {
     }
 
 
-    public static int gridWidth(){
-        return Grid.getGridWidth();
+    public int gridWidth(){
+        return this.board.getGrid().getWidth();
     }
     public GridViewModel getGridViewModel(){
         return gridViewModel;
@@ -26,5 +26,8 @@ public class BoardViewModel {
     }
     public int maxFilledCells() {
         return this.board.maxFilledCells();
+    }
+    public Board getBoard(){
+        return this.board;
     }
 }

@@ -8,9 +8,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 import java.util.Arrays;
 
 public class Grid {
-    static int MIN_WIDTH = 15, MIN_HEIGHT = 10, MAX_WIDTH = 30, MAX_HEIGHT = 20;
-    int gridWidth = MIN_WIDTH;
-    int gridHeight = MIN_HEIGHT;
+    static int MIN_WIDTH = 10, MIN_HEIGHT = 10, MAX_WIDTH = 50, MAX_HEIGHT = 50;
+    static final int GRID_WIDTH = 15;
+    static final int GRID_HEIGHT = MIN_HEIGHT;
 
     private final Cell[][] matrix;
 
@@ -19,13 +19,13 @@ public class Grid {
     private final LongBinding filledCellsCount;
 
     Grid() {
-        matrix = new Cell[gridWidth][gridHeight];
-        this.widthProperty = new SimpleIntegerProperty(gridWidth);
-        this.heightProperty = new SimpleIntegerProperty(gridHeight);
+        matrix = new Cell[GRID_WIDTH][GRID_HEIGHT];
+        this.widthProperty = new SimpleIntegerProperty(GRID_WIDTH);
+        this.heightProperty = new SimpleIntegerProperty(GRID_HEIGHT);
 
-        for (int i = 0; i < gridWidth; i++){
-            matrix[i] = new Cell[gridWidth];
-            for (int j = 0; j < gridHeight; j++){
+        for (int i = 0; i < GRID_WIDTH; i++){
+            matrix[i] = new Cell[GRID_WIDTH];
+            for (int j = 0; j < GRID_HEIGHT; j++){
                 matrix[i][j] = new Cell(i, j);
             }
         }
@@ -77,7 +77,7 @@ public class Grid {
     }
 
     public int getArea() {
-        return gridHeight * gridWidth;
+        return GRID_HEIGHT * GRID_WIDTH;
     }
 
 

@@ -1,22 +1,21 @@
 package sokoban.model;
 
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.List;
-
 public class Cell {
-    private IntegerProperty row;
-    private IntegerProperty column;
+    private final IntegerProperty row;
+    private final IntegerProperty column;
+    private final ObservableList<Element> stack;
 
     public Cell(int row, int column) {
         this.row = new SimpleIntegerProperty(row);
         this.column = new SimpleIntegerProperty(column);
+        this.stack = FXCollections.observableArrayList();
     }
+
     public int getRow() {
         return row.get();
     }
@@ -40,8 +39,21 @@ public class Cell {
     public void setColumn(int column) {
         this.column.set(column);
     }
-    boolean isEmpty(){
-        return false;
+
+    public ObservableList<Element> getStack() {
+        return stack;
+    }
+
+    public void addElement(ComposableElement element) {
+        stack.add(element);
+    }
+
+    public void removeElement(ComposableElement element) {
+        stack.remove(element);
+    }
+
+    public boolean isEmpty() {
+        return stack.isEmpty();
     }
 
 

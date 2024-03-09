@@ -39,6 +39,9 @@ public class Board {
     public LongBinding filledCellsCountProperty(){
         return grid.filledCellsCountProperty();
     }
+    public Grid getGrid(){
+        return this.grid;
+    }
 
 
     /*
