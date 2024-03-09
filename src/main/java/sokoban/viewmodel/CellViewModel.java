@@ -1,9 +1,14 @@
 package sokoban.viewmodel;
 
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import sokoban.model.Board;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import sokoban.model.Element;
 
 public class CellViewModel {
 
@@ -11,6 +16,7 @@ public class CellViewModel {
     private static final double EPSILON = 1e-3;
     private final int line, col;
     private final Board board;
+    private final ListProperty<Element> stack;
 
     private final SimpleDoubleProperty scale = new SimpleDoubleProperty(DEFAULT_SCALE);
     private final BooleanBinding mayIncrementScale = scale.lessThan(1 - EPSILON);
@@ -20,6 +26,15 @@ public class CellViewModel {
         this.line = line;
         this.col = col;
         this.board = board;
+        stack = new SimpleListProperty<>(FXCollections.observableArrayList());
+    }
+
+    public ListProperty<Element> stackProperty() {
+        return stack;
+    }
+
+    public ObservableList<Element> getStack() {
+        return stack.get();
     }
 
     /*
@@ -58,4 +73,5 @@ public class CellViewModel {
     public void resetScale() {
         scale.set(DEFAULT_SCALE);
     }
+
 }

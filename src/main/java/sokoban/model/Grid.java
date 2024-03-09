@@ -58,6 +58,9 @@ public class Grid {
     public static int getGridWidth(){
         return GRID_WIDTH;
     }
+    public static int getGridHeight(){
+        return GRID_HEIGHT;
+    }
 
     public IntegerProperty widthProperty() {
         return widthProperty;
