@@ -55,6 +55,9 @@ public class Grid {
     public int getWidth() {
         return widthProperty.get();
     }
+    public static int getGridWidth(){
+        return GRID_WIDTH;
+    }
 
     public IntegerProperty widthProperty() {
         return widthProperty;
