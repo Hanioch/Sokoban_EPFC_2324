@@ -32,8 +32,6 @@ public class CellView extends StackPane {
         this.getChildren().addAll(backgroundImageView, toolImageView, overlayImageView);
 
         setupMouseEvents();
-
-        setupMouseEvents();
     }
     private void bindImageViewSize(ImageView imageView) {
         imageView.fitWidthProperty().bind(this.widthProperty());

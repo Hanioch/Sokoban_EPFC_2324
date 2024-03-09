@@ -1,7 +1,8 @@
 package sokoban.view;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.geometry.Insets;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -15,6 +16,7 @@ import sokoban.model.Board;
 import sokoban.model.CellValue;
 import sokoban.viewmodel.BoardViewModel;
 import javafx.geometry.Pos;
+import sokoban.viewmodel.GridViewModel;
 
 
 import java.awt.*;
@@ -33,7 +35,6 @@ public class BoardView extends BorderPane {
     private BoardViewModel boardViewModel;
     private GridView gridView;
     private StackPane selectedTool;
-
     public BoardView(BoardViewModel boardViewModel) {
         this.boardViewModel = boardViewModel;
         this.mainVBox = new VBox();
@@ -85,7 +86,6 @@ public class BoardView extends BorderPane {
         MenuItem openMenuItem = new MenuItem("Ouvrir...");
         MenuItem saveAsMenuItem = new MenuItem("Enregistrer sous...");
         MenuItem exitMenuItem = new MenuItem("Quitter");
-        fileMenu.getItems().addAll(newMenuItem, openMenuItem, saveAsMenuItem, exitMenuItem);
         menuBar.getMenus().add(fileMenu);
         newMenuItem.setOnAction(event -> {
             NewGameDialog newGameDialog = new NewGameDialog();
@@ -94,9 +94,26 @@ public class BoardView extends BorderPane {
                 createBoard(dimension.width, dimension.height);
             }
         });
+        saveAsMenuItem.setOnAction(event -> {
+            boolean saveSuccessful = SaveAsDialog.showSaveDialog(boardViewModel);
+            if (saveSuccessful) {
+                showAlert("Sauvegarde réussie", "Le jeu a été sauvegardé avec succès.", Alert.AlertType.INFORMATION);
+            } else {
+                showAlert("Erreur de sauvegarde", "La sauvegarde du jeu a échoué.", Alert.AlertType.ERROR);
+            }
+        });
+
+        fileMenu.getItems().addAll(newMenuItem, openMenuItem, saveAsMenuItem, exitMenuItem);
+
         return menuBar;
     }
-
+    private void showAlert(String title, String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null); // Pas de texte d'en-tête nécessaire
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
     private VBox initializeToolbox() {
         String[] elements = {"ground.png", "goal.png", "wall.png", "player.png", "box.png"};
         VBox toolbox = new VBox(15);
@@ -164,11 +181,6 @@ public class BoardView extends BorderPane {
         }
         contentArea.getChildren().add(1, newGridView);
         this.gridView = newGridView;
-    }
-
-    public void showError(String errorMessage) {
-        errorLabel.setText(errorMessage);
-        errorLabel.setVisible(true);
     }
 
     public void hideError() {
