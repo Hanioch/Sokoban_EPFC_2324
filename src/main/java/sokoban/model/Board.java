@@ -2,6 +2,7 @@ package sokoban.model;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.LongBinding;
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class Board {
     private int maxFilledCells;

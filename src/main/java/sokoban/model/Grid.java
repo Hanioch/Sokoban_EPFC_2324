@@ -2,28 +2,27 @@ package sokoban.model;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.LongBinding;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.collections.ObservableList;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.Arrays;
 
 public class Grid {
-    int gridWidth = 10;
-    int gridHeight = 15;
+    static int MIN_WIDTH = 15, MIN_HEIGHT = 10, MAX_WIDTH = 30, MAX_HEIGHT = 20;
+    int gridWidth = MIN_WIDTH;
+    int gridHeight = MIN_HEIGHT;
 
-    static int MIN_HEIGHT = 15;
-    static int MIN_WIDTH = 15;
-    static int MAX_WIDTH = 15;
-    static int MAX_HEIGHT = 15;
-
-
-    //liste avec chaque celulle et son contenu (pas sur)
     private final Cell[][] matrix;
-    //Le nombre de celulle utilisé.
+
+    private final IntegerProperty widthProperty;
+    private final IntegerProperty heightProperty;
     private final LongBinding filledCellsCount;
 
     Grid() {
         matrix = new Cell[gridWidth][gridHeight];
+        this.widthProperty = new SimpleIntegerProperty(gridWidth);
+        this.heightProperty = new SimpleIntegerProperty(gridHeight);
+
         for (int i = 0; i < gridWidth; i++){
             matrix[i] = new Cell[gridWidth];
             for (int j = 0; j < gridHeight; j++){
@@ -31,7 +30,7 @@ public class Grid {
             }
         }
 
-        filledCellsCount = Bindings.createLongBinding(()-> Arrays
+        this.filledCellsCount = Bindings.createLongBinding(()-> Arrays
                 .stream(matrix)
                 .flatMap(Arrays::stream)
                 .filter(cell -> !cell.isEmpty())
@@ -53,12 +52,28 @@ public class Grid {
         return MAX_HEIGHT;
     }
 
-    public void setGridWidth(int gridWidth) {
-        this.gridWidth = gridWidth;
+    public int getWidth() {
+        return widthProperty.get();
     }
 
-    public void setGridHeight(int gridHeight) {
-        this.gridHeight = gridHeight;
+    public IntegerProperty widthProperty() {
+        return widthProperty;
+    }
+
+    public void setWidth(int width) {
+        widthProperty.set(width);
+    }
+
+    public int getHeight() {
+        return heightProperty.get();
+    }
+
+    public IntegerProperty heightProperty() {
+        return heightProperty;
+    }
+
+    public void setHeight(int height) {
+        heightProperty.set(height);
     }
 
     public int getArea() {
@@ -79,18 +94,23 @@ public class Grid {
     }
      */
 
+    /*
     void play(int line, int col, CellValue playerValue){
-        /* Faire
+        *//* Faire
         matrix[line][col].setValue(playerValue);
-        filledCellsCount.invalidate();*/
+        filledCellsCount.invalidate();*//*
     }
+    */
 
     public LongBinding filledCellsCountProperty() {
         return filledCellsCount;
     }
 
+    public Cell getCell(int x, int y) {
+        return matrix[x][y];
+    }
 
-    public boolean isEmpty(int line, int col) {
-        return matrix[line][col].isEmpty();
+    public boolean isEmpty(int x, int y) {
+        return matrix[x][y].isEmpty();
     }
 }
