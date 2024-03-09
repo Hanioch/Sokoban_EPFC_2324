@@ -14,11 +14,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 public class CellView extends StackPane {
-    private static final Image boxImage = new Image("/box.png");
+    /*private static final Image boxImage = new Image("box.png");
     private static final Image targetImage = new Image("goal.png");
     private static final Image groundImage = new Image("ground.png");
     private static final Image playerImage = new Image("player.png");
-    private static final Image wallImage = new Image("wall.png");
+    private static final Image wallImage = new Image("wall.png");*/
 
     private final CellViewModel viewModel;
     private final DoubleBinding widthProperty;
@@ -59,23 +59,25 @@ public class CellView extends StackPane {
 
     public void setImage(ObservableList<Element> stack) {
 
-        imageView.setImage(null);
+        Image groundImage = new Image("ground.png");
+
+        imageView.setImage(groundImage);
 
         for (Element element : stack) {
             if (element instanceof Player) {
-                imageView.setImage(playerImage);
+                imageView.setImage(new Image("player.png"));
                 break;
             } else if (element instanceof Box) {
-                imageView.setImage(boxImage);
+                imageView.setImage(new Image("box.png"));
                 break;
             } else if (element instanceof Target) {
-                imageView.setImage(targetImage);
+                imageView.setImage(new Image("goal.png"));
                 break;
             } else if (element instanceof Wall) {
-                imageView.setImage(wallImage);
+                imageView.setImage(new Image("wall.png"));
                 break;
             } else if (element instanceof Ground) {
-                imageView.setImage(groundImage);
+                imageView.setImage(new Image("ground.png"));
                 break;
             }
         }
