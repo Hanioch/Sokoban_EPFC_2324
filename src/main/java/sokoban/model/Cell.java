@@ -1,7 +1,9 @@
 package sokoban.model;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -44,6 +46,10 @@ public class Cell {
         return stack;
     }
 
+    public ReadOnlyListProperty<Element> stackProperty() {
+        return new SimpleListProperty<>(stack);
+    }
+
     public void addElement(ComposableElement element) {
         stack.add(element);
     }
@@ -55,8 +61,6 @@ public class Cell {
     public boolean isEmpty() {
         return stack.isEmpty();
     }
-
-
 
 
 

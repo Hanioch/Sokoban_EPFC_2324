@@ -30,11 +30,17 @@ public class Grid {
             }
         }
 
-        this.filledCellsCount = Bindings.createLongBinding(()-> Arrays
-                .stream(matrix)
-                .flatMap(Arrays::stream)
-                .filter(cell -> !cell.isEmpty())
-                .count());
+        this.filledCellsCount = Bindings.createLongBinding(()-> {
+            long count = 0;
+            for (int i = 0; i < GRID_WIDTH; i++) {
+                for (int j = 0; j < GRID_HEIGHT; j++) {
+                    if (matrix[i][j] != null && !matrix[i][j].isEmpty()) {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        });
     }
     public static int getMinHeight() {
         return MIN_HEIGHT;

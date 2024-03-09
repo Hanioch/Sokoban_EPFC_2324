@@ -14,7 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 public class CellView extends StackPane {
-    private static final Image boxImage = new Image("box.png");
+    private static final Image boxImage = new Image("/box.png");
     private static final Image targetImage = new Image("goal.png");
     private static final Image groundImage = new Image("ground.png");
     private static final Image playerImage = new Image("player.png");
@@ -57,30 +57,27 @@ public class CellView extends StackPane {
         hoverProperty().addListener(this::hoverChanged);
     }
 
-    //renvoie d'office l'image du wall, à voir comment récupérer la bonne image
     public void setImage(ObservableList<Element> stack) {
-        // Efface l'image existante pour éviter les superpositions d'images
+
         imageView.setImage(null);
 
-        // Parcours la pile d'éléments pour afficher les images
         for (Element element : stack) {
             if (element instanceof Player) {
-                imageView.setImage(new Image("chemin_vers_image_joueur"));
-                break; // Arrête la recherche après avoir trouvé le joueur
+                imageView.setImage(playerImage);
+                break;
             } else if (element instanceof Box) {
-                imageView.setImage(new Image("chemin_vers_image_caisse"));
-                break; // Arrête la recherche après avoir trouvé la caisse
+                imageView.setImage(boxImage);
+                break;
             } else if (element instanceof Target) {
-                imageView.setImage(new Image("chemin_vers_image_cible"));
-                break; // Arrête la recherche après avoir trouvé la cible
+                imageView.setImage(targetImage);
+                break;
             } else if (element instanceof Wall) {
-                imageView.setImage(new Image("chemin_vers_image_mur"));
-                break; // Arrête la recherche après avoir trouvé le mur
+                imageView.setImage(wallImage);
+                break;
             } else if (element instanceof Ground) {
-                imageView.setImage(new Image("chemin_vers_image_terrain"));
-                break; // Arrête la recherche après avoir trouvé le terrain
+                imageView.setImage(groundImage);
+                break;
             }
-            // Vous pouvez ajouter des conditions pour d'autres types d'éléments si nécessaire
         }
     }
 
