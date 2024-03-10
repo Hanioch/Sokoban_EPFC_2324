@@ -3,6 +3,7 @@ package sokoban.view;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.input.Clipboard;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
@@ -30,7 +31,7 @@ public class GridView extends GridPane {
     private void initializeGrid(int numCols, int numRows) {
         for (int i = 0; i < numCols; i++) {
             for (int j = 0; j < numRows; j++) {
-                CellView cellView = new CellView();
+                CellView cellView = new CellView(i,j, viewModel);
                 setupCellListeners(cellView, i, j);
                 this.add(cellView, i, j);
             }
@@ -87,7 +88,9 @@ public class GridView extends GridPane {
     private void setupCellListeners(CellView cellView, int i, int j) {
         viewModel.valueProperty(i, j).addListener((obs, oldVal, newVal) -> {
             cellView.updateImage(newVal);
+            System.out.println(newVal);
         });
+
         cellView.setOnDragOver(event -> {
             if (event.getGestureSource() != cellView && event.getDragboard().hasString()) {
                 event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
@@ -106,6 +109,7 @@ public class GridView extends GridPane {
             event.setDropCompleted(success);
             event.consume();
         });
+
     }
 }
 

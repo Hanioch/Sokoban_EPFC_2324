@@ -35,16 +35,15 @@ public class SaveAsDialog {
     private static boolean saveBoardToFile(BoardViewModel boardViewModel, File saveFile) {
         try (FileWriter writer = new FileWriter(saveFile)) {
             GridViewModel gridViewModel = boardViewModel.getGridViewModel();
-            Grid grid = gridViewModel.getGrid();
-
-            for (int i = 0; i < gridViewModel.getWidth(); i++) {
-                for (int j = 0; j < gridViewModel.getHeight(); j++) {
-                    CellValue cellValue = grid.getValue(i, j);
-                    writer.write(convertCellValueToXsbChar(cellValue));
+            for (int i = 0; i < gridViewModel.getHeight(); i++) {
+                for (int j = 0; j < gridViewModel.getWidth(); j++) {
+                    CellValue baseValue = gridViewModel.getGrid().getValue(j, i);
+                    CellValue overlayValue = gridViewModel.getGrid().getOverlay(j, i);
+                    char charToWrite = convertCellValueToXsbChar(baseValue, overlayValue);
+                    writer.write(charToWrite);
                 }
                 writer.write("\n");
             }
-
 
             return true;
         } catch (IOException e) {
@@ -52,8 +51,15 @@ public class SaveAsDialog {
             return false;
         }
     }
-    private static char convertCellValueToXsbChar(CellValue value) {
-        return switch (value) {
+    private static char convertCellValueToXsbChar(CellValue baseValue, CellValue overlayValue) {
+        if (overlayValue == CellValue.TARGET) {
+            if (baseValue == CellValue.PLAYER) {
+                return '+';
+            } else if (baseValue == CellValue.BOX) {
+                return '*';
+            }
+        }
+        return switch (baseValue) {
             case GROUND -> '-';
             case WALL -> '#';
             case TARGET -> '.';

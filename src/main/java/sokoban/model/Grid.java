@@ -2,6 +2,7 @@ package sokoban.model;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.LongBinding;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 
 import java.util.Arrays;
@@ -41,10 +42,18 @@ public class Grid {
     public ReadOnlyObjectProperty<CellValue> valueProperty(int line, int col) {
         return matrix[line][col].valueProperty();
     }
+    public ObjectProperty<CellValue> overlayProperty(int line, int col) {
+
+        return matrix[line][col].overlayProperty();
+    }
 
     public CellValue getValue(int line, int col) {
         return matrix[line][col].getValue();
     }
+    public CellValue getOverlay(int line, int col) {
+        return matrix[line][col].getOverlay();
+    }
+
 
     public boolean isEmpty(int line, int col) {
         return matrix[line][col].isEmpty();
@@ -58,5 +67,11 @@ public class Grid {
     public LongBinding filledCellsCountProperty() {
         return filledCellsCount;
     }
+    public void setOverlay(int line, int col, CellValue overlay) {
+        if (line >= 0 && line < this.width && col >= 0 && col < this.height) {
+            matrix[line][col].setOverlay(overlay);
+        }
+    }
+
 }
 
