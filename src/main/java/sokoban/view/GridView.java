@@ -10,7 +10,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Window;
 import sokoban.viewmodel.GridViewModel;
 import sokoban.model.*;
-
+import sokoban.view.CellView;
 import javafx.scene.layout.GridPane;
 import sokoban.viewmodel.GridViewModel;
 import sokoban.model.CellValue;
@@ -28,7 +28,8 @@ public class GridView extends GridPane {
         initializeGrid(viewModel.getGrid().getWidth(), viewModel.getGrid().getHeight());
     }
 
-    private void initializeGrid(int numCols, int numRows) {
+    public void initializeGrid(int numCols, int numRows) {
+
         for (int i = 0; i < numCols; i++) {
             for (int j = 0; j < numRows; j++) {
                 CellView cellView = new CellView(i,j, viewModel);
@@ -101,11 +102,12 @@ public class GridView extends GridPane {
         cellView.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
             boolean success = false;
-            if (db.hasString()) {
-                CellValue value = CellValue.valueOf(db.getString());
-                viewModel.setValue(i, j, value);
-                success = true;
-            }
+                if (db.hasString()) {
+                    CellValue value = CellValue.valueOf(db.getString());
+                    viewModel.setValue(i, j, value);
+                    cellView.processCellUpdate(value, cellView.getCellValue().get());
+                    success = true;
+                }
             event.setDropCompleted(success);
             event.consume();
         });

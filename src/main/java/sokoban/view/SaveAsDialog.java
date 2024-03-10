@@ -39,7 +39,9 @@ public class SaveAsDialog {
                 for (int j = 0; j < gridViewModel.getWidth(); j++) {
                     CellValue baseValue = gridViewModel.getGrid().getValue(j, i);
                     CellValue overlayValue = gridViewModel.getGrid().getOverlay(j, i);
+                    System.out.println("Base: " + baseValue + ", Overlay: " + overlayValue);
                     char charToWrite = convertCellValueToXsbChar(baseValue, overlayValue);
+                    System.out.println("result:"+charToWrite);
                     writer.write(charToWrite);
                 }
                 writer.write("\n");
@@ -51,23 +53,27 @@ public class SaveAsDialog {
             return false;
         }
     }
+
     private static char convertCellValueToXsbChar(CellValue baseValue, CellValue overlayValue) {
         if (overlayValue == CellValue.TARGET) {
             if (baseValue == CellValue.PLAYER) {
                 return '+';
             } else if (baseValue == CellValue.BOX) {
                 return '*';
+            } else if (baseValue == CellValue.GROUND) {
+                return '.';
             }
         }
-        return switch (baseValue) {
-            case GROUND -> '-';
-            case WALL -> '#';
-            case TARGET -> '.';
-            case BOX -> '$';
-            case PLAYER -> '@';
-            default -> '?';
-        };
+
+        switch (baseValue) {
+            case GROUND: return '-';
+            case WALL: return '#';
+            case BOX: return '$';
+            case PLAYER: return '@';
+            default: return '?';
+        }
     }
+
 }
 
 

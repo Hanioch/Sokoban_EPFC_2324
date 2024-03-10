@@ -20,6 +20,7 @@ public class CellView extends StackPane {
     private final ObjectProperty<CellValue> cellValue = new SimpleObjectProperty<>();
     private final ImageView toolImageView = new ImageView();
     private final ImageView overlayImageView = new ImageView();
+    private ImageView backgroundImageView = new ImageView();
     private static final ObjectProperty<CellValue> selectedTool = new SimpleObjectProperty<>(CellValue.GROUND);
     private final GridViewModel viewModel;
     public CellView(int rowIndex, int columnIndex,GridViewModel viewModel) {
@@ -27,25 +28,19 @@ public class CellView extends StackPane {
         this.columnIndex = columnIndex;
         this.viewModel = viewModel;
         Image groundImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/ground.png")));
-        ImageView backgroundImageView = new ImageView(groundImage);
+        backgroundImageView = new ImageView(groundImage);
         cellValue.addListener((obs, oldVal, newVal) -> updateImage(newVal));
-
-        bindImageViewSize(backgroundImageView);
-        bindImageViewSize(toolImageView);
-        bindImageViewSize(overlayImageView);
         this.getChildren().addAll(backgroundImageView, toolImageView, overlayImageView);
 
         setupMouseEvents();
     }
-    private void bindImageViewSize(ImageView imageView) {
-        imageView.fitWidthProperty().bind(this.widthProperty());
-        imageView.fitHeightProperty().bind(this.heightProperty());
-        imageView.setPreserveRatio(true);
-    }
+
     public static void setSelectedTool(CellValue tool) {
         selectedTool.set(tool);
     }
-
+    public ObjectProperty<CellValue> getCellValue() {
+        return cellValue;
+    }
     private void setupMouseEvents() {
         this.setOnDragDetected(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
@@ -64,7 +59,7 @@ public class CellView extends StackPane {
             }
             if (e.getButton() == MouseButton.SECONDARY) {
                 processCellUpdate(CellValue.GROUND, cellValue.get());
-               updateImage(CellValue.GROUND);
+                updateImage(CellValue.GROUND);
                 overlayImageView.setImage(null);
                 viewModel.setValue(rowIndex, columnIndex, CellValue.GROUND);
             }
@@ -76,13 +71,20 @@ public class CellView extends StackPane {
             }
             if (e.getButton() == MouseButton.SECONDARY) {
                 processCellUpdate(CellValue.GROUND, cellValue.get());
-               updateImage(CellValue.GROUND);
+                updateImage(CellValue.GROUND);
                 overlayImageView.setImage(null);
             }
         });
 
-        this.setOnMouseEntered(e -> colorAdjust.setBrightness(-0.2));
-        this.setOnMouseExited(e -> colorAdjust.setBrightness(0));
+        this.setOnMouseEntered(e -> {
+            colorAdjust.setBrightness(-0.2);
+            applyEffects();
+        });
+
+        this.setOnMouseExited(e -> {
+            colorAdjust.setBrightness(0);
+            applyEffects();
+        });
 
 
         this.setOnMouseDragged(e -> {
@@ -92,24 +94,29 @@ public class CellView extends StackPane {
             } else if (e.getButton() == MouseButton.SECONDARY) {
                 processCellUpdate(CellValue.GROUND, cellValue.get());
                updateImage(CellValue.GROUND);
+                overlayImageView.setImage(null);
             }
         });
     }
-    private void processCellUpdate(CellValue newCellValue, CellValue currentCellValue) {
+    void processCellUpdate(CellValue newCellValue, CellValue currentCellValue) {
             if (newCellValue == CellValue.TARGET) {
                 if (currentCellValue != CellValue.WALL) {
                     overlayImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/goal.png"))));
+                    viewModel.getGrid().setOverlay(rowIndex, columnIndex, newCellValue);
                 }
             } else if (currentCellValue == CellValue.TARGET) {
                 if (newCellValue != CellValue.BOX && newCellValue != CellValue.PLAYER) {
                     overlayImageView.setImage(null);
+                    viewModel.getGrid().setOverlay(rowIndex, columnIndex, null);
                 } else {
                     overlayImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/goal.png"))));
+                    viewModel.getGrid().setOverlay(rowIndex, columnIndex, newCellValue);
                 }
             } else {
                 cellValue.set(newCellValue);
                 updateImage(newCellValue);
                 overlayImageView.setImage(null);
+                viewModel.getGrid().setOverlay(rowIndex, columnIndex, null);
             }
     }
     public void updateImage(CellValue value) {
@@ -123,6 +130,11 @@ public class CellView extends StackPane {
             };
             toolImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
         }
+    }
+    private void applyEffects() {
+        backgroundImageView.setEffect(colorAdjust);
+        toolImageView.setEffect(colorAdjust);
+        overlayImageView.setEffect(colorAdjust);
     }
 }
 

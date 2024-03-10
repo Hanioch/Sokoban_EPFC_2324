@@ -1,4 +1,5 @@
 package sokoban.view;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.geometry.Insets;
@@ -80,11 +81,11 @@ public class BoardView extends BorderPane {
 
     private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
-        Menu fileMenu = new Menu("Fichiers");
-        MenuItem newMenuItem = new MenuItem("Nouveau...");
-        MenuItem openMenuItem = new MenuItem("Ouvrir...");
-        MenuItem saveAsMenuItem = new MenuItem("Enregistrer sous...");
-        MenuItem exitMenuItem = new MenuItem("Quitter");
+        Menu fileMenu = new Menu("Files");
+        MenuItem newMenuItem = new MenuItem("New...");
+        MenuItem openMenuItem = new MenuItem("Open...");
+        MenuItem saveAsMenuItem = new MenuItem("Save As...");
+        MenuItem exitMenuItem = new MenuItem("Exit");
         menuBar.getMenus().add(fileMenu);
         newMenuItem.setOnAction(event -> {
             NewGameDialog newGameDialog = new NewGameDialog();
@@ -101,7 +102,17 @@ public class BoardView extends BorderPane {
                 showAlert("Erreur de sauvegarde", "La sauvegarde du jeu a échoué.", Alert.AlertType.ERROR);
             }
         });
-
+        exitMenuItem.setOnAction(event -> {
+            Platform.exit();
+        });
+        openMenuItem.setOnAction(event -> {
+            boolean openSuccessful = OpenDialog.openBoardFromFile(boardViewModel, this);
+            if (openSuccessful) {
+                updateBoardView(boardViewModel);
+            } else {
+                showAlert("Erreur d'ouverture", "Impossible d'ouvrir le fichier.", Alert.AlertType.ERROR);
+            }
+        });
         fileMenu.getItems().addAll(newMenuItem, openMenuItem, saveAsMenuItem, exitMenuItem);
 
         return menuBar;
@@ -169,18 +180,21 @@ public class BoardView extends BorderPane {
 
 
 
-    private void updateBoardView(BoardViewModel newBoardViewModel) {
+    public void updateBoardView(BoardViewModel newBoardViewModel) {
         this.boardViewModel = newBoardViewModel;
-        GridView newGridView = new GridView(boardViewModel.getGridViewModel());
+        GridView newGridView = new GridView(newBoardViewModel.getGridViewModel()); // Pass actual dimensions
+        newGridView.setStyle("-fx-spacing: 0;");
         newGridView.setAlignment(Pos.CENTER);
 
+        contentArea.getChildren().set(1, newGridView);
+        contentArea.requestLayout();
 
-        if (contentArea.getChildren().size() > 1 && contentArea.getChildren().get(1) instanceof GridView) {
-            contentArea.getChildren().remove(1);
-        }
-        contentArea.getChildren().add(1, newGridView);
         this.gridView = newGridView;
+
+        newGridView.initializeGrid(newBoardViewModel.getGridViewModel().getGrid().getWidth(), newBoardViewModel.getGridViewModel().getGrid().getHeight()); // Call with actual dimensions
     }
+
+
 
     public void hideError() {
         errorLabel.setText("");
