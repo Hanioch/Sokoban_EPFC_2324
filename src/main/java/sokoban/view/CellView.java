@@ -61,7 +61,6 @@ public class CellView extends StackPane {
                 viewModel.setValue(rowIndex, columnIndex, selectedTool.get());
                 processCellUpdate(selectedTool.get(), cellValue.get());
                 updateImage(cellValue.get());
-                viewModel.setValue(rowIndex, columnIndex, selectedTool.get());
             }
             if (e.getButton() == MouseButton.SECONDARY) {
                 processCellUpdate(CellValue.GROUND, cellValue.get());
