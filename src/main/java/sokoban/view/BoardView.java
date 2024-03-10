@@ -27,19 +27,23 @@ public class BoardView extends BorderPane {
     private final VBox mainVBox;
     private final MenuBar menuBar;
     private final VBox errorVBox;
+
     private final Label errorLabel;
+
+    private final Label headerLabel;
     private final HBox contentArea;
     private final VBox toolbox;
     private BoardViewModel boardViewModel;
     private GridView gridView;
     private StackPane selectedTool;
-
     public BoardView(BoardViewModel boardViewModel) {
         this.boardViewModel = boardViewModel;
         this.mainVBox = new VBox();
         this.menuBar = createMenuBar();
         this.errorVBox = new VBox();
         this.errorLabel = new Label();
+
+        this.headerLabel = new Label("");
         this.contentArea = new HBox();
         this.toolbox = initializeToolbox();
         this.gridView = new GridView(boardViewModel.getGridViewModel());
@@ -50,8 +54,15 @@ public class BoardView extends BorderPane {
     }
 
     private void setupLayout() {
-        errorLabel.setText("Message d'erreur ici");
-        errorLabel.setVisible(false);
+        headerLabel.textProperty().bind(boardViewModel.filledCellsCountProperty().
+                asString("Number of filled cells: %d of " + boardViewModel.maxFilledCells()));
+        errorVBox.getChildren().add(headerLabel);
+
+        errorLabel.setText("Please correct the following error(s)");
+        boolean isErr = checkError();
+        if (!isErr)
+            errorLabel.setVisible(false);
+
         errorVBox.getChildren().add(errorLabel);
         errorVBox.setAlignment(Pos.CENTER);
 
@@ -67,6 +78,41 @@ public class BoardView extends BorderPane {
         HBox.setMargin(toolbox, new Insets(0, 10, 0, 0));
         HBox.setMargin(gridView, new Insets(0, 0, 0, 10));
         this.setCenter(mainVBox);
+    }
+
+    private boolean checkError(){
+        //on check les erreurs et on les ajoute à la liste si il y en a
+        if (isCharacterMissed())
+            errorVBox.getChildren().add(new Label("A player is required"));
+        if (isTargetMissed())
+            errorVBox.getChildren().add(new Label("At least one target is required"));
+        if (isBoxMissed())
+            errorVBox.getChildren().add(new Label("At least one box required"));
+        if (isSameNumberOfAndTarget())
+            errorVBox.getChildren().add(new Label("Number of boxes and targets must be equals"));
+
+        return isBoxMissed() || isTargetMissed() || isCharacterMissed()|| isSameNumberOfAndTarget();
+    }
+
+    private boolean isCharacterMissed(){
+        boolean istrue = false;
+        //check si il y a dja un perso déposé.
+        return istrue;
+    }
+    private boolean isTargetMissed(){
+        boolean istrue = false;
+        //check si il y a dja un  target déposé.
+        return istrue;
+    }
+    private boolean isBoxMissed(){
+        boolean istrue = false;
+        //check si il y a dja un carton déposé.
+        return istrue;
+    }
+    private boolean isSameNumberOfAndTarget(){
+        boolean istrue = false;
+        //check si le même nombre de target et de box a ete deposer.
+        return istrue;
     }
 
     private void setupStyles() {

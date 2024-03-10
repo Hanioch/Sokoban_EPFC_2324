@@ -17,7 +17,7 @@ public class SokobanApp extends Application  {
         BoardViewModel boardViewModel = new BoardViewModel(board);
         BoardView boardView = new BoardView(boardViewModel);
 
-        Scene scene = new Scene(boardView, 700, 600);
+        Scene scene = new Scene(boardView, 1000, 1000);
         String css = Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm();
         scene.getStylesheets().add(css);
         primaryStage.setTitle("Sokoban");

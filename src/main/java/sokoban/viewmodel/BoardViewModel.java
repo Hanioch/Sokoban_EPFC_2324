@@ -1,5 +1,6 @@
 package sokoban.viewmodel;
 
+import javafx.beans.binding.LongBinding;
 import javafx.beans.property.BooleanProperty;
 import sokoban.model.Board;
 
@@ -17,6 +18,12 @@ public class BoardViewModel {
 
     public BooleanProperty isModifiedProperty() {
         return board.isModifiedProperty();
+    }
+
+    public LongBinding filledCellsCountProperty() { return board.filledCellsCountProperty();}
+
+    public int maxFilledCells() {
+        return board.getMaxFilledCells();
     }
 }
 
