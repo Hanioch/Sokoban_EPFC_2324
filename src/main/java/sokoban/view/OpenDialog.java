@@ -55,7 +55,7 @@ public class OpenDialog {
             BoardViewModel newBoardViewModel = new BoardViewModel(newBoard);
 
             boardView.updateBoardView(newBoardViewModel);
-
+            boardViewModel.isModifiedProperty().set(false);
             return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();

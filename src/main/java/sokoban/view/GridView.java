@@ -29,10 +29,12 @@ public class GridView extends GridPane {
     }
 
     public void initializeGrid(int numCols, int numRows) {
-
+        this.getChildren().clear();
         for (int i = 0; i < numCols; i++) {
             for (int j = 0; j < numRows; j++) {
                 CellView cellView = new CellView(i,j, viewModel);
+                CellValue cellValue = viewModel.getGrid().getValue(i, j);
+                cellView.updateImage(cellValue);
                 setupCellListeners(cellView, i, j);
                 this.add(cellView, i, j);
             }
@@ -89,7 +91,6 @@ public class GridView extends GridPane {
     private void setupCellListeners(CellView cellView, int i, int j) {
         viewModel.valueProperty(i, j).addListener((obs, oldVal, newVal) -> {
             cellView.updateImage(newVal);
-            System.out.println(newVal);
         });
 
         cellView.setOnDragOver(event -> {

@@ -88,10 +88,26 @@ public class BoardView extends BorderPane {
         MenuItem exitMenuItem = new MenuItem("Exit");
         menuBar.getMenus().add(fileMenu);
         newMenuItem.setOnAction(event -> {
-            NewGameDialog newGameDialog = new NewGameDialog();
-            Dimension dimension = newGameDialog.showDimension();
-            if (dimension != null) {
-                createBoard(dimension.width, dimension.height);
+            if (boardViewModel.isModifiedProperty().get()) {
+                Optional<ButtonType> result = showAlertWithConfirmation("Sauvegarder les changements", "Voulez-vous sauvegarder les modifications avant de créer une nouvelle grille ?");
+                if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+                    return;
+                } else if (result.isPresent() && result.get() == ButtonType.YES) {
+                    if (!SaveAsDialog.showSaveDialog(boardViewModel)) {
+                        return;
+                    }
+                }
+                NewGameDialog newGameDialog = new NewGameDialog();
+                Dimension dimension = newGameDialog.showDimension();
+                if (dimension != null) {
+                    createBoard(dimension.width, dimension.height);
+                }
+            } else {
+                NewGameDialog newGameDialog = new NewGameDialog();
+                Dimension dimension = newGameDialog.showDimension();
+                if (dimension != null) {
+                    createBoard(dimension.width, dimension.height);
+                }
             }
         });
         saveAsMenuItem.setOnAction(event -> {
@@ -103,16 +119,45 @@ public class BoardView extends BorderPane {
             }
         });
         exitMenuItem.setOnAction(event -> {
+            if (boardViewModel.isModifiedProperty().get()) {
+                Optional<ButtonType> result = showAlertWithConfirmation("Sauvegarder les changements", "Voulez-vous sauvegarder les modifications avant de quitter ?");
+                if (result.isPresent() && result.get() == ButtonType.YES) {
+                    if (!SaveAsDialog.showSaveDialog(boardViewModel)) {
+
+                        return;
+                    }
+                } else if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+                    return;
+                }
+            }
             Platform.exit();
         });
         openMenuItem.setOnAction(event -> {
-            boolean openSuccessful = OpenDialog.openBoardFromFile(boardViewModel, this);
-            if (openSuccessful) {
-                updateBoardView(boardViewModel);
+            if (boardViewModel.isModifiedProperty().get()) {
+                Optional<ButtonType> result = showAlertWithConfirmation("Sauvegarder les changements", "Voulez-vous sauvegarder les modifications avant d'ouvrir une nouvelle grille ?");
+                if (result.isPresent() && result.get() == ButtonType.CANCEL) {
+                    return;
+                } else if (result.isPresent() && result.get() == ButtonType.YES) {
+                    if (!SaveAsDialog.showSaveDialog(boardViewModel)) {
+                        return;
+                    }
+                }
+                boolean openSuccessful = OpenDialog.openBoardFromFile(boardViewModel, this);
+                if (openSuccessful) {
+                    updateBoardView(boardViewModel);
+                } else {
+                    showAlert("Erreur d'ouverture", "Impossible d'ouvrir le fichier.", Alert.AlertType.ERROR);
+                }
             } else {
-                showAlert("Erreur d'ouverture", "Impossible d'ouvrir le fichier.", Alert.AlertType.ERROR);
+                boolean openSuccessful = OpenDialog.openBoardFromFile(boardViewModel, this);
+                if (openSuccessful) {
+                    updateBoardView(boardViewModel);
+                } else {
+                    showAlert("Erreur d'ouverture", "Impossible d'ouvrir le fichier.", Alert.AlertType.ERROR);
+                }
             }
         });
+
         fileMenu.getItems().addAll(newMenuItem, openMenuItem, saveAsMenuItem, exitMenuItem);
 
         return menuBar;
@@ -120,7 +165,7 @@ public class BoardView extends BorderPane {
     private void showAlert(String title, String message, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
-        alert.setHeaderText(null); // Pas de texte d'en-tête nécessaire
+        alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
@@ -166,6 +211,7 @@ public class BoardView extends BorderPane {
         };
     }
     private void createBoard(int width, int height) {
+        boardViewModel.isModifiedProperty().set(false);
         Board newBoard = new Board(width, height);
         BoardViewModel newBoardViewModel = new BoardViewModel(newBoard);
         GridView newGridView = new GridView(newBoardViewModel.getGridViewModel());
@@ -182,20 +228,27 @@ public class BoardView extends BorderPane {
 
     public void updateBoardView(BoardViewModel newBoardViewModel) {
         this.boardViewModel = newBoardViewModel;
-        GridView newGridView = new GridView(newBoardViewModel.getGridViewModel()); // Pass actual dimensions
+        GridView newGridView = new GridView(newBoardViewModel.getGridViewModel());
         newGridView.setStyle("-fx-spacing: 0;");
         newGridView.setAlignment(Pos.CENTER);
-
-        contentArea.getChildren().set(1, newGridView);
+        newGridView.initializeGrid(newBoardViewModel.getGridViewModel().getGrid().getWidth(), newBoardViewModel.getGridViewModel().getGrid().getHeight());
+        if (contentArea.getChildren().size() > 1) {
+            contentArea.getChildren().set(1, newGridView);
+        } else {
+            contentArea.getChildren().add(newGridView);
+        }
         contentArea.requestLayout();
-
         this.gridView = newGridView;
-
-        newGridView.initializeGrid(newBoardViewModel.getGridViewModel().getGrid().getWidth(), newBoardViewModel.getGridViewModel().getGrid().getHeight()); // Call with actual dimensions
     }
 
-
-
+    public Optional<ButtonType> showAlertWithConfirmation(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+        return alert.showAndWait();
+    }
     public void hideError() {
         errorLabel.setText("");
         errorLabel.setVisible(false);

@@ -46,7 +46,7 @@ public class SaveAsDialog {
                 }
                 writer.write("\n");
             }
-
+            boardViewModel.isModifiedProperty().set(false);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
