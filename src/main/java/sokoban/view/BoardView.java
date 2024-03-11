@@ -16,13 +16,14 @@ import java.util.Objects;
 public class BoardView extends BorderPane {
     private final BoardViewModel boardViewModel;
     private static final int GRID_WIDTH = BoardViewModel.gridWidth();
+    private static final int GRID_HEIGHT = BoardViewModel.gridHeight();
     private static final int SCENE_MIN_WIDTH = 420;
     private static final int SCENE_MIN_HEIGHT = 420;
     private final Label headerLabel = new Label("");
     private final HBox headerBox = new HBox();
 
     public BoardView(Stage primaryStage, BoardViewModel boardViewModel) {
-        this.BoardViewModel = boardViewModel;
+        this.boardViewModel = boardViewModel;
         start(primaryStage);
     }
 
@@ -61,11 +62,20 @@ public class BoardView extends BorderPane {
         heightProperty(),
         headerBox.heightProperty());
 
-        GridView gridView = new GridView(boardViewModel.getGridViewModel(), gridWidth);
+        DoubleBinding gridHeight = Bindings.createDoubleBinding(
+                () -> {
+                    var size = Math.min(heightProperty().get(), widthProperty().get() - headerBox.heightProperty().get());
+                    return Math.floor(size / GRID_HEIGHT) * GRID_HEIGHT;
+                },
+                widthProperty(),
+                heightProperty(),
+                headerBox.heightProperty());
 
-        gridView.minHeightProperty().bind(gridWidth);
+        GridView gridView = new GridView(boardViewModel.getGridViewModel(), gridWidth, gridHeight);
+
+        gridView.minHeightProperty().bind(gridHeight);
         gridView.minWidthProperty().bind(gridWidth);
-        gridView.maxHeightProperty().bind(gridWidth);
+        gridView.maxHeightProperty().bind(gridHeight);
         gridView.maxWidthProperty().bind(gridWidth);
 
         setCenter(gridView);
