@@ -17,13 +17,11 @@ import javafx.scene.input.ScrollEvent;
 import java.util.Objects;
 
 public class CellView extends StackPane {
-    /*
     private static final Image boxImage = new Image("box.png");
     private static final Image targetImage = new Image("goal.png");
     private static final Image groundImage = new Image("ground.png");
     private static final Image playerImage = new Image("player.png");
     private static final Image wallImage = new Image("wall.png");
-    */
 
     private final CellViewModel viewModel;
     private final DoubleBinding widthProperty;
@@ -66,11 +64,6 @@ public class CellView extends StackPane {
 
     public void setImage(ObservableList<Element> stack) {
 
-        Image groundImage = new Image("src/main/resources/ground.png");
-
-        imageView.setImage(groundImage);
-
-        /*
         for (Element element : stack) {
             if (element instanceof Player) {
                 imageView.setImage(new Image("player.png"));
@@ -89,7 +82,6 @@ public class CellView extends StackPane {
                 break;
             }
         }
-        */
     }
 
     private void hoverChanged(ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) {
