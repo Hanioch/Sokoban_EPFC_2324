@@ -78,11 +78,11 @@ public class Grid {
     }
     *
     * FAIRE UN
-    *     CellValue getValue(int line, int col) {
+    *
+     */
+    CellValue getValue(int line, int col) {
         return matrix[line][col].getValue();
     }
-     */
-
     void play(int line, int col, CellValue playerValue){
         /* Faire
         matrix[line][col].setValue(playerValue);

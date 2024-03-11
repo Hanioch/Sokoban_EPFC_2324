@@ -12,6 +12,8 @@ public class Cell {
         return values;
     }
 
+
+
     void addValue(CellValue value){
         switch (value){
             case GROUND,WALL :
