@@ -4,6 +4,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ObservableList;
 
 import java.util.Arrays;
 
@@ -18,6 +19,8 @@ public class Grid {
     private final IntegerProperty heightProperty;
     private final LongBinding filledCellsCount;
 
+
+
     Grid() {
         matrix = new Cell[GRID_WIDTH][GRID_HEIGHT];
         this.widthProperty = new SimpleIntegerProperty(GRID_WIDTH);
@@ -26,15 +29,21 @@ public class Grid {
         for (int i = 0; i < GRID_WIDTH; i++){
             matrix[i] = new Cell[GRID_WIDTH];
             for (int j = 0; j < GRID_HEIGHT; j++){
-                matrix[i][j] = new Cell(i, j);
+                matrix[i][j] = new Cell();
             }
         }
 
-        this.filledCellsCount = Bindings.createLongBinding(()-> Arrays
-                .stream(matrix)
-                .flatMap(Arrays::stream)
-                .filter(cell -> !cell.isEmpty())
-                .count());
+        this.filledCellsCount = Bindings.createLongBinding(()-> {
+            long count = 0;
+            for (int i = 0; i < GRID_WIDTH; i++) {
+                for (int j = 0; j < GRID_HEIGHT; j++) {
+                    if (matrix[i][j] != null && !matrix[i][j].isEmpty()) {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        });
     }
     public static int getMinHeight() {
         return MIN_HEIGHT;
@@ -87,32 +96,27 @@ public class Grid {
     }
 
 
-    /*
-    * Je sais aps ce qu'il faut faire
-    *
-    ObservableList<CellValue> valueProperty(int line, int col){
-        return matrix[line][col].;
-    }
-    *
-    * FAIRE UN
-    *     CellValue getValue(int line, int col) {
-        return matrix[line][col].getValue();
-    }
-     */
 
-    /*
-    void play(int line, int col, CellValue playerValue){
-        *//* Faire
-        matrix[line][col].setValue(playerValue);
-        filledCellsCount.invalidate();*//*
+    public ObservableList<Element> getStack(int line, int col) {
+        ObservableList<Element> stack  = matrix[line][col].getValue();
+        return stack ;
     }
-    */
+
+
+    public void play(int line, int col, Element elem){
+        matrix[line][col].addElement(elem);
+        filledCellsCount.invalidate();
+    }
+
 
     public LongBinding filledCellsCountProperty() {
         return filledCellsCount;
     }
 
     public Cell getCell(int x, int y) {
+        if (matrix[x][y] == null) {
+            return new Cell(); // Crée une nouvelle cellule si elle n'existe pas encore
+        }
         return matrix[x][y];
     }
 

@@ -7,24 +7,24 @@ import javafx.beans.property.SimpleIntegerProperty;
 public class Board {
     private int maxFilledCells;
 
-    private final Grid grid = new Grid();
+    private final Grid grid;
 
     private final BooleanBinding isFull;
 
-    public Board(){
+    public Board() {
+        grid = new Grid();
         maxFilledCells = grid.getArea()/2;
         isFull = grid.filledCellsCountProperty().isEqualTo(maxFilledCells);
     }
 
-    /*
-    public cellValue play(int line,int col) {
-     if (grid.getValue(line, col) == CellValue.EMPTY && isFull())
-            return CellValue.EMPTY;
+    public void play(int line, int col, Element newElem) {
+        /*Todo
+        *  faut verifier d'autres trucs.*/
 
-        grid.play(line, col, grid.getValue(line, col) == CellValue.EMPTY ? CellValue.X : CellValue.EMPTY);
-        return grid.getValue(line, col);
+        if (!(grid.getCell(line, col).isEmpty() && isFull() || !(newElem instanceof Ground)))
+            grid.play(line, col, newElem);
     }
-    */
+
     public boolean isFull() {
         return isFull.get();
     }
@@ -42,11 +42,4 @@ public class Board {
     public Grid getGrid(){
         return this.grid;
     }
-
-
-    /*
-    *     public ReadOnlyObjectProperty<CellValue> valueProperty(int line, int col) {
-        return grid.valueProperty(line, col);
-    }
-*/
 }

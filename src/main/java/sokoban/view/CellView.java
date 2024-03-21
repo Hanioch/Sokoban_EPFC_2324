@@ -5,13 +5,16 @@ import sokoban.model.*;
 import sokoban.model.Cell;
 import sokoban.model.Element;
 import sokoban.viewmodel.CellViewModel;
-
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.input.ScrollEvent;
+
+import java.util.Objects;
 
 public class CellView extends StackPane {
     private static final Image boxImage = new Image("box.png");
@@ -22,18 +25,20 @@ public class CellView extends StackPane {
 
     private final CellViewModel viewModel;
     private final DoubleBinding widthProperty;
+    private final DoubleBinding heightProperty;
 
     private final ImageView imageView = new ImageView();
 
-    CellView(CellViewModel cellViewModel, DoubleBinding cellWidthProperty) {
+    CellView(CellViewModel cellViewModel, DoubleBinding cellWidthProperty, DoubleBinding cellHeightProperty) {
         this.viewModel = cellViewModel;
         this.widthProperty = cellWidthProperty;
-        cellViewModel.stackProperty().addListener((observable, oldValue, newValue) -> {
-            setImage(newValue);
-        });
+        this.heightProperty = cellHeightProperty;
+
         setAlignment(Pos.CENTER);
         layoutControls();
         configureBindings();
+
+        setImage(viewModel.getStack());
     }
 
     private void layoutControls() {
@@ -57,35 +62,29 @@ public class CellView extends StackPane {
         hoverProperty().addListener(this::hoverChanged);
     }
 
-    //renvoie d'office l'image du wall, à voir comment récupérer la bonne image
     public void setImage(ObservableList<Element> stack) {
-        // Efface l'image existante pour éviter les superpositions d'images
-        imageView.setImage(null);
 
-        // Parcours la pile d'éléments pour afficher les images
         for (Element element : stack) {
             if (element instanceof Player) {
-                imageView.setImage(new Image("chemin_vers_image_joueur"));
-                break; // Arrête la recherche après avoir trouvé le joueur
+                imageView.setImage(new Image("player.png"));
+                break;
             } else if (element instanceof Box) {
-                imageView.setImage(new Image("chemin_vers_image_caisse"));
-                break; // Arrête la recherche après avoir trouvé la caisse
+                imageView.setImage(new Image("box.png"));
+                break;
             } else if (element instanceof Target) {
-                imageView.setImage(new Image("chemin_vers_image_cible"));
-                break; // Arrête la recherche après avoir trouvé la cible
+                imageView.setImage(new Image("goal.png"));
+                break;
             } else if (element instanceof Wall) {
-                imageView.setImage(new Image("chemin_vers_image_mur"));
-                break; // Arrête la recherche après avoir trouvé le mur
+                imageView.setImage(new Image("wall.png"));
+                break;
             } else if (element instanceof Ground) {
-                imageView.setImage(new Image("chemin_vers_image_terrain"));
-                break; // Arrête la recherche après avoir trouvé le terrain
+                imageView.setImage(new Image("ground.png"));
+                break;
             }
-            // Vous pouvez ajouter des conditions pour d'autres types d'éléments si nécessaire
         }
     }
 
     private void hoverChanged(ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) {
         // à faire : griser la cellule en survol
     }
-
 }
