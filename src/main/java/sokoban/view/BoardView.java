@@ -1,5 +1,6 @@
 package sokoban.view;
 
+import javafx.scene.control.Button;
 import sokoban.viewmodel.BoardViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -21,6 +22,7 @@ public class BoardView extends BorderPane {
     private static final int SCENE_MIN_HEIGHT = 420;
     private final Label headerLabel = new Label("");
     private final HBox headerBox = new HBox();
+    private final HBox toolBox = new HBox();
 
     public BoardView(Stage primaryStage, BoardViewModel boardViewModel) {
         this.boardViewModel = boardViewModel;
@@ -41,6 +43,7 @@ public class BoardView extends BorderPane {
         stage.setTitle("SOKOBAN");
         createGrid();
         createHeader();
+        createToolBox();
     }
 
     private void createHeader() {
@@ -79,5 +82,9 @@ public class BoardView extends BorderPane {
         gridView.maxWidthProperty().bind(gridWidth);
 
         setCenter(gridView);
+    }
+
+    private void createToolBox() {
+        setLeft(toolBox);
     }
 }

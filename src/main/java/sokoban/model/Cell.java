@@ -57,7 +57,6 @@ public class Cell {
                 stack.add(element);
             }
         }
-
     }
 
 
@@ -69,7 +68,5 @@ public class Cell {
         boolean containsGround =  stack.stream().anyMatch(item -> item instanceof Ground);
         return stack.size() == 1 && containsGround;
     }
-
-
 
 }
