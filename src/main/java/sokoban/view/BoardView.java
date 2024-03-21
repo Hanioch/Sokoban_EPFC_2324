@@ -1,6 +1,11 @@
 package sokoban.view;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import sokoban.viewmodel.BoardViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -18,11 +23,12 @@ public class BoardView extends BorderPane {
     private final BoardViewModel boardViewModel;
     private static final int GRID_WIDTH = BoardViewModel.gridWidth();
     private static final int GRID_HEIGHT = BoardViewModel.gridHeight();
-    private static final int SCENE_MIN_WIDTH = 420;
-    private static final int SCENE_MIN_HEIGHT = 420;
+    private static final int SCENE_MIN_WIDTH = 800;
+    private static final int SCENE_MIN_HEIGHT = 500;
     private final Label headerLabel = new Label("");
     private final HBox headerBox = new HBox();
-    private final HBox toolBox = new HBox();
+    private final VBox toolBox = new VBox();
+    private StackPane selectedTool;
 
     public BoardView(Stage primaryStage, BoardViewModel boardViewModel) {
         this.boardViewModel = boardViewModel;
@@ -85,6 +91,27 @@ public class BoardView extends BorderPane {
     }
 
     private void createToolBox() {
+        String[] elements = {"ground.png", "goal.png", "wall.png", "player.png", "box.png"};
+        for (String elemPath : elements) {
+            Image image = new Image(elemPath);
+            ImageView imageView = new ImageView(image);
+            StackPane imageContainer = new StackPane(imageView);
+
+            imageContainer.setOnMouseClicked(e -> {
+                selectedTool = imageContainer;
+            });
+//            imageContainer.setOnDragDetected(event -> {
+//                Dragboard db = imageContainer.startDragAndDrop(TransferMode.ANY);
+//                ClipboardContent content = new ClipboardContent();
+//                content.putString(convertPathToCellValue(elementPath).name());
+//                db.setContent(content);
+//                event.consume();
+//            });
+
+            toolBox.getChildren().add(imageContainer);
+        }
+        toolBox.setAlignment(Pos.CENTER);
+        toolBox.setPadding(new Insets(20));
         setLeft(toolBox);
     }
 }
