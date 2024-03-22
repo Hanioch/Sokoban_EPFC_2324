@@ -98,20 +98,19 @@ public class BoardView extends BorderPane {
             StackPane imageContainer = new StackPane(imageView);
 
             imageContainer.setOnMouseClicked(e -> {
+                if (selectedTool != null) {
+                    selectedTool.setStyle("");
+                }
                 selectedTool = imageContainer;
+                selectedTool.setStyle("-fx-border-color: blue; -fx-border-width: 5;");
             });
-//            imageContainer.setOnDragDetected(event -> {
-//                Dragboard db = imageContainer.startDragAndDrop(TransferMode.ANY);
-//                ClipboardContent content = new ClipboardContent();
-//                content.putString(convertPathToCellValue(elementPath).name());
-//                db.setContent(content);
-//                event.consume();
-//            });
+
 
             toolBox.getChildren().add(imageContainer);
         }
         toolBox.setAlignment(Pos.CENTER);
         toolBox.setPadding(new Insets(20));
+        toolBox.setSpacing(20);
         setLeft(toolBox);
     }
 }
