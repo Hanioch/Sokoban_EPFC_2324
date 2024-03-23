@@ -1,7 +1,9 @@
 package sokoban.view;
 
 import javafx.collections.ObservableList;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import sokoban.model.*;
 import sokoban.model.Cell;
 import sokoban.model.Element;
@@ -50,18 +52,29 @@ public class CellView extends StackPane {
         minWidthProperty().bind(widthProperty);
         minHeightProperty().bind(widthProperty);
 
-        this.setOnMouseClicked(e -> {
+        this.setOnMouseDragEntered(this::handleMouseEvent);
+        this.setOnMouseClicked(this::handleMouseEvent);
+        this.setOnMouseDragged(this::handleMouseEvent);
 
-            if (e.getButton() == MouseButton.PRIMARY) {
-                viewModel.play();
+        this.setOnMouseEntered(e -> this.setOpacity(0.6));
+        this.setOnMouseExited(e -> this.setOpacity(1.0));
+
+        this.setOnDragDetected(e -> {
+            if (e.getButton() == MouseButton.PRIMARY || e.getButton() == MouseButton.SECONDARY) {
+                this.startFullDrag();
+                handleMouseEvent(e);
             }
-            if (e.getButton() == MouseButton.SECONDARY) {
-                viewModel.removeTopElement();
-            }
-            setImage(viewModel.getStack());
         });
 
-        hoverProperty().addListener(this::hoverChanged);
+
+    }
+    private void handleMouseEvent(MouseEvent e) {
+        if (e.getButton() == MouseButton.PRIMARY) {
+            viewModel.play();
+        } else if (e.getButton() == MouseButton.SECONDARY) {
+            viewModel.removeTopElement();
+        }
+        setImage(viewModel.getStack());
     }
     public void setImage(ObservableList<Element> stack) {
         this.getChildren().clear();
@@ -87,8 +100,5 @@ public class CellView extends StackPane {
             return new Image("ground.png");
         }
         return null;
-    }
-    private void hoverChanged(ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) {
-        // à faire : griser la cellule en survol
     }
 }
