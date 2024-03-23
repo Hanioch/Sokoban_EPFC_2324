@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import sokoban.model.*;
 import sokoban.viewmodel.BoardViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -87,6 +88,7 @@ public class BoardView extends BorderPane {
         gridView.maxHeightProperty().bind(gridHeight);
         gridView.maxWidthProperty().bind(gridWidth);
 
+        gridView.setAlignment(Pos.CENTER);
         setCenter(gridView);
     }
 
@@ -103,6 +105,8 @@ public class BoardView extends BorderPane {
                 }
                 selectedTool = imageContainer;
                 selectedTool.setStyle("-fx-border-color: blue; -fx-border-width: 5;");
+                Element selectedElement = selectedElementFromImagePath(elemPath);
+                boardViewModel.setSelectedElement(selectedElement);
             });
 
 
@@ -112,5 +116,21 @@ public class BoardView extends BorderPane {
         toolBox.setPadding(new Insets(20));
         toolBox.setSpacing(20);
         setLeft(toolBox);
+    }
+    private Element selectedElementFromImagePath(String imagePath) {
+        switch (imagePath) {
+            case "ground.png":
+                return new Ground();
+            case "goal.png":
+                return new Target();
+            case "wall.png":
+                return new Wall();
+            case "player.png":
+                return new Player();
+            case "box.png":
+                return new Box();
+            default:
+                return null;
+        }
     }
 }

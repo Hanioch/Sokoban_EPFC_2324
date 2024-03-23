@@ -20,8 +20,7 @@ public class Board {
     public void play(int line, int col, Element newElem) {
         /*Todo
         *  faut verifier d'autres trucs.*/
-
-        if (!(grid.getCell(line, col).isEmpty() && isFull() || !(newElem instanceof Ground)))
+        //if (!(grid.getCell(line, col).isEmpty() && isFull() || !(newElem instanceof Ground)))
             grid.play(line, col, newElem);
     }
 

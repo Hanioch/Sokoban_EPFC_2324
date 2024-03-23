@@ -1,6 +1,7 @@
 package sokoban.view;
 
 import sokoban.viewmodel.BoardViewModel;
+import sokoban.viewmodel.CellViewModel;
 import sokoban.viewmodel.GridViewModel;
 
 import javafx.beans.binding.DoubleBinding;
@@ -26,7 +27,7 @@ public class GridView extends GridPane {
 
         for(int i = 0 ; i < GRID_HEIGHT; ++i) {
             for (int j = 0 ; j < GRID_WIDTH; ++j) {
-                CellView cellView = new CellView(gridViewModel.getCellViewModel(i,j), cellWidth, cellHeight);
+                CellView cellView = new CellView(gridViewModel.getCellViewModel(j,i), cellWidth, cellHeight);
                 add(cellView, j, i);
             }
         }

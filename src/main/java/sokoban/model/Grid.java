@@ -17,7 +17,7 @@ public class Grid {
 
     private final IntegerProperty widthProperty;
     private final IntegerProperty heightProperty;
-    private final LongBinding filledCellsCount;
+    public final LongBinding filledCellsCount;
 
 
 

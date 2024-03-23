@@ -33,11 +33,14 @@ public class Cell {
 
     public void addElement(Element element) {
         if (element instanceof Ground || element instanceof Wall) {
-            stack.removeAll();
+            stack.clear();
+            if(element instanceof Wall){
+                stack.add(new Ground());
+            }
             stack.add(element);
         } else if (element instanceof Box || element instanceof Player ) {
             boolean containsTarget =  stack.stream().anyMatch(item -> item instanceof Target);
-            stack.removeAll();
+            stack.clear();
             stack.add(new Ground());
 
             if (containsTarget){
@@ -50,7 +53,7 @@ public class Cell {
             boolean containsWall =  stack.stream().anyMatch(item -> item instanceof Wall);
 
             if (containsWall){
-                stack.removeAll();
+                stack.clear();
                 stack.add(new Ground());
                 stack.add(element);
             } else if (!containsTarget) {
@@ -58,7 +61,6 @@ public class Cell {
             }
         }
     }
-
 
     public void removeElement(ComposableElement element) {
         stack.remove(element);

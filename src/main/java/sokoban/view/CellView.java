@@ -1,6 +1,7 @@
 package sokoban.view;
 
 import javafx.collections.ObservableList;
+import javafx.scene.input.MouseButton;
 import sokoban.model.*;
 import sokoban.model.Cell;
 import sokoban.model.Element;
@@ -49,41 +50,44 @@ public class CellView extends StackPane {
         minWidthProperty().bind(widthProperty);
         minHeightProperty().bind(widthProperty);
 
-        // à voir si nécessaire car on n'a pas de notion de rescale
-//        imageView.fitWidthProperty().bind(widthProperty);
+        this.setOnMouseClicked(e -> {
 
-        // copié du tuto Grid, à voir comment importer le bon élément et comment valider
-        /*
-        this.setOnMouseClicked(e -> viewModel.play());
-
-        viewModel.valueProperty().addListener((obs, old, newVal) -> setImage(imageView, newVal));
-        */
+            if (e.getButton() == MouseButton.PRIMARY) {
+                viewModel.play();
+            }
+            if (e.getButton() == MouseButton.SECONDARY) {
+                viewModel.removeTopElement();
+            }
+            setImage(viewModel.getStack());
+        });
 
         hoverProperty().addListener(this::hoverChanged);
     }
-
     public void setImage(ObservableList<Element> stack) {
-
+        this.getChildren().clear();
         for (Element element : stack) {
-            if (element instanceof Player) {
-                imageView.setImage(new Image("player.png"));
-                break;
-            } else if (element instanceof Box) {
-                imageView.setImage(new Image("box.png"));
-                break;
-            } else if (element instanceof Target) {
-                imageView.setImage(new Image("goal.png"));
-                break;
-            } else if (element instanceof Wall) {
-                imageView.setImage(new Image("wall.png"));
-                break;
-            } else if (element instanceof Ground) {
-                imageView.setImage(new Image("ground.png"));
-                break;
-            }
+            ImageView imageView = new ImageView(getImageForElement(element));
+            imageView.setPreserveRatio(true);
+            imageView.fitWidthProperty().bind(this.widthProperty);
+            imageView.fitHeightProperty().bind(this.heightProperty);
+            this.getChildren().add(imageView);
         }
     }
 
+    private Image getImageForElement(Element element) {
+        if (element instanceof Player) {
+            return new Image("player.png");
+        } else if (element instanceof Box) {
+            return new Image("box.png");
+        } else if (element instanceof Target) {
+            return new Image("goal.png");
+        } else if (element instanceof Wall) {
+            return new Image("wall.png");
+        } else if (element instanceof Ground) {
+            return new Image("ground.png");
+        }
+        return null;
+    }
     private void hoverChanged(ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) {
         // à faire : griser la cellule en survol
     }
