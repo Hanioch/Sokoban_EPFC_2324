@@ -1,22 +1,27 @@
 package sokoban.view;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import sokoban.model.*;
 import sokoban.viewmodel.BoardViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.util.Objects;
 
 
@@ -29,6 +34,7 @@ public class BoardView extends BorderPane {
     private final Label headerLabel = new Label("");
     private final HBox headerBox = new HBox();
     private final VBox toolBox = new VBox();
+    private final VBox top = new VBox();
     private StackPane selectedTool;
 
     public BoardView(Stage primaryStage, BoardViewModel boardViewModel) {
@@ -48,18 +54,56 @@ public class BoardView extends BorderPane {
 
     private void configMainComponents(Stage stage) {
         stage.setTitle("SOKOBAN");
+        createMenuBar();
         createGrid();
         createHeader();
         createToolBox();
+        setTop(top);
     }
+    private void createMenuBar() {
+        MenuBar menuBar = new MenuBar();
 
+        Menu fileMenu = new Menu("File");
+
+        MenuItem newItem = new MenuItem("New...");
+        newItem.setOnAction(e -> {
+            NewGameDialog newGameDialog = new NewGameDialog();
+            Dimension dimension = newGameDialog.showDimension();
+
+        });
+        MenuItem openItem = new MenuItem("Open...");
+        openItem.setOnAction(e -> {});
+        MenuItem saveAsItem = new MenuItem("Save As...");
+        saveAsItem.setOnAction(e -> {
+            boolean saveSuccessful = SaveAsDialog.showSaveDialog(boardViewModel);
+            if (saveSuccessful) {
+                showAlert("Sauvegarde réussie", "Le jeu a été sauvegardé avec succès.", Alert.AlertType.INFORMATION);
+            } else {
+                showAlert("Erreur de sauvegarde", "La sauvegarde du jeu a échoué.", Alert.AlertType.ERROR);
+            }
+        });
+        MenuItem exitItem = new MenuItem("Exit");
+        exitItem.setOnAction(e -> System.exit(0));
+
+        fileMenu.getItems().addAll(newItem, openItem, saveAsItem, exitItem);
+        menuBar.getMenus().add(fileMenu);
+        top.getChildren().add(menuBar);
+        top.setSpacing(10);
+    }
+    private void showAlert(String title, String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
     private void createHeader() {
         headerLabel.textProperty().bind(boardViewModel.filledCellsCountProperty()
                 .asString("Number of filled cells : %d of " + boardViewModel.maxFilledCells()));
         headerLabel.getStyleClass().add("header");
         headerBox.getChildren().add(headerLabel);
         headerBox.setAlignment(Pos.CENTER);
-        setTop(headerBox);
+        top.getChildren().add(headerBox);
     }
 
     private void createGrid() {
