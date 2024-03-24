@@ -65,7 +65,18 @@ public class Cell {
     public void removeElement(ComposableElement element) {
         stack.remove(element);
     }
-
+    public void removePlayer() {
+        Element playerElement = null;
+        for (Element element : stack) {
+            if (element instanceof Player) {
+                playerElement = element;
+                break;
+            }
+        }
+        if (playerElement != null) {
+            stack.remove(playerElement);
+        }
+    }
     public boolean isEmpty() {
         boolean containsGround =  stack.stream().anyMatch(item -> item instanceof Ground);
         return stack.size() == 1 && containsGround;

@@ -1,16 +1,10 @@
 package sokoban.viewmodel;
 
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import sokoban.model.Board;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import sokoban.model.Element;
-import sokoban.model.Grid;
-import sokoban.model.Ground;
+import sokoban.model.*;
 
 public class CellViewModel {
     private BoardViewModel boardViewModel;
@@ -24,7 +18,6 @@ public class CellViewModel {
     }
 
     private final ObservableList<Element> stack;
-
     private final SimpleDoubleProperty scale = new SimpleDoubleProperty(DEFAULT_SCALE);
     private final BooleanBinding mayIncrementScale = scale.lessThan(1 - EPSILON);
     private final BooleanBinding mayDecrementScale = scale.greaterThan(0.1 + EPSILON);
@@ -38,10 +31,8 @@ public class CellViewModel {
     }
     public void play() {
         Element selectedElement = boardViewModel.getSelectedElement();
-
-            board.play(line, col, selectedElement);
+        board.play(line, col, selectedElement);
     }
-
 
     public boolean isEmpty(){
         return board.isEmpty(line, col);

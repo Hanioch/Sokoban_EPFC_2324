@@ -18,7 +18,23 @@ public class Grid {
     private final IntegerProperty widthProperty;
     private final IntegerProperty heightProperty;
     public final LongBinding filledCellsCount;
+    private int playerX = -1;
+    private int playerY = -1;
+    public int getPlayerX() {
+        return playerX;
+    }
 
+    public void setPlayerX(int playerX) {
+        this.playerX = playerX;
+    }
+
+    public int getPlayerY() {
+        return playerY;
+    }
+
+    public void setPlayerY(int playerY) {
+        this.playerY = playerY;
+    }
 
 
     Grid() {
@@ -104,18 +120,29 @@ public class Grid {
 
 
     public void play(int line, int col, Element elem){
-        matrix[line][col].addElement(elem);
+        if (elem instanceof Player) {
+            placePlayer(line, col);
+        }else{
+            matrix[line][col].addElement(elem);
+        }
         filledCellsCount.invalidate();
     }
 
-
+    public void placePlayer(int newX, int newY) {
+        if (playerX >= 0 && playerY >= 0) {
+            matrix[playerX][playerY].removePlayer();
+        }
+        matrix[newX][newY].addElement(new Player());
+        playerX = newX;
+        playerY = newY;
+    }
     public LongBinding filledCellsCountProperty() {
         return filledCellsCount;
     }
 
     public Cell getCell(int x, int y) {
         if (matrix[x][y] == null) {
-            return new Cell(); // Crée une nouvelle cellule si elle n'existe pas encore
+            return new Cell();
         }
         return matrix[x][y];
     }
