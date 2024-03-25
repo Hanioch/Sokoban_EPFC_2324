@@ -3,14 +3,13 @@ package sokoban.model;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
 
-import java.util.Arrays;
-
 public class Grid {
-    static int MIN_WIDTH = 10, MIN_HEIGHT = 7, MAX_WIDTH = 50, MAX_HEIGHT = 50;
-    static final int GRID_WIDTH = 10;
+    static int MIN_WIDTH = 10, MIN_HEIGHT = 10, MAX_WIDTH = 50, MAX_HEIGHT = 50;
+    static final int GRID_WIDTH = 15;
     static final int GRID_HEIGHT = MIN_HEIGHT;
 
     private final Cell[][] matrix;
@@ -18,23 +17,6 @@ public class Grid {
     private final IntegerProperty widthProperty;
     private final IntegerProperty heightProperty;
     public final LongBinding filledCellsCount;
-    private int playerX = -1;
-    private int playerY = -1;
-    public int getPlayerX() {
-        return playerX;
-    }
-
-    public void setPlayerX(int playerX) {
-        this.playerX = playerX;
-    }
-
-    public int getPlayerY() {
-        return playerY;
-    }
-
-    public void setPlayerY(int playerY) {
-        this.playerY = playerY;
-    }
 
 
     Grid() {
@@ -61,6 +43,11 @@ public class Grid {
             return count;
         });
     }
+
+    ReadOnlyListProperty<Element> valueProperty(int line, int col) {
+        return matrix[line][col].stackProperty();
+    }
+
     public static int getMinHeight() {
         return MIN_HEIGHT;
     }
@@ -129,12 +116,12 @@ public class Grid {
     }
 
     public void placePlayer(int newX, int newY) {
-        if (playerX >= 0 && playerY >= 0) {
-            matrix[playerX][playerY].removePlayer();
+        int oldX = Player.getX();
+        int oldY = Player.getY();
+        if (oldX >= 0 || oldY >= 0) {
+            matrix[oldX][oldY].removePlayer();
         }
-        matrix[newX][newY].addElement(new Player());
-        playerX = newX;
-        playerY = newY;
+        matrix[newX][newY].addElement(new Player(newX, newY));
     }
     public LongBinding filledCellsCountProperty() {
         return filledCellsCount;

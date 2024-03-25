@@ -2,7 +2,6 @@ package sokoban.viewmodel;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import sokoban.model.*;
 
@@ -29,8 +28,15 @@ public class CellViewModel {
         this.boardViewModel = boardViewModel;
         stack = board.getGrid().getCell(line, col).getStack();
     }
+
+    public ReadOnlyListProperty<Element> valueProperty() {
+        return board.valueProperty(line, col);
+    }
     public void play() {
         Element selectedElement = boardViewModel.getSelectedElement();
+        if (selectedElement instanceof Player) {
+            stack.remove((selectedElement));
+        }
         board.play(line, col, selectedElement);
     }
 

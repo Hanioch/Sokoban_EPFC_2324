@@ -66,6 +66,8 @@ public class CellView extends StackPane {
             }
         });
 
+        viewModel.valueProperty().addListener((obs, old, newVal) -> setImage(viewModel.getStack()));
+
 
     }
     private void handleMouseEvent(MouseEvent e) {

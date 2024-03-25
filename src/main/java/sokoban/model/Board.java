@@ -2,7 +2,7 @@ package sokoban.model;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.LongBinding;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.ReadOnlyListProperty;
 
 public class Board {
     private int maxFilledCells;
@@ -17,9 +17,18 @@ public class Board {
         isFull = grid.filledCellsCountProperty().isEqualTo(maxFilledCells);
     }
 
+    public ReadOnlyListProperty<Element> valueProperty(int line, int col) {
+        return grid.valueProperty(line, col);
+    }
+
     public void play(int line, int col, Element newElem) {
-        if (!isFull() || (newElem instanceof Ground) )
+        if (!isFull() || (newElem instanceof Ground))
             grid.play(line, col, newElem);
+        if (newElem instanceof Player) {
+            if (Player.playerIsSet() || !isFull()) {
+                grid.play(line, col, newElem);
+            }
+        }
     }
 
     public boolean isFull() {
