@@ -1,5 +1,6 @@
 package sokoban.view;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
@@ -10,7 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import sokoban.model.*;
 import sokoban.viewmodel.BoardViewModel;
 import javafx.beans.binding.Bindings;
@@ -22,7 +22,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.awt.*;
-import java.util.Objects;
 
 
 public class BoardView extends BorderPane {
@@ -35,6 +34,7 @@ public class BoardView extends BorderPane {
     private final HBox headerBox = new HBox();
     private final VBox toolBox = new VBox();
     private final VBox top = new VBox();
+    private final VBox errorBox = new VBox();
     private StackPane selectedTool;
 
     public BoardView(Stage primaryStage, BoardViewModel boardViewModel) {
@@ -104,6 +104,8 @@ public class BoardView extends BorderPane {
         headerBox.getChildren().add(headerLabel);
         headerBox.setAlignment(Pos.CENTER);
         top.getChildren().add(headerBox);
+
+        showError();
     }
 
     private void createGrid() {
@@ -177,4 +179,36 @@ public class BoardView extends BorderPane {
                 return null;
         }
     }
+
+    private void showError(){
+
+        BooleanBinding error = boardViewModel.isBoxMissed().or(boardViewModel.isTargetMissed()).or(boardViewModel.isCharacterMissed());
+
+        errorBox.visibleProperty().bind(error);
+        errorBox.getChildren().add(new Label("Please correct the following error(s)"));
+
+        error.addListener((obs, oldValue, newValue) -> {
+            System.out.println("cehckckcenkoc");
+            errorBox.getChildren().clear();
+            errorBox.getChildren().add(new Label("Please correct the following error(s)"));
+
+            if (boardViewModel.isCharacterMissed().get()) {
+                errorBox.getChildren().add(new Label("A player is required"));
+            }
+            if (boardViewModel.isTargetMissed().get()) {
+                errorBox.getChildren().add(new Label("At least one target is required"));
+            }
+            if (boardViewModel.isBoxMissed().get()) {
+                errorBox.getChildren().add(new Label("At least one box required"));
+            }
+            if (boardViewModel.isSameNumberOfBoxAndTarget().get()) {
+                errorBox.getChildren().add(new Label("Number of boxes and targets must be equals"));
+            }
+        });
+
+        top.getChildren().add(errorBox);
+    }
+
+
+
 }

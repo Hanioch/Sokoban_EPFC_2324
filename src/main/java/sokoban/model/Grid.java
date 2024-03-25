@@ -1,12 +1,14 @@
 package sokoban.model;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class Grid {
     static int MIN_WIDTH = 10, MIN_HEIGHT = 10, MAX_WIDTH = 50, MAX_HEIGHT = 50;
@@ -149,5 +151,48 @@ public class Grid {
 
     public boolean isEmpty(int x, int y) {
         return matrix[x][y].isEmpty();
+    }
+
+    public BooleanBinding checkIfContain(Class<?> type){
+        //System.out.println("check grid Model");
+
+        return Bindings.createBooleanBinding(()-> {
+            boolean isNotOn = true;
+
+            for (int i = 0; i < GRID_WIDTH; i++) {
+                for (int j = 0; j < GRID_HEIGHT; j++) {
+                    List stackCell = matrix[i][j].getStack();
+                    for (Object elem : stackCell) {
+                        if (type.isInstance(elem)) {
+                            isNotOn= false; // Si au moins un élément correspond, on renvoie true
+                        }
+                        }
+                }
+            }
+           return isNotOn;
+        });
+    }
+
+    public BooleanBinding isSameNumberBoxAndTarget(){
+
+        return Bindings.createBooleanBinding(()-> {
+            int countTarget = 0;
+            int countBox = 0;
+
+            for (int i = 0; i < GRID_WIDTH; i++) {
+                for (int j = 0; j < GRID_HEIGHT; j++) {
+                    List stackCell = matrix[i][j].getStack();
+                    for (Object elem : stackCell) {
+                        if (elem instanceof Box)
+                            countBox ++;
+
+                        if (elem instanceof Target)
+                            countTarget++;
+
+                    }
+                }
+            }
+            return countTarget != countBox;
+        });
     }
 }

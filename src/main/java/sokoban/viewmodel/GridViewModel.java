@@ -14,4 +14,6 @@ public class GridViewModel {
     public CellViewModel getCellViewModel (int line, int col) {
         return new CellViewModel(line, col, board, boardViewModel);
     }
+
+
 }

@@ -1,12 +1,12 @@
 package sokoban.viewmodel;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import sokoban.model.Board;
 import sokoban.model.Element;
 import sokoban.model.Grid;
 import javafx.beans.binding.LongBinding;
-import sokoban.model.Board;
 
 public class BoardViewModel {
     private final GridViewModel gridViewModel;
@@ -42,5 +42,18 @@ public class BoardViewModel {
     }
     public Board getBoard(){
         return this.board;
+    }
+
+    public BooleanBinding isCharacterMissed(){
+ //       System.out.println("check viewModel" + board.isCharacterMissed().get());
+
+        return board.isCharacterMissed();
+    }
+    public BooleanBinding isTargetMissed(){
+        return board.isTargetMissed();
+    } public BooleanBinding isBoxMissed(){
+        return board.isBoxMissed();
+    } public BooleanBinding isSameNumberOfBoxAndTarget(){
+        return board.isSameNumberOfBoxAndTarget();
     }
 }
