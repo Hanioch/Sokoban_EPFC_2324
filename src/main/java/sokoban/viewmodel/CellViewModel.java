@@ -1,17 +1,13 @@
 package sokoban.viewmodel;
 
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import sokoban.model.Board;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import sokoban.model.Element;
+import sokoban.model.*;
 
 public class CellViewModel {
-
+    private BoardViewModel boardViewModel;
     private static final double DEFAULT_SCALE = 0.5;
     private static final double EPSILON = 1e-3;
     private final int line, col;
@@ -22,26 +18,21 @@ public class CellViewModel {
     }
 
     private final ObservableList<Element> stack;
-
     private final SimpleDoubleProperty scale = new SimpleDoubleProperty(DEFAULT_SCALE);
     private final BooleanBinding mayIncrementScale = scale.lessThan(1 - EPSILON);
     private final BooleanBinding mayDecrementScale = scale.greaterThan(0.1 + EPSILON);
 
-    CellViewModel(int line, int col, Board board) {
+    CellViewModel(int line, int col, Board board, BoardViewModel boardViewModel) {
         this.line = line;
         this.col = col;
         this.board = board;
+        this.boardViewModel = boardViewModel;
         stack = board.getGrid().getCell(line, col).getStack();
     }
-
-    /*
     public void play() {
-        board.play(line, col);
+        Element selectedElement = boardViewModel.getSelectedElement();
+        board.play(line, col, selectedElement);
     }
-    public ReadOnlyObjectProperty<CellValue> valueProperty(){
-        return board.valueProperty(line, col);
-    }
-    */
 
     public boolean isEmpty(){
         return board.isEmpty(line, col);
@@ -70,5 +61,13 @@ public class CellViewModel {
     public void resetScale() {
         scale.set(DEFAULT_SCALE);
     }
-
+    public void removeTopElement() {
+        if (!stack.isEmpty()) {
+            Element topElement = stack.get(stack.size() - 1);
+            if (!(topElement instanceof Ground)) {
+                stack.remove(topElement);
+                board.getGrid().filledCellsCount.invalidate();
+            }
+        }
+    }
 }

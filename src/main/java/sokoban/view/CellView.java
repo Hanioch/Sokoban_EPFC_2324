@@ -1,6 +1,9 @@
 package sokoban.view;
 
 import javafx.collections.ObservableList;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import sokoban.model.*;
 import sokoban.model.Cell;
 import sokoban.model.Element;
@@ -49,42 +52,53 @@ public class CellView extends StackPane {
         minWidthProperty().bind(widthProperty);
         minHeightProperty().bind(widthProperty);
 
-        // à voir si nécessaire car on n'a pas de notion de rescale
-//        imageView.fitWidthProperty().bind(widthProperty);
+        this.setOnMouseDragEntered(this::handleMouseEvent);
+        this.setOnMouseClicked(this::handleMouseEvent);
+        this.setOnMouseDragged(this::handleMouseEvent);
 
-        // copié du tuto Grid, à voir comment importer le bon élément et comment valider
-        /*
-        this.setOnMouseClicked(e -> viewModel.play());
+        this.setOnMouseEntered(e -> this.setOpacity(0.6));
+        this.setOnMouseExited(e -> this.setOpacity(1.0));
 
-        viewModel.valueProperty().addListener((obs, old, newVal) -> setImage(imageView, newVal));
-        */
-
-        hoverProperty().addListener(this::hoverChanged);
-    }
-
-    public void setImage(ObservableList<Element> stack) {
-
-        for (Element element : stack) {
-            if (element instanceof Player) {
-                imageView.setImage(new Image("player.png"));
-                break;
-            } else if (element instanceof Box) {
-                imageView.setImage(new Image("box.png"));
-                break;
-            } else if (element instanceof Target) {
-                imageView.setImage(new Image("goal.png"));
-                break;
-            } else if (element instanceof Wall) {
-                imageView.setImage(new Image("wall.png"));
-                break;
-            } else if (element instanceof Ground) {
-                imageView.setImage(new Image("ground.png"));
-                break;
+        this.setOnDragDetected(e -> {
+            if (e.getButton() == MouseButton.PRIMARY || e.getButton() == MouseButton.SECONDARY) {
+                this.startFullDrag();
+                handleMouseEvent(e);
             }
+        });
+
+
+    }
+    private void handleMouseEvent(MouseEvent e) {
+        if (e.getButton() == MouseButton.PRIMARY) {
+            viewModel.play();
+        } else if (e.getButton() == MouseButton.SECONDARY) {
+            viewModel.removeTopElement();
+        }
+        setImage(viewModel.getStack());
+    }
+    public void setImage(ObservableList<Element> stack) {
+        this.getChildren().clear();
+        for (Element element : stack) {
+            ImageView imageView = new ImageView(getImageForElement(element));
+            imageView.setPreserveRatio(true);
+            imageView.fitWidthProperty().bind(this.widthProperty);
+            imageView.fitHeightProperty().bind(this.heightProperty);
+            this.getChildren().add(imageView);
         }
     }
 
-    private void hoverChanged(ObservableValue<? extends Boolean> obs, Boolean oldVal, Boolean newVal) {
-        // à faire : griser la cellule en survol
+    private Image getImageForElement(Element element) {
+        if (element instanceof Player) {
+            return new Image("player.png");
+        } else if (element instanceof Box) {
+            return new Image("box.png");
+        } else if (element instanceof Target) {
+            return new Image("goal.png");
+        } else if (element instanceof Wall) {
+            return new Image("wall.png");
+        } else if (element instanceof Ground) {
+            return new Image("ground.png");
+        }
+        return null;
     }
 }

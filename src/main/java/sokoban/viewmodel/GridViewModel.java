@@ -6,11 +6,12 @@ import sokoban.model.Ground;
 
 public class GridViewModel {
     private final Board board;
-
-    public GridViewModel (Board board) {
+    private BoardViewModel boardViewModel;
+    public GridViewModel(Board board, BoardViewModel boardViewModel) {
         this.board = board;
+        this.boardViewModel = boardViewModel;
     }
     public CellViewModel getCellViewModel (int line, int col) {
-        return new CellViewModel(line, col, board);
+        return new CellViewModel(line, col, board, boardViewModel);
     }
 }
