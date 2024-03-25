@@ -9,8 +9,8 @@ import javafx.collections.ObservableList;
 import java.util.Arrays;
 
 public class Grid {
-    static int MIN_WIDTH = 10, MIN_HEIGHT = 10, MAX_WIDTH = 50, MAX_HEIGHT = 50;
-    static final int GRID_WIDTH = 15;
+    static int MIN_WIDTH = 10, MIN_HEIGHT = 7, MAX_WIDTH = 50, MAX_HEIGHT = 50;
+    static final int GRID_WIDTH = 10;
     static final int GRID_HEIGHT = MIN_HEIGHT;
 
     private final Cell[][] matrix;

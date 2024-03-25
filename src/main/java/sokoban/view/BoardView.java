@@ -30,7 +30,9 @@ public class BoardView extends BorderPane {
     private static final int GRID_WIDTH = BoardViewModel.gridWidth();
     private static final int GRID_HEIGHT = BoardViewModel.gridHeight();
     private static final int SCENE_MIN_WIDTH = 800;
-    private static final int SCENE_MIN_HEIGHT = 500;
+    private static final int SCENE_MIN_HEIGHT = 600;
+    private static final int SCENE_MAX_WIDTH = 1400;
+    private static final int SCENE_MAX_HEIGHT = 1050;
     private final Label headerLabel = new Label("");
     private final HBox headerBox = new HBox();
     private final VBox toolBox = new VBox();
@@ -109,7 +111,7 @@ public class BoardView extends BorderPane {
     private void createGrid() {
         DoubleBinding gridWidth = Bindings.createDoubleBinding(
             () -> {
-                    var size = Math.min(widthProperty().get(), heightProperty().get() - headerBox.heightProperty().get());
+                    var size = Math.min(widthProperty().get() - toolBox.widthProperty().get(), heightProperty().get() - headerBox.heightProperty().get());
                     return Math.floor(size / GRID_WIDTH) * GRID_WIDTH;
         },
         widthProperty(),
@@ -118,19 +120,18 @@ public class BoardView extends BorderPane {
 
         DoubleBinding gridHeight = Bindings.createDoubleBinding(
                 () -> {
-                    var size = Math.min(heightProperty().get(), widthProperty().get() - headerBox.heightProperty().get());
+                    var size = Math.min(heightProperty().get() - headerBox.heightProperty().get(), widthProperty().get() - toolBox.widthProperty().get());
                     return Math.floor(size / GRID_HEIGHT) * GRID_HEIGHT;
                 },
                 widthProperty(),
                 heightProperty(),
                 headerBox.heightProperty());
 
+
         GridView gridView = new GridView(boardViewModel.getGridViewModel(), gridWidth, gridHeight);
 
         gridView.minHeightProperty().bind(gridHeight);
         gridView.minWidthProperty().bind(gridWidth);
-        gridView.maxHeightProperty().bind(gridHeight);
-        gridView.maxWidthProperty().bind(gridWidth);
 
         gridView.setAlignment(Pos.CENTER);
         setCenter(gridView);
