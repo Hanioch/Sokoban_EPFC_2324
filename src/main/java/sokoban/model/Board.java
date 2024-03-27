@@ -22,7 +22,9 @@ public class Board {
     }
 
     public void play(int line, int col, Element newElem) {
-        if (!isFull() || (newElem instanceof Ground) || (newElem instanceof Player && grid.playerIsSet()) && grid.playerIsAlone()) {
+
+        if (!isFull() || (newElem instanceof Ground) || (newElem instanceof Player && grid.playerIsSet() && grid.playerIsAlone())
+                || (newElem instanceof Target && !grid.getCell(line, col).isEmpty())) {
             grid.play(line, col, newElem);
         }
     }
