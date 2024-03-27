@@ -24,7 +24,7 @@ public class Player extends ComposableElement implements Movable {
         return Y;
     }
 
-    public static boolean playerIsSet() {
+    public boolean playerIsSet() {
         return getX() >= 0;
     }
     public void removePlayer() {

@@ -137,4 +137,30 @@ public class Grid {
     public boolean isEmpty(int x, int y) {
         return matrix[x][y].isEmpty();
     }
+
+    public boolean playerIsSet() {
+        for (int i = 0; i < GRID_WIDTH; i++) {
+            for (int j = 0; j < GRID_HEIGHT; j++) {
+                if (containsPlayer(i, j)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean containsPlayer(int line, int col){
+        ReadOnlyListProperty<Element> stack = valueProperty(line, col);
+        for (Element e : stack) {
+            if (e instanceof Player){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean playerIsAlone() {
+        ReadOnlyListProperty<Element> stack = valueProperty(Player.getX(), Player.getY());
+        return stack.size() == 2;
+    }
 }
