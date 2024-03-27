@@ -67,6 +67,7 @@ public class Cell {
         for (Element element : stackProperty()) {
             if (element instanceof Player) {
                 removeElement(element);
+                ((Player) element).removePlayer();
                 break;
             }
         }

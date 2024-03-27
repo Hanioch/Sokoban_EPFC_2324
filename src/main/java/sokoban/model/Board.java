@@ -22,12 +22,8 @@ public class Board {
     }
 
     public void play(int line, int col, Element newElem) {
-        if (!isFull() || (newElem instanceof Ground))
+        if (!isFull() || (newElem instanceof Ground) || (newElem instanceof Player && Player.playerIsSet())) {
             grid.play(line, col, newElem);
-        if (newElem instanceof Player) {
-            if (Player.playerIsSet() || !isFull()) {
-                grid.play(line, col, newElem);
-            }
         }
     }
 

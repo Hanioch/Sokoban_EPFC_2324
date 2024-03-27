@@ -72,6 +72,9 @@ public class CellViewModel {
             Element topElement = stack.get(stack.size() - 1);
             if (!(topElement instanceof Ground)) {
                 stack.remove(topElement);
+                if (topElement instanceof Player) {
+                    ((Player) topElement).removePlayer();
+                }
                 board.getGrid().filledCellsCount.invalidate();
             }
         }
