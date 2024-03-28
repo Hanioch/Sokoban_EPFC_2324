@@ -33,8 +33,13 @@ public class Board {
 
     public void play(int line, int col, Element newElem) {
 
-        if (!isFull() || (newElem instanceof Ground) || (newElem instanceof Player && grid.playerIsSet() && grid.playerIsAlone())
-                || (newElem instanceof Target && !grid.getCell(line, col).isEmpty())) {
+        String type = newElem.getClass().getSimpleName();
+
+        // peut jouer si le Grid n'est pas rempli || si la cellule visée est déjà remplie || si on place un Ground
+        // || si on place un Player et qu'il est déjà placé ailleurs sur une case où il n'est pas avec une Target
+
+        if(!isFull() || !grid.getCell(line, col).isEmpty() || type.equals("Ground")
+                    || (type.equals("Player") && grid.playerIsSet() && grid.playerIsAlone())) {
             grid.play(line, col, newElem);
             setModified(true);
         }

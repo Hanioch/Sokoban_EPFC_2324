@@ -159,7 +159,8 @@ public class BoardView extends BorderPane {
         int GRID_HEIGHT = boardViewModel.gridHeight();
         DoubleBinding gridWidth = Bindings.createDoubleBinding(
             () -> {
-                    var size = Math.min(widthProperty().get() - toolBox.widthProperty().get(), heightProperty().get() - headerBox.heightProperty().get());
+                    var size = Math.min(widthProperty().get() - toolBox.widthProperty().get(), heightProperty().get()
+                            - headerBox.heightProperty().get());
                     return Math.floor(size / GRID_WIDTH) * GRID_WIDTH;
         },
         widthProperty(),
@@ -168,7 +169,8 @@ public class BoardView extends BorderPane {
 
         DoubleBinding gridHeight = Bindings.createDoubleBinding(
                 () -> {
-                    var size = Math.min(heightProperty().get() - headerBox.heightProperty().get(), widthProperty().get() - toolBox.widthProperty().get());
+                    var size = Math.min(heightProperty().get() - headerBox.heightProperty().get(), widthProperty().get()
+                            - toolBox.widthProperty().get());
                     return Math.floor(size / GRID_HEIGHT) * GRID_HEIGHT;
                 },
                 widthProperty(),
