@@ -7,19 +7,19 @@ import sokoban.model.*;
 
 public class CellViewModel {
     private BoardViewModel boardViewModel;
-    private static final double DEFAULT_SCALE = 0.5;
-    private static final double EPSILON = 1e-3;
-    private final int line, col;
-    private final Board board;
+    private static double DEFAULT_SCALE = 0.5;
+    private static double EPSILON = 1e-3;
+    private  int line, col;
+    private  Board board;
 
     public ObservableList<Element> getStack() {
         return stack;
     }
 
-    private final ObservableList<Element> stack;
-    private final SimpleDoubleProperty scale = new SimpleDoubleProperty(DEFAULT_SCALE);
-    private final BooleanBinding mayIncrementScale = scale.lessThan(1 - EPSILON);
-    private final BooleanBinding mayDecrementScale = scale.greaterThan(0.1 + EPSILON);
+    private  ObservableList<Element> stack;
+    private  SimpleDoubleProperty scale = new SimpleDoubleProperty(DEFAULT_SCALE);
+    private  BooleanBinding mayIncrementScale = scale.lessThan(1 - EPSILON);
+    private  BooleanBinding mayDecrementScale = scale.greaterThan(0.1 + EPSILON);
 
     CellViewModel(int line, int col, Board board, BoardViewModel boardViewModel) {
         this.line = line;

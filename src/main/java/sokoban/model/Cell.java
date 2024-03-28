@@ -5,7 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Cell {
-    private final ObservableList<Element> stack;
+    private  ObservableList<Element> stack;
 
     public Cell() {
         this.stack = FXCollections.observableArrayList();

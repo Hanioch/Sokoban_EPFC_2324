@@ -1,5 +1,6 @@
 package sokoban.viewmodel;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import sokoban.model.Board;
@@ -9,9 +10,9 @@ import javafx.beans.binding.LongBinding;
 import sokoban.model.Board;
 
 public class BoardViewModel {
-    private final GridViewModel gridViewModel;
-    private final Board board;
-    private final ObjectProperty<Element> selectedElement = new SimpleObjectProperty<>();
+    private  GridViewModel gridViewModel;
+    private  Board board;
+    private  ObjectProperty<Element> selectedElement = new SimpleObjectProperty<>();
 
     public void setSelectedElement(Element element) {
         selectedElement.set(element);
@@ -24,12 +25,22 @@ public class BoardViewModel {
         this.board = board;
         gridViewModel = new GridViewModel(board, this);
     }
+    public void createNewGrid(int width, int height) {
+        board.resetGrid(width, height);
 
-    public static int gridWidth(){
-        return Grid.getGridWidth();
     }
-    public static int gridHeight(){
-        return Grid.getGridHeight();
+    public void updateGrid(Grid newGrid) {
+        this.board.setGrid(newGrid);
+        this.isModifiedProperty().set(false);
+    }
+    public int gridWidth(){
+        return board.getGrid().getWidth();
+    }
+    public BooleanProperty isModifiedProperty() {
+        return board.isModifiedProperty();
+    }
+    public int gridHeight(){
+        return board.getGrid().getHeight();
     }
     public GridViewModel getGridViewModel(){
         return gridViewModel;

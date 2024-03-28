@@ -5,7 +5,7 @@ import sokoban.model.Element;
 import sokoban.model.Ground;
 
 public class GridViewModel {
-    private final Board board;
+    private  Board board;
     private BoardViewModel boardViewModel;
     public GridViewModel(Board board, BoardViewModel boardViewModel) {
         this.board = board;

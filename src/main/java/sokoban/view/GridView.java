@@ -9,11 +9,14 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 
 public class GridView extends GridPane {
-    private static final int PADDING = 20;
-    private static final int GRID_WIDTH = BoardViewModel.gridWidth();
-    private static final int GRID_HEIGHT = BoardViewModel.gridHeight();
+    BoardViewModel boardViewModel;
+    public static int PADDING = 20;
 
-    GridView (GridViewModel gridViewModel, DoubleBinding gridWidth, DoubleBinding gridHeight) {
+    GridView (BoardViewModel boardViewModel,GridViewModel gridViewModel, DoubleBinding gridWidth, DoubleBinding gridHeight) {
+        this.boardViewModel = boardViewModel;
+        int GRID_WIDTH = boardViewModel.gridWidth();
+        int GRID_HEIGHT = boardViewModel.gridHeight();
+
         setGridLinesVisible(false);
         setPadding(new Insets(PADDING));
 

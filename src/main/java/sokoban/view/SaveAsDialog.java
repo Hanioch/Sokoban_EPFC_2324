@@ -79,7 +79,7 @@ public class SaveAsDialog {
             return '$';
         }
         else {
-            return '0';
+            return ' ';
         }
     }
 

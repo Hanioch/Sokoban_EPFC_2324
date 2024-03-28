@@ -7,34 +7,33 @@ import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
 
+import java.util.List;
+
 public class Grid {
-    static int MIN_WIDTH = 10, MIN_HEIGHT = 10, MAX_WIDTH = 50, MAX_HEIGHT = 50;
-    static final int GRID_WIDTH = 15;
-    static final int GRID_HEIGHT = MIN_HEIGHT;
 
-    private final Cell[][] matrix;
+    private  Cell[][] matrix;
 
-    private final IntegerProperty widthProperty;
-    private final IntegerProperty heightProperty;
-    public final LongBinding filledCellsCount;
+    private IntegerProperty widthProperty ;
+    private IntegerProperty heightProperty ;
+    public  LongBinding filledCellsCount;
 
 
-    Grid() {
-        matrix = new Cell[GRID_WIDTH][GRID_HEIGHT];
-        this.widthProperty = new SimpleIntegerProperty(GRID_WIDTH);
-        this.heightProperty = new SimpleIntegerProperty(GRID_HEIGHT);
+    public Grid(int width, int height) {
+        matrix = new Cell[width][height];
+        widthProperty = new SimpleIntegerProperty(width);
+        heightProperty = new SimpleIntegerProperty(height);
 
-        for (int i = 0; i < GRID_WIDTH; i++){
-            matrix[i] = new Cell[GRID_WIDTH];
-            for (int j = 0; j < GRID_HEIGHT; j++){
+        for (int i = 0; i < width; i++){
+           // matrix[i] = new Cell[width];
+            for (int j = 0; j < height; j++){
                 matrix[i][j] = new Cell();
             }
         }
 
         this.filledCellsCount = Bindings.createLongBinding(()-> {
             long count = 0;
-            for (int i = 0; i < GRID_WIDTH; i++) {
-                for (int j = 0; j < GRID_HEIGHT; j++) {
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j <  height; j++) {
                     if (matrix[i][j] != null && !matrix[i][j].isEmpty()) {
                         count++;
                     }
@@ -43,35 +42,25 @@ public class Grid {
             return count;
         });
     }
+    public void addElementsToCell(int x, int y, List<Element> elements) {
+        Cell cell = getCell(x, y);
+        for (Element element : elements) {
+            cell.addElement(element);
+        }
+    }
 
     ReadOnlyListProperty<Element> valueProperty(int line, int col) {
         return matrix[line][col].stackProperty();
     }
 
-    public static int getMinHeight() {
-        return MIN_HEIGHT;
-    }
-
-    public static int getMinWidth() {
-        return MIN_WIDTH;
-    }
-
-    public static int getMaxWidth() {
-        return MAX_WIDTH;
-    }
-
-    public static int getMaxHeight() {
-        return MAX_HEIGHT;
-    }
-
-    public int getWidth() {
+    public  int getWidth() {
         return widthProperty.get();
     }
-    public static int getGridWidth(){
-        return GRID_WIDTH;
+    public  int getGridWidth(){
+        return widthProperty.get();
     }
-    public static int getGridHeight(){
-        return GRID_HEIGHT;
+    public  int getGridHeight(){
+        return heightProperty.get();
     }
 
     public IntegerProperty widthProperty() {
@@ -82,7 +71,7 @@ public class Grid {
         widthProperty.set(width);
     }
 
-    public int getHeight() {
+    public  int getHeight() {
         return heightProperty.get();
     }
 
@@ -95,9 +84,8 @@ public class Grid {
     }
 
     public int getArea() {
-        return GRID_HEIGHT * GRID_WIDTH;
+        return widthProperty.get() * heightProperty.get();
     }
-
 
 
     public ObservableList<Element> getStack(int line, int col) {
@@ -139,8 +127,8 @@ public class Grid {
     }
 
     public boolean playerIsSet() {
-        for (int i = 0; i < GRID_WIDTH; i++) {
-            for (int j = 0; j < GRID_HEIGHT; j++) {
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
                 if (containsPlayer(i, j)) {
                     return true;
                 }
