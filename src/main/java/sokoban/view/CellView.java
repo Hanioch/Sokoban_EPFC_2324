@@ -26,11 +26,11 @@ public class CellView extends StackPane {
     private static final Image playerImage = new Image("player.png");
     private static final Image wallImage = new Image("wall.png");
 
-    private final CellViewModel viewModel;
-    private final DoubleBinding widthProperty;
-    private final DoubleBinding heightProperty;
+    private  CellViewModel viewModel;
+    private  DoubleBinding widthProperty;
+    private  DoubleBinding heightProperty;
 
-    private final ImageView imageView = new ImageView();
+    private  ImageView imageView = new ImageView();
 
     CellView(CellViewModel cellViewModel, DoubleBinding cellWidthProperty, DoubleBinding cellHeightProperty) {
         this.viewModel = cellViewModel;

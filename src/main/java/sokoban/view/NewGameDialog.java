@@ -16,12 +16,12 @@ import java.util.Optional;
 
 public class NewGameDialog extends Dialog<Dimension> {
 
-    private final TextField widthField = new TextField("15");
-    private final TextField heightField = new TextField("10");
-    private final Label widthErrorLabel = new Label();
-    private final Label heightErrorLabel = new Label();
-    private final StringProperty widthTextProperty = new SimpleStringProperty();
-    private final StringProperty heightTextProperty = new SimpleStringProperty();
+    private  TextField widthField = new TextField("15");
+    private  TextField heightField = new TextField("10");
+    private  Label widthErrorLabel = new Label();
+    private  Label heightErrorLabel = new Label();
+    private  StringProperty widthTextProperty = new SimpleStringProperty();
+    private  StringProperty heightTextProperty = new SimpleStringProperty();
 
     public NewGameDialog() {
         setTitle("Sokoban");

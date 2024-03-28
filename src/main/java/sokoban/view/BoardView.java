@@ -10,7 +10,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import sokoban.model.*;
 import sokoban.viewmodel.BoardViewModel;
 import javafx.beans.binding.Bindings;
@@ -22,31 +21,30 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.awt.*;
-import java.util.Objects;
+import java.util.Optional;
 
 
 public class BoardView extends BorderPane {
-    private final BoardViewModel boardViewModel;
-    private static final int GRID_WIDTH = BoardViewModel.gridWidth();
-    private static final int GRID_HEIGHT = BoardViewModel.gridHeight();
-    private static final int SCENE_MIN_WIDTH = 800;
-    private static final int SCENE_MIN_HEIGHT = 600;
-    private static final int SCENE_MAX_WIDTH = 1400;
-    private static final int SCENE_MAX_HEIGHT = 1050;
-    private final Label headerLabel = new Label("");
-    private final HBox headerBox = new HBox();
-    private final VBox toolBox = new VBox();
-    private final VBox top = new VBox();
+    private  BoardViewModel boardViewModel;
+    private static  int SCENE_MIN_WIDTH = 800;
+    private static  int SCENE_MIN_HEIGHT = 600;
+    private static  int SCENE_MAX_WIDTH = 1400;
+    private static  int SCENE_MAX_HEIGHT = 1050;
+    private  Label headerLabel = new Label("");
+    private  HBox headerBox = new HBox();
+    private  VBox toolBox = new VBox();
+    private  VBox top = new VBox();
     private StackPane selectedTool;
-
+    private  Stage primaryStage;
     public BoardView(Stage primaryStage, BoardViewModel boardViewModel) {
+        this.primaryStage = primaryStage;
         this.boardViewModel = boardViewModel;
         start(primaryStage);
     }
 
     private void start(Stage stage) {
-        configMainComponents(stage);
-
+        stage.setTitle("Sokoban");
+        configMainComponents();
         Scene scene = new Scene(this, SCENE_MIN_WIDTH, SCENE_MIN_HEIGHT);
         stage.setScene(scene);
         stage.show();
@@ -54,13 +52,20 @@ public class BoardView extends BorderPane {
         stage.setMinWidth(stage.getWidth());
     }
 
-    private void configMainComponents(Stage stage) {
-        stage.setTitle("SOKOBAN");
+    private void configMainComponents() {
+        setupModificationListener();
         createMenuBar();
         createGrid();
         createHeader();
         createToolBox();
         setTop(top);
+    }
+    private void setupModificationListener() {
+        boardViewModel.isModifiedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                primaryStage.setTitle("Sokoban (*)");
+            }
+        });
     }
     private void createMenuBar() {
         MenuBar menuBar = new MenuBar();
@@ -69,20 +74,14 @@ public class BoardView extends BorderPane {
 
         MenuItem newItem = new MenuItem("New...");
         newItem.setOnAction(e -> {
-            NewGameDialog newGameDialog = new NewGameDialog();
-            Dimension dimension = newGameDialog.showDimension();
+            newGrid();
 
         });
         MenuItem openItem = new MenuItem("Open...");
         openItem.setOnAction(e -> {});
         MenuItem saveAsItem = new MenuItem("Save As...");
         saveAsItem.setOnAction(e -> {
-            boolean saveSuccessful = SaveAsDialog.showSaveDialog(boardViewModel);
-            if (saveSuccessful) {
-                showAlert("Sauvegarde réussie", "Le jeu a été sauvegardé avec succès.", Alert.AlertType.INFORMATION);
-            } else {
-                showAlert("Erreur de sauvegarde", "La sauvegarde du jeu a échoué.", Alert.AlertType.ERROR);
-            }
+            saveGrid();
         });
         MenuItem exitItem = new MenuItem("Exit");
         exitItem.setOnAction(e -> System.exit(0));
@@ -92,6 +91,53 @@ public class BoardView extends BorderPane {
         top.getChildren().add(menuBar);
         top.setSpacing(10);
     }
+
+    private boolean saveGrid() {
+        boolean saveSuccessful = SaveAsDialog.showSaveDialog(boardViewModel);
+        if (saveSuccessful) {
+            showAlert("Sauvegarde réussie", "Le jeu a été sauvegardé avec succès.", Alert.AlertType.INFORMATION);
+        } else {
+            showAlert("Erreur de sauvegarde", "La sauvegarde du jeu a échoué.", Alert.AlertType.ERROR);
+        }
+        return saveSuccessful;
+    }
+    private boolean newGrid() {
+        if (!boardViewModel.isModifiedProperty().get()) {
+            return true;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Sauvegarder les changements");
+        alert.setHeaderText("Voulez-vous sauvegarder les modifications avant de créer une nouvelle grille ?");
+        alert.setContentText("Choisissez une option.");
+
+        ButtonType buttonYes = new ButtonType("Oui");
+        ButtonType buttonNo = new ButtonType("Non", ButtonBar.ButtonData.NO);
+        ButtonType buttonCancel = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonYes, buttonNo, buttonCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == buttonYes) {
+            return saveGrid();
+        } else if( result.isPresent() && result.get() == buttonNo){
+            NewGameDialog newGameDialog = new NewGameDialog();
+            Dimension dimension = newGameDialog.showDimension();
+            if (dimension != null) {
+                boardViewModel.createNewGrid(dimension.width, dimension.height);
+                refreshView();
+            }
+        }
+        return false;
+    }
+    private void refreshView() {
+        this.setCenter(null);
+        toolBox.getChildren().clear();
+        headerBox.getChildren().clear();
+        top.getChildren().clear();
+        configMainComponents();
+    }
+
     private void showAlert(String title, String message, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -109,6 +155,8 @@ public class BoardView extends BorderPane {
     }
 
     private void createGrid() {
+        int GRID_WIDTH = boardViewModel.gridWidth();
+        int GRID_HEIGHT = boardViewModel.gridHeight();
         DoubleBinding gridWidth = Bindings.createDoubleBinding(
             () -> {
                     var size = Math.min(widthProperty().get() - toolBox.widthProperty().get(), heightProperty().get() - headerBox.heightProperty().get());
@@ -128,7 +176,7 @@ public class BoardView extends BorderPane {
                 headerBox.heightProperty());
 
 
-        GridView gridView = new GridView(boardViewModel.getGridViewModel(), gridWidth, gridHeight);
+        GridView gridView = new GridView( boardViewModel,boardViewModel.getGridViewModel(), gridWidth, gridHeight);
 
         gridView.minHeightProperty().bind(gridHeight);
         gridView.minWidthProperty().bind(gridWidth);
