@@ -92,43 +92,42 @@ public class BoardView extends BorderPane {
         top.setSpacing(10);
     }
 
+
     private boolean saveGrid() {
         boolean saveSuccessful = SaveAsDialog.showSaveDialog(boardViewModel);
         if (saveSuccessful) {
-            showAlert("Sauvegarde réussie", "Le jeu a été sauvegardé avec succès.", Alert.AlertType.INFORMATION);
+            showAlert("Save Successful", "The game was saved successfully.", Alert.AlertType.INFORMATION);
         } else {
-            showAlert("Erreur de sauvegarde", "La sauvegarde du jeu a échoué.", Alert.AlertType.ERROR);
+            showAlert("Save Error", "Saving the game failed.", Alert.AlertType.ERROR);
         }
         return saveSuccessful;
     }
     private boolean newGrid() {
-        if (!boardViewModel.isModifiedProperty().get()) {
-            return true;
-        }
+        if (boardViewModel.isModifiedProperty().get()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Dialog");
+            alert.setHeaderText("Your board has been modified");
+            alert.setContentText("Do you want to save your changes?");
+            ButtonType buttonYes = new ButtonType("Oui", ButtonBar.ButtonData.YES);
+            ButtonType buttonNo = new ButtonType("Non", ButtonBar.ButtonData.NO);
+            ButtonType buttonCancel = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Sauvegarder les changements");
-        alert.setHeaderText("Voulez-vous sauvegarder les modifications avant de créer une nouvelle grille ?");
-        alert.setContentText("Choisissez une option.");
+            alert.getButtonTypes().setAll(buttonYes, buttonNo, buttonCancel);
 
-        ButtonType buttonYes = new ButtonType("Oui");
-        ButtonType buttonNo = new ButtonType("Non", ButtonBar.ButtonData.NO);
-        ButtonType buttonCancel = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        alert.getButtonTypes().setAll(buttonYes, buttonNo, buttonCancel);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == buttonYes) {
-            return saveGrid();
-        } else if( result.isPresent() && result.get() == buttonNo){
-            NewGameDialog newGameDialog = new NewGameDialog();
-            Dimension dimension = newGameDialog.showDimension();
-            if (dimension != null) {
-                boardViewModel.createNewGrid(dimension.width, dimension.height);
-                refreshView();
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == buttonYes) {
+                return saveGrid();
+            } else if (result.isPresent() && result.get() == buttonCancel) {
+                return false;
             }
         }
-        return false;
+        NewGameDialog newGameDialog = new NewGameDialog();
+        Dimension dimension = newGameDialog.showDimension();
+        if (dimension != null) {
+            boardViewModel.createNewGrid(dimension.width, dimension.height);
+            refreshView();
+        }
+        return true;
     }
     private void refreshView() {
         this.setCenter(null);
@@ -206,6 +205,12 @@ public class BoardView extends BorderPane {
 
 
             toolBox.getChildren().add(imageContainer);
+            if (elemPath.equals("wall.png")) {
+                selectedTool = imageContainer;
+                selectedTool.setStyle("-fx-border-color: blue; -fx-border-width: 5;");
+                Element selectedElement = selectedElementFromImagePath(elemPath);
+                boardViewModel.setSelectedElement(selectedElement);
+            }
         }
         toolBox.setAlignment(Pos.CENTER);
         toolBox.setPadding(new Insets(20));

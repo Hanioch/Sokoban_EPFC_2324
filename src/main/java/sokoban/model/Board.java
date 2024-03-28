@@ -49,6 +49,7 @@ public class Board {
         this.grid = new Grid(width, height);
         this.isModifiedProperty.set(false);
         this.maxFilledCells = this.grid.getArea() / 2;
+        this.isFull = grid.filledCellsCountProperty().isEqualTo(maxFilledCells);
         grid.setHeight(height);
         grid.setWidth(width);
 
