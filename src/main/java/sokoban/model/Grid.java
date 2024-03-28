@@ -7,6 +7,8 @@ import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
 
+import java.util.List;
+
 public class Grid {
 
     private  Cell[][] matrix;
@@ -16,7 +18,7 @@ public class Grid {
     public  LongBinding filledCellsCount;
 
 
-    Grid(int width, int height) {
+    public Grid(int width, int height) {
         matrix = new Cell[width][height];
         widthProperty = new SimpleIntegerProperty(width);
         heightProperty = new SimpleIntegerProperty(height);
@@ -39,6 +41,12 @@ public class Grid {
             }
             return count;
         });
+    }
+    public void addElementsToCell(int x, int y, List<Element> elements) {
+        Cell cell = getCell(x, y);
+        for (Element element : elements) {
+            cell.addElement(element);
+        }
     }
 
     ReadOnlyListProperty<Element> valueProperty(int line, int col) {

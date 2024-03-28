@@ -44,6 +44,11 @@ public class Board {
             setModified(true);
         }
     }
+    public void setGrid(Grid newGrid) {
+        this.grid = newGrid;
+        this.maxFilledCells = this.grid.getArea() / 2;
+        this.isFull = grid.filledCellsCountProperty().isEqualTo(maxFilledCells);
+    }
     public void resetGrid(int width, int height) {
         grid.filledCellsCount.invalidate();
         this.grid = new Grid(width, height);

@@ -10,7 +10,7 @@ import javafx.scene.layout.GridPane;
 
 public class GridView extends GridPane {
     BoardViewModel boardViewModel;
-    private static  int PADDING = 20;
+    public static int PADDING = 20;
 
     GridView (BoardViewModel boardViewModel,GridViewModel gridViewModel, DoubleBinding gridWidth, DoubleBinding gridHeight) {
         this.boardViewModel = boardViewModel;

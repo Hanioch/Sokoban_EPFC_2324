@@ -29,6 +29,10 @@ public class BoardViewModel {
         board.resetGrid(width, height);
 
     }
+    public void updateGrid(Grid newGrid) {
+        this.board.setGrid(newGrid);
+        this.isModifiedProperty().set(false);
+    }
     public int gridWidth(){
         return board.getGrid().getWidth();
     }

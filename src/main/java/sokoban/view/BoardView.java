@@ -23,6 +23,8 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.util.Optional;
 
+import static sokoban.view.GridView.PADDING;
+
 
 public class BoardView extends BorderPane {
     private  BoardViewModel boardViewModel;
@@ -78,7 +80,9 @@ public class BoardView extends BorderPane {
 
         });
         MenuItem openItem = new MenuItem("Open...");
-        openItem.setOnAction(e -> {});
+        openItem.setOnAction(e -> {
+            openGrid();
+        });
         MenuItem saveAsItem = new MenuItem("Save As...");
         saveAsItem.setOnAction(e -> {
             saveGrid();
@@ -91,7 +95,30 @@ public class BoardView extends BorderPane {
         top.getChildren().add(menuBar);
         top.setSpacing(10);
     }
+    private boolean openGrid() {
+        if (boardViewModel.isModifiedProperty().get()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Dialog");
+            alert.setHeaderText("Your board has been modified");
+            alert.setContentText("Do you want to save your changes?");
+            ButtonType buttonYes = new ButtonType("Oui", ButtonBar.ButtonData.YES);
+            ButtonType buttonNo = new ButtonType("Non", ButtonBar.ButtonData.NO);
+            ButtonType buttonCancel = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
 
+            alert.getButtonTypes().setAll(buttonYes, buttonNo, buttonCancel);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == buttonYes) {
+                return saveGrid();
+            } else if (result.isPresent() && result.get() == buttonCancel) {
+                return false;
+            }
+        }
+
+        boolean success = OpenDialog.openBoardFromFile(boardViewModel, this);
+        refreshView();
+        return success;
+    }
 
     private boolean saveGrid() {
         boolean saveSuccessful = SaveAsDialog.showSaveDialog(boardViewModel);
