@@ -19,11 +19,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-
-import java.awt.*;
 import java.util.Optional;
 
-import static sokoban.view.GridView.PADDING;
 
 
 public class BoardView extends BorderPane {
@@ -71,22 +68,14 @@ public class BoardView extends BorderPane {
     }
     private void createMenuBar() {
         MenuBar menuBar = new MenuBar();
-
         Menu fileMenu = new Menu("File");
 
         MenuItem newItem = new MenuItem("New...");
-        newItem.setOnAction(e -> {
-            newGrid();
-
-        });
+        newItem.setOnAction(e -> {newGrid();});
         MenuItem openItem = new MenuItem("Open...");
-        openItem.setOnAction(e -> {
-            openGrid();
-        });
+        openItem.setOnAction(e -> {openGrid();});
         MenuItem saveAsItem = new MenuItem("Save As...");
-        saveAsItem.setOnAction(e -> {
-            saveGrid();
-        });
+        saveAsItem.setOnAction(e -> {saveGrid();});
         MenuItem exitItem = new MenuItem("Exit");
         exitItem.setOnAction(e -> System.exit(0));
 
@@ -95,29 +84,47 @@ public class BoardView extends BorderPane {
         top.getChildren().add(menuBar);
         top.setSpacing(10);
     }
-    private boolean openGrid() {
-        if (boardViewModel.isModifiedProperty().get()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation Dialog");
-            alert.setHeaderText("Your board has been modified");
-            alert.setContentText("Do you want to save your changes?");
-            ButtonType buttonYes = new ButtonType("Oui", ButtonBar.ButtonData.YES);
-            ButtonType buttonNo = new ButtonType("Non", ButtonBar.ButtonData.NO);
-            ButtonType buttonCancel = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-            alert.getButtonTypes().setAll(buttonYes, buttonNo, buttonCancel);
-
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == buttonYes) {
-                return saveGrid();
-            } else if (result.isPresent() && result.get() == buttonCancel) {
-                return false;
-            }
+    private boolean confirmSaveChanges() {
+        if (!boardViewModel.isModifiedProperty().get()) {
+            return true;
         }
 
-        boolean success = OpenDialog.openBoardFromFile(boardViewModel, this);
-        refreshView();
-        return success;
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText("Your board has been modified.");
+        alert.setContentText("Do you want to save your changes?");
+
+        ButtonType buttonYes = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        ButtonType buttonNo = new ButtonType("No", ButtonBar.ButtonData.NO);
+        ButtonType buttonCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonYes, buttonNo, buttonCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == buttonYes) {
+            return saveGrid();
+        } else return result.isPresent() && result.get() == buttonNo;
+    }
+    private void newGrid() {
+        if (confirmSaveChanges()) {
+            NewGameDialog dialog = new NewGameDialog();
+            int[] dimensions = dialog.showDimension();
+            if (dimensions.length == 2) {
+                int width = dimensions[0];
+                int height = dimensions[1];
+                boardViewModel.createNewGrid(width, height);
+                refreshView();
+            }
+        }
+    }
+
+    private void openGrid() {
+        if (confirmSaveChanges()) {
+            boolean success = OpenDialog.openBoardFromFile(boardViewModel);
+            if (success) {
+                refreshView();
+            }
+        }
     }
 
     private boolean saveGrid() {
@@ -129,33 +136,7 @@ public class BoardView extends BorderPane {
         }
         return saveSuccessful;
     }
-    private boolean newGrid() {
-        if (boardViewModel.isModifiedProperty().get()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation Dialog");
-            alert.setHeaderText("Your board has been modified");
-            alert.setContentText("Do you want to save your changes?");
-            ButtonType buttonYes = new ButtonType("Oui", ButtonBar.ButtonData.YES);
-            ButtonType buttonNo = new ButtonType("Non", ButtonBar.ButtonData.NO);
-            ButtonType buttonCancel = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-            alert.getButtonTypes().setAll(buttonYes, buttonNo, buttonCancel);
-
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == buttonYes) {
-                return saveGrid();
-            } else if (result.isPresent() && result.get() == buttonCancel) {
-                return false;
-            }
-        }
-        NewGameDialog newGameDialog = new NewGameDialog();
-        Dimension dimension = newGameDialog.showDimension();
-        if (dimension != null) {
-            boardViewModel.createNewGrid(dimension.width, dimension.height);
-            refreshView();
-        }
-        return true;
-    }
     private void refreshView() {
         this.setCenter(null);
         toolBox.getChildren().clear();
@@ -245,19 +226,13 @@ public class BoardView extends BorderPane {
         setLeft(toolBox);
     }
     private Element selectedElementFromImagePath(String imagePath) {
-        switch (imagePath) {
-            case "ground.png":
-                return new Ground();
-            case "goal.png":
-                return new Target();
-            case "wall.png":
-                return new Wall();
-            case "player.png":
-                return new Player();
-            case "box.png":
-                return new Box();
-            default:
-                return null;
-        }
+        return switch (imagePath) {
+            case "ground.png" -> new Ground();
+            case "goal.png" -> new Target();
+            case "wall.png" -> new Wall();
+            case "player.png" -> new Player();
+            case "box.png" -> new Box();
+            default -> null;
+        };
     }
 }

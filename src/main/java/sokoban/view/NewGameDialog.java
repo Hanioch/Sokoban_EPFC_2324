@@ -1,6 +1,5 @@
 package sokoban.view;
 
-import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -10,11 +9,9 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.awt.Dimension;
-import javafx.geometry.Dimension2D;
 import java.util.Optional;
 
-public class NewGameDialog extends Dialog<Dimension> {
+public class NewGameDialog extends Dialog<int[]> {
 
     private  TextField widthField = new TextField("15");
     private  TextField heightField = new TextField("10");
@@ -34,7 +31,7 @@ public class NewGameDialog extends Dialog<Dimension> {
                 try {
                     int width = Integer.parseInt(widthField.getText());
                     int height = Integer.parseInt(heightField.getText());
-                    return new Dimension(width, height);
+                    return new int[]{width, height};
                 } catch (NumberFormatException e) {
                     return null;
                 }
@@ -94,9 +91,9 @@ public class NewGameDialog extends Dialog<Dimension> {
         }
         return "";
     }
-    public Dimension showDimension() {
-        Optional<Dimension> result = this.showAndWait();
-        return result.orElse(null);
+    public int[] showDimension() {
+        Optional<int[]> result = this.showAndWait();
+        return result.orElse(new int[0]);
     }
 }
 

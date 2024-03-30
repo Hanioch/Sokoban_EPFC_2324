@@ -4,14 +4,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sokoban.model.*;
 import sokoban.viewmodel.BoardViewModel;
-import sokoban.viewmodel.CellViewModel;
-import sokoban.viewmodel.GridViewModel;
+
 
 public class SaveAsDialog {
 

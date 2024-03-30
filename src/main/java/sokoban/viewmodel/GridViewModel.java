@@ -1,8 +1,5 @@
 package sokoban.viewmodel;
-import javafx.collections.ObservableList;
 import sokoban.model.Board;
-import sokoban.model.Element;
-import sokoban.model.Ground;
 
 public class GridViewModel {
     private  Board board;

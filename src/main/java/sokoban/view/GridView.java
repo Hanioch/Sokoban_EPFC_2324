@@ -1,7 +1,6 @@
 package sokoban.view;
 
 import sokoban.viewmodel.BoardViewModel;
-import sokoban.viewmodel.CellViewModel;
 import sokoban.viewmodel.GridViewModel;
 
 import javafx.beans.binding.DoubleBinding;

@@ -5,19 +5,13 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import sokoban.model.*;
-import sokoban.model.Cell;
 import sokoban.model.Element;
 import sokoban.viewmodel.CellViewModel;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.control.Button;
-import javafx.scene.input.ScrollEvent;
-
-import java.util.Objects;
 
 public class CellView extends StackPane {
     private static final Image boxImage = new Image("box.png");

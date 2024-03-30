@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class OpenDialog {
-    public static boolean openBoardFromFile(BoardViewModel boardViewModel, BoardView boardView) {
+    public static boolean openBoardFromFile(BoardViewModel boardViewModel) {
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Fichiers XSB (*.xsb)", "*.xsb");
