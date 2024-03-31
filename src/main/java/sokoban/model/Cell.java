@@ -1,16 +1,11 @@
 package sokoban.model;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyListProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.Objects;
-
 public class Cell {
-    private final ObservableList<Element> stack;
+    private  ObservableList<Element> stack;
 
     public Cell() {
         this.stack = FXCollections.observableArrayList();
@@ -31,6 +26,7 @@ public class Cell {
         return new SimpleListProperty<>(stack);
     }
 
+
     public void addElement(Element element) {
         if (element instanceof Ground || element instanceof Wall) {
             stack.clear();
@@ -43,10 +39,12 @@ public class Cell {
             stack.clear();
             stack.add(new Ground());
 
+            stack.add(element);
+
             if (containsTarget){
                   stack.add(new Target());
             }
-            stack.add(element);
+
 
         } else if (element instanceof Target) {
             boolean containsTarget =  stack.stream().anyMatch(item -> item instanceof Target);
@@ -62,24 +60,22 @@ public class Cell {
         }
     }
 
-    public void removeElement(ComposableElement element) {
+    public void removeElement(Element element) {
         stack.remove(element);
     }
     public void removePlayer() {
-        Element playerElement = null;
-        for (Element element : stack) {
+        for (Element element : stackProperty()) {
             if (element instanceof Player) {
-                playerElement = element;
+                removeElement(element);
+                ((Player) element).removePlayer();
                 break;
             }
-        }
-        if (playerElement != null) {
-            stack.remove(playerElement);
         }
     }
     public boolean isEmpty() {
         boolean containsGround =  stack.stream().anyMatch(item -> item instanceof Ground);
         return stack.size() == 1 && containsGround;
     }
+
 
 }

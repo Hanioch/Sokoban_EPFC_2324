@@ -2,25 +2,24 @@ package sokoban.viewmodel;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import sokoban.model.*;
 
 public class CellViewModel {
     private BoardViewModel boardViewModel;
-    private static final double DEFAULT_SCALE = 0.5;
-    private static final double EPSILON = 1e-3;
-    private final int line, col;
-    private final Board board;
+    private static double DEFAULT_SCALE = 0.5;
+    private static double EPSILON = 1e-3;
+    private  int line, col;
+    private  Board board;
 
     public ObservableList<Element> getStack() {
         return stack;
     }
 
-    private final ObservableList<Element> stack;
-    private final SimpleDoubleProperty scale = new SimpleDoubleProperty(DEFAULT_SCALE);
-    private final BooleanBinding mayIncrementScale = scale.lessThan(1 - EPSILON);
-    private final BooleanBinding mayDecrementScale = scale.greaterThan(0.1 + EPSILON);
+    private  ObservableList<Element> stack;
+    private  SimpleDoubleProperty scale = new SimpleDoubleProperty(DEFAULT_SCALE);
+    private  BooleanBinding mayIncrementScale = scale.lessThan(1 - EPSILON);
+    private  BooleanBinding mayDecrementScale = scale.greaterThan(0.1 + EPSILON);
 
     CellViewModel(int line, int col, Board board, BoardViewModel boardViewModel) {
         this.line = line;
@@ -29,8 +28,15 @@ public class CellViewModel {
         this.boardViewModel = boardViewModel;
         stack = board.getGrid().getCell(line, col).getStack();
     }
+
+    public ReadOnlyListProperty<Element> valueProperty() {
+        return board.valueProperty(line, col);
+    }
     public void play() {
         Element selectedElement = boardViewModel.getSelectedElement();
+        if (selectedElement instanceof Player) {
+            stack.remove((selectedElement));
+        }
         board.play(line, col, selectedElement);
     }
 
@@ -66,6 +72,9 @@ public class CellViewModel {
             Element topElement = stack.get(stack.size() - 1);
             if (!(topElement instanceof Ground)) {
                 stack.remove(topElement);
+                if (topElement instanceof Player) {
+                    ((Player) topElement).removePlayer();
+                }
                 board.getGrid().filledCellsCount.invalidate();
             }
         }
