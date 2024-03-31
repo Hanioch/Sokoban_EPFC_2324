@@ -22,6 +22,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.util.Objects;
+import java.util.concurrent.Callable;
 
 
 public class BoardView extends BorderPane {
@@ -44,8 +46,12 @@ public class BoardView extends BorderPane {
 
     private void start(Stage stage) {
         configMainComponents(stage);
+        errorBox.getStyleClass().add("error-box");
 
         Scene scene = new Scene(this, SCENE_MIN_WIDTH, SCENE_MIN_HEIGHT);
+
+        //scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        System.out.println();
         stage.setScene(scene);
         stage.show();
         stage.setMinHeight(stage.getHeight());
@@ -182,29 +188,33 @@ public class BoardView extends BorderPane {
 
     private void showError(){
 
-        BooleanBinding error = boardViewModel.isBoxMissed().or(boardViewModel.isTargetMissed()).or(boardViewModel.isCharacterMissed());
-
+        BooleanBinding error = boardViewModel.isAnError();
         errorBox.visibleProperty().bind(error);
         errorBox.getChildren().add(new Label("Please correct the following error(s)"));
+        errorBox.managedProperty().bind(errorBox.visibleProperty());
 
-        error.addListener((obs, oldValue, newValue) -> {
-            System.out.println("cehckckcenkoc");
-            errorBox.getChildren().clear();
-            errorBox.getChildren().add(new Label("Please correct the following error(s)"));
+        Label lablMissedChar = new Label("A player is required");
+        errorBox.getChildren().add(lablMissedChar);
+        lablMissedChar.visibleProperty().bind(boardViewModel.isCharacterMissed());
+        lablMissedChar.managedProperty().bind(lablMissedChar.visibleProperty());
 
-            if (boardViewModel.isCharacterMissed().get()) {
-                errorBox.getChildren().add(new Label("A player is required"));
-            }
-            if (boardViewModel.isTargetMissed().get()) {
-                errorBox.getChildren().add(new Label("At least one target is required"));
-            }
-            if (boardViewModel.isBoxMissed().get()) {
-                errorBox.getChildren().add(new Label("At least one box required"));
-            }
-            if (boardViewModel.isSameNumberOfBoxAndTarget().get()) {
-                errorBox.getChildren().add(new Label("Number of boxes and targets must be equals"));
-            }
-        });
+        Label lablMissedTarget = new Label("At least one target is required");
+        errorBox.getChildren().add(lablMissedTarget);
+        lablMissedTarget.visibleProperty().bind(boardViewModel.isTargetMissed());
+        lablMissedTarget.managedProperty().bind(lablMissedTarget.visibleProperty());
+
+        Label lablMissedBox = new Label("At least one box required");
+        errorBox.getChildren().add(lablMissedBox);
+        lablMissedBox.visibleProperty().bind(boardViewModel.isBoxMissed());
+        lablMissedBox.managedProperty().bind(lablMissedBox.visibleProperty());
+
+        Label lablEqualsBoxTarget = new Label("Number of boxes and targets must be equals");
+        errorBox.getChildren().add(lablEqualsBoxTarget);
+        lablEqualsBoxTarget.visibleProperty().bind(boardViewModel.isSameNumberOfBoxAndTarget());
+        lablEqualsBoxTarget.managedProperty().bind(lablEqualsBoxTarget.visibleProperty());
+
+        errorBox.getStyleClass().add("header");
+
 
         top.getChildren().add(errorBox);
     }

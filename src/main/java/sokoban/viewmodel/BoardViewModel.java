@@ -1,6 +1,7 @@
 package sokoban.viewmodel;
 
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import sokoban.model.Board;
@@ -20,9 +21,15 @@ public class BoardViewModel {
     public Element getSelectedElement() {
         return selectedElement.get();
     }
+    //private final Grid gridModel;
+
+    //private final BooleanBinding isCharMissed;
+
     public BoardViewModel(Board board) {
         this.board = board;
         gridViewModel = new GridViewModel(board, this);
+      //  this.gridModel = board.getGrid();
+        //isCharMissed = gridModel.isCharacterMissedProperty();
     }
 
     public static int gridWidth(){
@@ -45,15 +52,18 @@ public class BoardViewModel {
     }
 
     public BooleanBinding isCharacterMissed(){
- //       System.out.println("check viewModel" + board.isCharacterMissed().get());
-
-        return board.isCharacterMissed();
+        return board.isCharMissed();
     }
     public BooleanBinding isTargetMissed(){
         return board.isTargetMissed();
-    } public BooleanBinding isBoxMissed(){
+    }
+    public BooleanBinding isBoxMissed(){
         return board.isBoxMissed();
-    } public BooleanBinding isSameNumberOfBoxAndTarget(){
+    }
+    public BooleanBinding isSameNumberOfBoxAndTarget(){
         return board.isSameNumberOfBoxAndTarget();
+    }
+    public BooleanBinding isAnError(){
+        return board.isAnError();
     }
 }

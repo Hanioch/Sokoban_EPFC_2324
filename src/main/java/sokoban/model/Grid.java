@@ -3,11 +3,9 @@ package sokoban.model;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.LongBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Grid {
@@ -38,6 +36,13 @@ public class Grid {
         this.playerY = playerY;
     }
 
+    private final BooleanBinding characterMissed;
+    private final BooleanBinding targetMissed ;
+    private final BooleanBinding boxMissed;
+    private final BooleanBinding sameNumberOfBoxAndTarget;
+    private final BooleanBinding isAnError;
+
+
 
     Grid() {
         matrix = new Cell[GRID_WIDTH][GRID_HEIGHT];
@@ -62,6 +67,12 @@ public class Grid {
             }
             return count;
         });
+
+        characterMissed = checkIfNotContain(Player.class);
+        boxMissed = checkIfNotContain(Box.class);
+        targetMissed =  checkIfNotContain(Target.class);
+        sameNumberOfBoxAndTarget = isNotSameNumberBoxAndTarget();
+        isAnError = checkErrorsProperty();
     }
     public static int getMinHeight() {
         return MIN_HEIGHT;
@@ -153,46 +164,75 @@ public class Grid {
         return matrix[x][y].isEmpty();
     }
 
-    public BooleanBinding checkIfContain(Class<?> type){
-        //System.out.println("check grid Model");
-
-        return Bindings.createBooleanBinding(()-> {
-            boolean isNotOn = true;
-
+    private BooleanBinding checkIfNotContain(Class<?> type){
+        return Bindings.createBooleanBinding(()->{
             for (int i = 0; i < GRID_WIDTH; i++) {
                 for (int j = 0; j < GRID_HEIGHT; j++) {
                     List stackCell = matrix[i][j].getStack();
                     for (Object elem : stackCell) {
                         if (type.isInstance(elem)) {
-                            isNotOn= false; // Si au moins un élément correspond, on renvoie true
+                            return false;
                         }
                         }
                 }
             }
-           return isNotOn;
+            return true;
         });
+
     }
 
-    public BooleanBinding isSameNumberBoxAndTarget(){
+    private BooleanBinding isNotSameNumberBoxAndTarget(){
 
-        return Bindings.createBooleanBinding(()-> {
-            int countTarget = 0;
-            int countBox = 0;
+        return Bindings.createBooleanBinding(()->{
 
-            for (int i = 0; i < GRID_WIDTH; i++) {
-                for (int j = 0; j < GRID_HEIGHT; j++) {
-                    List stackCell = matrix[i][j].getStack();
-                    for (Object elem : stackCell) {
-                        if (elem instanceof Box)
-                            countBox ++;
+         int countTarget = 0;
+         int countBox = 0;
 
-                        if (elem instanceof Target)
-                            countTarget++;
+         for (int i = 0; i < GRID_WIDTH; i++) {
+             for (int j = 0; j < GRID_HEIGHT; j++) {
+                 List stackCell = matrix[i][j].getStack();
+                 for (Object elem : stackCell) {
+                     if (elem instanceof Box)
+                         countBox ++;
 
-                    }
-                }
-            }
-            return countTarget != countBox;
+                     if (elem instanceof Target)
+                         countTarget++;
+
+                 }
+             }
+         }
+         return  countTarget != countBox;
         });
+
     }
+
+    private BooleanBinding checkErrorsProperty(){
+        return Bindings.createBooleanBinding(()-> targetMissed.get() || characterMissed.get() || boxMissed.get()|| sameNumberOfBoxAndTarget.get());
+    }
+
+
+    public BooleanBinding isCharacterMissedProperty(){
+        return characterMissed ;
+    }
+    public BooleanBinding isTargetMissedProperty(){
+        return targetMissed;
+    }
+    public BooleanBinding isBoxMissedProperty(){
+        return boxMissed;
+    }
+    public BooleanBinding isSameNumberOfBoxAndTargetProperty(){
+        return sameNumberOfBoxAndTarget;
+    }
+    public BooleanBinding IsAnErrorProperty(){
+        return isAnError;
+    }
+
+    public void invalidateBinding(){
+        characterMissed.invalidate();
+        boxMissed.invalidate();
+        targetMissed.invalidate();
+        sameNumberOfBoxAndTarget.invalidate();
+        isAnError.invalidate();
+    }
+
 }
