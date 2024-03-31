@@ -1,7 +1,9 @@
 package sokoban.model;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.LongBinding;
+import javafx.beans.property.*;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -16,7 +18,11 @@ public class Grid {
     private IntegerProperty widthProperty ;
     private IntegerProperty heightProperty ;
     public  LongBinding filledCellsCount;
-
+    private final BooleanBinding characterMissed;
+    private final BooleanBinding targetMissed ;
+    private final BooleanBinding boxMissed;
+    private final BooleanBinding sameNumberOfBoxAndTarget;
+    private final BooleanBinding isAnError;
 
     public Grid(int width, int height) {
         matrix = new Cell[width][height];
@@ -41,6 +47,12 @@ public class Grid {
             }
             return count;
         });
+
+        characterMissed = checkIfNotContain(Player.class);
+        boxMissed = checkIfNotContain(Box.class);
+        targetMissed =  checkIfNotContain(Target.class);
+        sameNumberOfBoxAndTarget = isNotSameNumberBoxAndTarget();
+        isAnError = checkErrorsProperty();
     }
     public void addElementsToCell(int x, int y, List<Element> elements) {
         Cell cell = getCell(x, y);
@@ -151,4 +163,76 @@ public class Grid {
         ReadOnlyListProperty<Element> stack = valueProperty(Player.getX(), Player.getY());
         return stack.size() == 2;
     }
+
+    private BooleanBinding checkIfNotContain(Class<?> type){
+        return Bindings.createBooleanBinding(()->{
+            for (int i = 0; i < getWidth(); i++) {
+                for (int j = 0; j < getHeight(); j++) {
+                    List stackCell = matrix[i][j].getStack();
+                    for (Object elem : stackCell) {
+                        if (type.isInstance(elem)) {
+                            return false;
+                        }
+                        }
+                }
+            }
+            return true;
+        });
+
+    }
+
+    private BooleanBinding isNotSameNumberBoxAndTarget(){
+
+        return Bindings.createBooleanBinding(()->{
+
+         int countTarget = 0;
+         int countBox = 0;
+
+         for (int i = 0; i < getWidth(); i++) {
+             for (int j = 0; j < getHeight(); j++) {
+                 List stackCell = matrix[i][j].getStack();
+                 for (Object elem : stackCell) {
+                     if (elem instanceof Box)
+                         countBox ++;
+
+                     if (elem instanceof Target)
+                         countTarget++;
+
+                 }
+             }
+         }
+         return  countTarget != countBox;
+        });
+
+    }
+
+    private BooleanBinding checkErrorsProperty(){
+        return Bindings.createBooleanBinding(()-> targetMissed.get() || characterMissed.get() || boxMissed.get()|| sameNumberOfBoxAndTarget.get());
+    }
+
+
+    public BooleanBinding isCharacterMissedProperty(){
+        return characterMissed ;
+    }
+    public BooleanBinding isTargetMissedProperty(){
+        return targetMissed;
+    }
+    public BooleanBinding isBoxMissedProperty(){
+        return boxMissed;
+    }
+    public BooleanBinding isSameNumberOfBoxAndTargetProperty(){
+        return sameNumberOfBoxAndTarget;
+    }
+    public BooleanBinding IsAnErrorProperty(){
+        return isAnError;
+    }
+
+    public void invalidateBinding(){
+        characterMissed.invalidate();
+        boxMissed.invalidate();
+        targetMissed.invalidate();
+        sameNumberOfBoxAndTarget.invalidate();
+        isAnError.invalidate();
+    }
+
 }

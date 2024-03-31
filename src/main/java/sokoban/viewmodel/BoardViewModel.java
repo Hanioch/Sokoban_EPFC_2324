@@ -1,5 +1,6 @@
 package sokoban.viewmodel;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -20,6 +21,7 @@ public class BoardViewModel {
     public Element getSelectedElement() {
         return selectedElement.get();
     }
+
     public BoardViewModel(Board board) {
         this.board = board;
         gridViewModel = new GridViewModel(board, this);
@@ -52,5 +54,21 @@ public class BoardViewModel {
     }
     public Board getBoard(){
         return this.board;
+    }
+
+    public BooleanBinding isCharacterMissed(){
+        return board.isCharMissed();
+    }
+    public BooleanBinding isTargetMissed(){
+        return board.isTargetMissed();
+    }
+    public BooleanBinding isBoxMissed(){
+        return board.isBoxMissed();
+    }
+    public BooleanBinding isSameNumberOfBoxAndTarget(){
+        return board.isSameNumberOfBoxAndTarget();
+    }
+    public BooleanBinding isAnError(){
+        return board.isAnError();
     }
 }

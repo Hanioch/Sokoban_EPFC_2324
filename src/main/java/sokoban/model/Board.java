@@ -9,7 +9,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 public class Board {
     private int maxFilledCells;
 
-    private Grid grid;
+    private  Grid grid;
 
     private  BooleanBinding isFull;
     private  BooleanProperty isModifiedProperty = new SimpleBooleanProperty(false);
@@ -43,6 +43,7 @@ public class Board {
             grid.play(line, col, newElem);
             setModified(true);
         }
+        grid.invalidateBinding();
     }
     public void setGrid(Grid newGrid) {
         this.grid = newGrid;
@@ -72,6 +73,21 @@ public class Board {
 
     public LongBinding filledCellsCountProperty(){
         return grid.filledCellsCountProperty();
+    }
+    public BooleanBinding isCharMissed(){
+        return grid.isCharacterMissedProperty();
+    }
+    public BooleanBinding isBoxMissed(){
+        return grid.isBoxMissedProperty();
+    }
+    public BooleanBinding isTargetMissed(){
+        return grid.isTargetMissedProperty();
+    }
+    public BooleanBinding isSameNumberOfBoxAndTarget(){
+        return grid.isSameNumberOfBoxAndTargetProperty();
+    }
+    public BooleanBinding isAnError(){
+        return grid.IsAnErrorProperty();
     }
     public Grid getGrid(){
         return this.grid;

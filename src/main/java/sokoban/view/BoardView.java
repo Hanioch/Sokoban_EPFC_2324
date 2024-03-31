@@ -1,5 +1,6 @@
 package sokoban.view;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
@@ -10,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import sokoban.model.*;
 import sokoban.viewmodel.BoardViewModel;
 import javafx.beans.binding.Bindings;
@@ -21,6 +23,9 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import java.util.Optional;
 
+import java.awt.*;
+import java.util.Objects;
+import java.util.concurrent.Callable;
 
 
 public class BoardView extends BorderPane {
@@ -33,6 +38,7 @@ public class BoardView extends BorderPane {
     private  HBox headerBox = new HBox();
     private  VBox toolBox = new VBox();
     private  VBox top = new VBox();
+    private final VBox errorBox = new VBox();
     private StackPane selectedTool;
     private  Stage primaryStage;
     public BoardView(Stage primaryStage, BoardViewModel boardViewModel) {
@@ -44,7 +50,9 @@ public class BoardView extends BorderPane {
     private void start(Stage stage) {
         stage.setTitle("Sokoban");
         configMainComponents();
+
         Scene scene = new Scene(this, SCENE_MIN_WIDTH, SCENE_MIN_HEIGHT);
+
         stage.setScene(scene);
         stage.show();
         stage.setMinHeight(stage.getHeight());
@@ -142,6 +150,7 @@ public class BoardView extends BorderPane {
         toolBox.getChildren().clear();
         headerBox.getChildren().clear();
         top.getChildren().clear();
+        errorBox.getChildren().clear();
         configMainComponents();
     }
 
@@ -159,6 +168,8 @@ public class BoardView extends BorderPane {
         headerBox.getChildren().add(headerLabel);
         headerBox.setAlignment(Pos.CENTER);
         top.getChildren().add(headerBox);
+
+        showError();
     }
 
     private void createGrid() {
@@ -235,4 +246,32 @@ public class BoardView extends BorderPane {
             default -> null;
         };
     }
+
+    private void showError(){
+
+        BooleanBinding error = boardViewModel.isAnError();
+        errorBox.visibleProperty().bind(error);
+        Label titleError= new Label("Please correct the following error(s)");
+        errorBox.getChildren().add(titleError);
+        titleError.setTextFill(Color.RED);
+        errorBox.managedProperty().bind(errorBox.visibleProperty());
+
+        fillLabelError("A player is required", boardViewModel.isCharacterMissed());
+        fillLabelError("At least one target is required", boardViewModel.isTargetMissed());
+        fillLabelError("At least one box required", boardViewModel.isBoxMissed());
+        fillLabelError("Number of boxes and targets must be equals", boardViewModel.isSameNumberOfBoxAndTarget());
+        errorBox.setAlignment(Pos.CENTER);
+        top.getChildren().add(errorBox);
+    }
+
+    public void fillLabelError(String msg ,BooleanBinding bool){
+        Label newLabel = new Label("\u2022 "+msg);
+        errorBox.getChildren().add(newLabel);
+        newLabel.visibleProperty().bind(bool);
+        newLabel.managedProperty().bind(newLabel.visibleProperty());
+        newLabel.setTextFill(Color.RED);
+    }
+
+
+
 }

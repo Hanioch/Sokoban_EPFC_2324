@@ -1,4 +1,7 @@
 package sokoban.viewmodel;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.collections.ObservableList;
 import sokoban.model.Board;
 
 public class GridViewModel {
