@@ -1,11 +1,15 @@
 package sokoban.view;
 
+import javafx.beans.binding.Bindings;
 import sokoban.viewmodel.BoardViewModel;
 import sokoban.viewmodel.GridViewModel;
 
 import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
+
+import static java.lang.Math.min;
+
 
 public class GridView extends GridPane {
     BoardViewModel boardViewModel;
@@ -19,17 +23,17 @@ public class GridView extends GridPane {
         setGridLinesVisible(false);
         setPadding(new Insets(PADDING));
 
-        DoubleBinding cellWidth = gridWidth
-                .subtract(PADDING * 2)
-                .divide(GRID_WIDTH);
-
-        DoubleBinding cellHeight = gridHeight
-                .subtract(PADDING * 2)
-                .divide(GRID_WIDTH);
+        DoubleBinding cellSize = Bindings.createDoubleBinding(
+                () -> Math.min(
+                        gridWidth.subtract(PADDING * 2).divide(GRID_WIDTH).doubleValue(),
+                        gridHeight.subtract(PADDING * 2).divide(GRID_HEIGHT).doubleValue()
+                ),
+                gridWidth, gridHeight
+        );
 
         for(int i = 0 ; i < GRID_HEIGHT; ++i) {
             for (int j = 0 ; j < GRID_WIDTH; ++j) {
-                CellView cellView = new CellView(gridViewModel.getCellViewModel(j,i), cellWidth, cellHeight);
+                CellView cellView = new CellView(gridViewModel.getCellViewModel(j,i),  cellSize, cellSize);
                 add(cellView, j, i);
             }
         }

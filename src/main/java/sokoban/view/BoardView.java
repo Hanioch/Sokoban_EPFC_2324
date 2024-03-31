@@ -30,8 +30,8 @@ import java.util.concurrent.Callable;
 
 public class BoardView extends BorderPane {
     private  BoardViewModel boardViewModel;
-    private static  int SCENE_MIN_WIDTH = 800;
-    private static  int SCENE_MIN_HEIGHT = 600;
+    private static  int SCENE_MIN_WIDTH = 1000;
+    private static  int SCENE_MIN_HEIGHT = 800;
     private static  int SCENE_MAX_WIDTH = 1400;
     private static  int SCENE_MAX_HEIGHT = 1050;
     private  Label headerLabel = new Label("");
@@ -202,7 +202,7 @@ public class BoardView extends BorderPane {
         gridView.minHeightProperty().bind(gridHeight);
         gridView.minWidthProperty().bind(gridWidth);
 
-        gridView.setAlignment(Pos.TOP_CENTER);
+        gridView.setAlignment(Pos.CENTER);
         setCenter(gridView);
     }
 
@@ -232,7 +232,7 @@ public class BoardView extends BorderPane {
                 boardViewModel.setSelectedElement(selectedElement);
             }
         }
-        toolBox.setAlignment(Pos.TOP_CENTER);
+        toolBox.setAlignment(Pos.CENTER);
         toolBox.setPadding(new Insets(20));
         toolBox.setSpacing(20);
         setLeft(toolBox);
