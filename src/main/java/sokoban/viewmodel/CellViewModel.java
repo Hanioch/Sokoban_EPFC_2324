@@ -75,7 +75,10 @@ public class CellViewModel {
                 if (topElement instanceof Player) {
                     ((Player) topElement).removePlayer();
                 }
-                board.getGrid().filledCellsCount.invalidate();
+                Grid grid = board.getGrid();
+                grid.filledCellsCount.invalidate();
+                grid.invalidateBinding();
+
             }
         }
     }
