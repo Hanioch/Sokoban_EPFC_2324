@@ -151,6 +151,7 @@ public class BoardView extends BorderPane {
         toolBox.getChildren().clear();
         headerBox.getChildren().clear();
         top.getChildren().clear();
+        errorBox.getChildren().clear();
         configMainComponents();
     }
 
