@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import sokoban.model.*;
 import sokoban.viewmodel.BoardViewModel;
 import javafx.beans.binding.Bindings;
@@ -49,11 +50,9 @@ public class BoardView extends BorderPane {
     private void start(Stage stage) {
         stage.setTitle("Sokoban");
         configMainComponents();
-        errorBox.getStyleClass().add("error-box");
 
         Scene scene = new Scene(this, SCENE_MIN_WIDTH, SCENE_MIN_HEIGHT);
 
-        //scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
         stage.setMinHeight(stage.getHeight());
@@ -252,33 +251,25 @@ public class BoardView extends BorderPane {
 
         BooleanBinding error = boardViewModel.isAnError();
         errorBox.visibleProperty().bind(error);
-        errorBox.getChildren().add(new Label("Please correct the following error(s)"));
+        Label titleError= new Label("Please correct the following error(s)");
+        errorBox.getChildren().add(titleError);
+        titleError.setTextFill(Color.RED);
         errorBox.managedProperty().bind(errorBox.visibleProperty());
 
-        Label lablMissedChar = new Label("A player is required");
-        errorBox.getChildren().add(lablMissedChar);
-        lablMissedChar.visibleProperty().bind(boardViewModel.isCharacterMissed());
-        lablMissedChar.managedProperty().bind(lablMissedChar.visibleProperty());
-
-        Label lablMissedTarget = new Label("At least one target is required");
-        errorBox.getChildren().add(lablMissedTarget);
-        lablMissedTarget.visibleProperty().bind(boardViewModel.isTargetMissed());
-        lablMissedTarget.managedProperty().bind(lablMissedTarget.visibleProperty());
-
-        Label lablMissedBox = new Label("At least one box required");
-        errorBox.getChildren().add(lablMissedBox);
-        lablMissedBox.visibleProperty().bind(boardViewModel.isBoxMissed());
-        lablMissedBox.managedProperty().bind(lablMissedBox.visibleProperty());
-
-        Label lablEqualsBoxTarget = new Label("Number of boxes and targets must be equals");
-        errorBox.getChildren().add(lablEqualsBoxTarget);
-        lablEqualsBoxTarget.visibleProperty().bind(boardViewModel.isSameNumberOfBoxAndTarget());
-        lablEqualsBoxTarget.managedProperty().bind(lablEqualsBoxTarget.visibleProperty());
-
-        errorBox.getStyleClass().add("header");
-
-
+        fillLabelError("A player is required", boardViewModel.isCharacterMissed());
+        fillLabelError("At least one target is required", boardViewModel.isTargetMissed());
+        fillLabelError("At least one box required", boardViewModel.isBoxMissed());
+        fillLabelError("Number of boxes and targets must be equals", boardViewModel.isSameNumberOfBoxAndTarget());
+        errorBox.setAlignment(Pos.CENTER);
         top.getChildren().add(errorBox);
+    }
+
+    public void fillLabelError(String msg ,BooleanBinding bool){
+        Label newLabel = new Label("\u2022 "+msg);
+        errorBox.getChildren().add(newLabel);
+        newLabel.visibleProperty().bind(bool);
+        newLabel.managedProperty().bind(newLabel.visibleProperty());
+        newLabel.setTextFill(Color.RED);
     }
 
 
