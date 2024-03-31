@@ -90,7 +90,8 @@ public class BoardView extends BorderPane {
         fileMenu.getItems().addAll(newItem, openItem, saveAsItem, exitItem);
         menuBar.getMenus().add(fileMenu);
         top.getChildren().add(menuBar);
-        top.setSpacing(10);
+        top.setSpacing(20);
+       // top.setStyle("-fx-border-color: red;");
     }
     private boolean confirmSaveChanges() {
         if (!boardViewModel.isModifiedProperty().get()) {
@@ -201,7 +202,7 @@ public class BoardView extends BorderPane {
         gridView.minHeightProperty().bind(gridHeight);
         gridView.minWidthProperty().bind(gridWidth);
 
-        gridView.setAlignment(Pos.CENTER);
+        gridView.setAlignment(Pos.TOP_CENTER);
         setCenter(gridView);
     }
 
@@ -231,7 +232,7 @@ public class BoardView extends BorderPane {
                 boardViewModel.setSelectedElement(selectedElement);
             }
         }
-        toolBox.setAlignment(Pos.CENTER);
+        toolBox.setAlignment(Pos.TOP_CENTER);
         toolBox.setPadding(new Insets(20));
         toolBox.setSpacing(20);
         setLeft(toolBox);
