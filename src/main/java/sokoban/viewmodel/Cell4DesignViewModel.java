@@ -9,7 +9,7 @@ public class Cell4DesignViewModel extends CellViewModel {
     private Board4DesignViewModel board4DesignViewModel;
     private static double DEFAULT_SCALE = 0.5;
     private static double EPSILON = 1e-3;
-    private  int line, col;
+
     private Board4Design board4Design;
 
     public ObservableList<Element> getStack() {

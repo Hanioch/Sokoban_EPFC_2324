@@ -14,8 +14,6 @@ public class Grid4Design extends Grid {
 
     private  Cell4Design[][] matrix;
 
-    private IntegerProperty widthProperty ;
-    private IntegerProperty heightProperty ;
     public  LongBinding filledCellsCount;
     private final BooleanBinding characterMissed;
     private final BooleanBinding targetMissed ;
@@ -24,6 +22,8 @@ public class Grid4Design extends Grid {
     private final BooleanBinding isAnError;
 
     public Grid4Design(int width, int height) {
+        this.width = width;
+        this.height = height;
         matrix = new Cell4Design[width][height];
         widthProperty = new SimpleIntegerProperty(width);
         heightProperty = new SimpleIntegerProperty(height);
