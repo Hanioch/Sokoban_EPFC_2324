@@ -67,11 +67,17 @@ public class BoardView extends BorderPane {
         createToolBox();
         setTop(top);
     }
+    private void updateWindowTitle() {
+        String title = "Sokoban";
+        if (boardViewModel.isModifiedProperty().get()) {
+            title += " (*)";
+        }
+        primaryStage.setTitle(title);
+    }
     private void setupModificationListener() {
         boardViewModel.isModifiedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                primaryStage.setTitle("Sokoban (*)");
-            }
+                updateWindowTitle();
+
         });
     }
     private void createMenuBar() {
@@ -139,7 +145,9 @@ public class BoardView extends BorderPane {
     private boolean saveGrid() {
         boolean saveSuccessful = SaveAsDialog.showSaveDialog(boardViewModel);
         if (saveSuccessful) {
+            boardViewModel.isModifiedProperty().set(false);
             showAlert("Save Successful", "The game was saved successfully.", Alert.AlertType.INFORMATION);
+            updateWindowTitle();
         } else {
             showAlert("Save Error", "Saving the game failed.", Alert.AlertType.ERROR);
         }
