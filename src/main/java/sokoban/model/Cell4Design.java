@@ -46,6 +46,7 @@ public class Cell4Design extends Cell{
     public void removeElement(Element element) {
         stack.remove(element);
     }
+
     public void removePlayer() {
         for (Element element : stackProperty()) {
             if (element instanceof Player4Design) {

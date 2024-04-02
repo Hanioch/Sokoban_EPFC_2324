@@ -278,16 +278,6 @@ public class Board4DesignView extends BoardView {
         Board4PlayViewModel vm= new Board4PlayViewModel(board4Play);
         new Board4PlayView(secondaryStage, primaryStage, vm);
     }
-    private Element selectedElementFromImagePath(String imagePath) {
-        return switch (imagePath) {
-            case "ground.png" -> new Ground4Design();
-            case "goal.png" -> new Target4Design();
-            case "wall.png" -> new Wall4Design();
-            case "player.png" -> new Player4Design();
-            case "box.png" -> new Box4Design();
-            default -> null;
-        };
-    }
 
     private void showError(){
 
