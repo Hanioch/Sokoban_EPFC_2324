@@ -7,8 +7,7 @@ import javafx.collections.ObservableList;
 public class Cell4Design extends Cell{
 
     public Cell4Design() {
-        this.stack = FXCollections.observableArrayList();
-        stack.add(new Ground4Design());
+        super();
     }
 
     public void addElement(Element element) {

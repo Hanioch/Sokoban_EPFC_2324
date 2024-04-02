@@ -266,10 +266,15 @@ public class Board4DesignView extends BoardView {
                 startPlay(playStage);
 
             }
+        }else {
+            primaryStage.hide();
+            Stage playStage = new Stage();
+            startPlay(playStage);
         }
+
     }
     public void startPlay(Stage secondaryStage) {
-        Board4Play board4Play = new Board4Play();
+        Board4Play board4Play = new Board4Play(widthProperty().intValue(), heightProperty().intValue());
         Board4PlayViewModel vm= new Board4PlayViewModel(board4Play);
         new Board4PlayView(secondaryStage, primaryStage, vm);
     }

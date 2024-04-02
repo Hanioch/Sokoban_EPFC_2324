@@ -2,6 +2,7 @@ package sokoban.model;
 
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public abstract class Cell {
@@ -18,6 +19,11 @@ public abstract class Cell {
 
     public ReadOnlyListProperty<Element> stackProperty() {
         return new SimpleListProperty<>(stack);
+    }
+
+    public Cell(){
+        this.stack = FXCollections.observableArrayList();
+        stack.add(new Ground4Design());
     }
 
     public boolean isEmpty() {

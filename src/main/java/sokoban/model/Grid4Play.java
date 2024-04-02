@@ -6,7 +6,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 public class Grid4Play extends Grid {
     private Cell4Play[][] matrix;
 
-    public Grid4Play() {
+    public Grid4Play(int width, int height) {
+        super(width, height);
         matrix = new Cell4Play[width][height];
         widthProperty = new SimpleIntegerProperty(width);
         heightProperty = new SimpleIntegerProperty(height);

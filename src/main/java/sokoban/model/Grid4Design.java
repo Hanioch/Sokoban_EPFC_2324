@@ -12,8 +12,6 @@ import java.util.List;
 
 public class Grid4Design extends Grid {
 
-    private  Cell4Design[][] matrix;
-
     public  LongBinding filledCellsCount;
     private final BooleanBinding characterMissed;
     private final BooleanBinding targetMissed ;
@@ -22,18 +20,7 @@ public class Grid4Design extends Grid {
     private final BooleanBinding isAnError;
 
     public Grid4Design(int width, int height) {
-        this.width = width;
-        this.height = height;
-        matrix = new Cell4Design[width][height];
-        widthProperty = new SimpleIntegerProperty(width);
-        heightProperty = new SimpleIntegerProperty(height);
-
-        for (int i = 0; i < width; i++){
-           // matrix[i] = new Cell[width];
-            for (int j = 0; j < height; j++){
-                matrix[i][j] = new Cell4Design();
-            }
-        }
+        super(width, height);
 
         this.filledCellsCount = Bindings.createLongBinding(()-> {
             long count = 0;
