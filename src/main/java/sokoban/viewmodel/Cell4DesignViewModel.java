@@ -12,11 +12,6 @@ public class Cell4DesignViewModel extends CellViewModel {
 
     private Board4Design board4Design;
 
-    public ObservableList<Element> getStack() {
-        return stack;
-    }
-
-    private  ObservableList<Element> stack;
     private  SimpleDoubleProperty scale = new SimpleDoubleProperty(DEFAULT_SCALE);
     private  BooleanBinding mayIncrementScale = scale.lessThan(1 - EPSILON);
     private  BooleanBinding mayDecrementScale = scale.greaterThan(0.1 + EPSILON);

@@ -7,12 +7,11 @@ import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 public class Board4Design extends Board {
+    private Grid4Design grid;
     private int maxFilledCells;
 
-    private Grid4Design grid4Design;
-
-    private  BooleanBinding isFull;
-    private  BooleanProperty isModifiedProperty = new SimpleBooleanProperty(false);
+    private BooleanBinding isFull;
+    private BooleanProperty isModifiedProperty = new SimpleBooleanProperty(false);
 
     public BooleanProperty isModifiedProperty() {
         return isModifiedProperty;
@@ -22,13 +21,13 @@ public class Board4Design extends Board {
         this.isModifiedProperty.set(isModified);
     }
     public Board4Design() {
-        grid4Design = new Grid4Design(15,10);
-        maxFilledCells = grid4Design.getArea()/2;
-        isFull = grid4Design.filledCellsCountProperty().isEqualTo(maxFilledCells);
+        grid = new Grid4Design(15,10);
+        maxFilledCells = grid.getArea()/2;
+        isFull = grid.filledCellsCountProperty().isEqualTo(maxFilledCells);
     }
 
     public ReadOnlyListProperty<Element> valueProperty(int line, int col) {
-        return grid4Design.valueProperty(line, col);
+        return grid.valueProperty(line, col);
     }
 
     public void play(int line, int col, Element newElem) {
@@ -38,33 +37,33 @@ public class Board4Design extends Board {
         // peut jouer si le Grid n'est pas rempli || si la cellule visée est déjà remplie || si on place un Ground
         // || si on place un Player et qu'il est déjà placé ailleurs sur une case où il n'est pas avec une Target
 
-        if(!isFull() || !grid4Design.getCell(line, col).isEmpty() || type.equals("Ground")
-                || (type.equals("Player") && grid4Design.playerIsSet() && grid4Design.playerIsAlone())) {
-            grid4Design.play(line, col, newElem);
+        if(!isFull() || !grid.getCell(line, col).isEmpty() || type.equals("Ground")
+                || (type.equals("Player") && grid.playerIsSet() && grid.playerIsAlone())) {
+            grid.play(line, col, newElem);
             setModified(true);
         }
-        grid4Design.invalidateBinding();
+        grid.invalidateBinding();
     }
     public void setGrid(Grid4Design newGrid4Design) {
-        this.grid4Design = newGrid4Design;
-        this.maxFilledCells = this.grid4Design.getArea() / 2;
-        this.isFull = grid4Design.filledCellsCountProperty().isEqualTo(maxFilledCells);
+        this.grid = newGrid4Design;
+        this.maxFilledCells = this.grid.getArea() / 2;
+        this.isFull = grid.filledCellsCountProperty().isEqualTo(maxFilledCells);
     }
     public void resetGrid(int width, int height) {
-        grid4Design.filledCellsCount.invalidate();
-        this.grid4Design = new Grid4Design(width, height);
+        grid.filledCellsCount.invalidate();
+        this.grid = new Grid4Design(width, height);
         this.isModifiedProperty.set(false);
-        this.maxFilledCells = this.grid4Design.getArea() / 2;
-        this.isFull = grid4Design.filledCellsCountProperty().isEqualTo(maxFilledCells);
-        grid4Design.setHeight(height);
-        grid4Design.setWidth(width);
+        this.maxFilledCells = this.grid.getArea() / 2;
+        this.isFull = grid.filledCellsCountProperty().isEqualTo(maxFilledCells);
+        grid.setHeight(height);
+        grid.setWidth(width);
 
     }
     public boolean isFull() {
         return isFull.get();
     }
     public boolean isEmpty(int line, int col) {
-        return grid4Design.isEmpty(line,col);
+        return grid.isEmpty(line,col);
     }
 
     public int maxFilledCells() {
@@ -72,25 +71,25 @@ public class Board4Design extends Board {
     }
 
     public LongBinding filledCellsCountProperty(){
-        return grid4Design.filledCellsCountProperty();
+        return grid.filledCellsCountProperty();
     }
     public BooleanBinding isCharMissed(){
-        return grid4Design.isCharacterMissedProperty();
+        return grid.isCharacterMissedProperty();
     }
     public BooleanBinding isBoxMissed(){
-        return grid4Design.isBoxMissedProperty();
+        return grid.isBoxMissedProperty();
     }
     public BooleanBinding isTargetMissed(){
-        return grid4Design.isTargetMissedProperty();
+        return grid.isTargetMissedProperty();
     }
     public BooleanBinding isSameNumberOfBoxAndTarget(){
-        return grid4Design.isSameNumberOfBoxAndTargetProperty();
+        return grid.isSameNumberOfBoxAndTargetProperty();
     }
     public BooleanBinding isAnError(){
-        return grid4Design.IsAnErrorProperty();
+        return grid.IsAnErrorProperty();
     }
     public Grid4Design getGrid(){
-        return this.grid4Design;
+        return this.grid;
     }
 }
 

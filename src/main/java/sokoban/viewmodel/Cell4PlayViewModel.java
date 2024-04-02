@@ -9,15 +9,14 @@ import sokoban.model.Element;
 
 public class Cell4PlayViewModel extends CellViewModel{
     private Board4PlayViewModel board4PlayViewModel;
-
     private Board4Play board4Play;
 
-    private  ObservableList<Element> stack;
-
-
-    Cell4PlayViewModel( Board4Play board4Play, Board4PlayViewModel board4PlayViewModel) {
+    Cell4PlayViewModel(int line, int col, Board4Play board4Play, Board4PlayViewModel board4PlayViewModel) {
+        super();
+        this.line = line;
+        this.col = col;
         this.board4Play = board4Play;
         this.board4PlayViewModel = board4PlayViewModel;
-        stack = board4Play.getGrid().getCell(line, col).getStack();
+        this.stack = board4Play.getGrid().getCell(line, col).getStack();
     }
 }

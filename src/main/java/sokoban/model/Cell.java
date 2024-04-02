@@ -7,7 +7,7 @@ import javafx.collections.ObservableList;
 
 public abstract class Cell {
     protected  ObservableList<Element> stack;
-    void addValue(Cell4Design value){}
+    void addValue(Cell value){}
 
     public ObservableList<Element> getValue() {
         return stack;
@@ -23,7 +23,6 @@ public abstract class Cell {
 
     public Cell(){
         this.stack = FXCollections.observableArrayList();
-        stack.add(new Ground4Design());
     }
 
     public boolean isEmpty() {

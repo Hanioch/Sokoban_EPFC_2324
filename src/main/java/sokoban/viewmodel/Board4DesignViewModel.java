@@ -10,8 +10,8 @@ import sokoban.model.Grid4Design;
 import javafx.beans.binding.LongBinding;
 
 public class Board4DesignViewModel extends BoardViewModel{
-    private Grid4DesignViewModel grid4DesignViewModel;
-    private Board4Design board4Design;
+    private Grid4DesignViewModel gridViewModel;
+    private Board4Design board;
     private  ObjectProperty<Element> selectedElement = new SimpleObjectProperty<>();
 
     public void setSelectedElement(Element element) {
@@ -23,52 +23,53 @@ public class Board4DesignViewModel extends BoardViewModel{
     }
 
     public Board4DesignViewModel(Board4Design board4Design) {
-        this.board4Design = board4Design;
-        grid4DesignViewModel = new Grid4DesignViewModel(board4Design, this);
+        this.board = board4Design;
+        gridViewModel = new Grid4DesignViewModel(board4Design, this);
     }
     public void createNewGrid(int width, int height) {
-        board4Design.resetGrid(width, height);
-
+        board.resetGrid(width, height);
     }
     public void updateGrid(Grid4Design newGrid4Design) {
-        this.board4Design.setGrid(newGrid4Design);
+        this.board.setGrid(newGrid4Design);
         this.isModifiedProperty().set(false);
     }
-    public int gridWidth(){
-        return board4Design.getGrid().getWidth();
-    }
+
     public BooleanProperty isModifiedProperty() {
-        return board4Design.isModifiedProperty();
+        return board.isModifiedProperty();
     }
-    public int gridHeight(){
-        return board4Design.getGrid().getHeight();
-    }
+
     public Grid4DesignViewModel getGridViewModel(){
-        return grid4DesignViewModel;
+        return gridViewModel;
     }
     public LongBinding filledCellsCountProperty() {
-        return board4Design.filledCellsCountProperty();
+        return board.filledCellsCountProperty();
     }
     public int maxFilledCells() {
-        return this.board4Design.maxFilledCells();
+        return this.board.maxFilledCells();
     }
     public Board4Design getBoard(){
-        return this.board4Design;
+        return this.board;
     }
 
     public BooleanBinding isCharacterMissed(){
-        return board4Design.isCharMissed();
+        return board.isCharMissed();
     }
     public BooleanBinding isTargetMissed(){
-        return board4Design.isTargetMissed();
+        return board.isTargetMissed();
     }
     public BooleanBinding isBoxMissed(){
-        return board4Design.isBoxMissed();
+        return board.isBoxMissed();
     }
     public BooleanBinding isSameNumberOfBoxAndTarget(){
-        return board4Design.isSameNumberOfBoxAndTarget();
+        return board.isSameNumberOfBoxAndTarget();
     }
     public BooleanBinding isAnError(){
-        return board4Design.isAnError();
+        return board.isAnError();
+    }
+    public int gridWidth(){
+        return board.getGrid().getWidth();
+    }
+    public int gridHeight(){
+        return board.getGrid().getHeight();
     }
 }

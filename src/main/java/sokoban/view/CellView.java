@@ -19,57 +19,26 @@ public abstract class CellView extends StackPane {
     protected static final Image playerImage = new Image("player.png");
     protected static final Image wallImage = new Image("wall.png");
 
-    protected CellViewModel viewModel;
     protected DoubleBinding widthProperty;
     protected  DoubleBinding heightProperty;
 
     protected ImageView imageView = new ImageView();
 
-    public CellView(CellViewModel cellViewModel, DoubleBinding cellWidthProperty, DoubleBinding cellHeightProperty) {
-        this.viewModel = cellViewModel;
+    public CellView(DoubleBinding cellWidthProperty, DoubleBinding cellHeightProperty) {
         this.widthProperty = cellWidthProperty;
         this.heightProperty = cellHeightProperty;
 
         setAlignment(Pos.CENTER);
         layoutControls();
-        configureBindings();
-
-        setImage(viewModel.getStack());
     }
 
     private void layoutControls() {
         imageView.setPreserveRatio(true);
         getChildren().add(imageView);
     }
-    private void configureBindings() {
-        minWidthProperty().bind(widthProperty);
-        minHeightProperty().bind(widthProperty);
 
-        this.setOnMouseDragEntered(this::handleMouseEvent);
-        this.setOnMouseClicked(this::handleMouseEvent);
-        this.setOnMouseDragged(this::handleMouseEvent);
 
-        this.setOnMouseEntered(e -> this.setOpacity(0.6));
-        this.setOnMouseExited(e -> this.setOpacity(1.0));
 
-        this.setOnDragDetected(e -> {
-            if (e.getButton() == MouseButton.PRIMARY || e.getButton() == MouseButton.SECONDARY) {
-                this.startFullDrag();
-                handleMouseEvent(e);
-            }
-        });
-
-        viewModel.valueProperty().addListener((obs, old, newVal) -> setImage(viewModel.getStack()));
-    }
-
-    private void handleMouseEvent(MouseEvent e) {
-        if (e.getButton() == MouseButton.PRIMARY) {
-            viewModel.play();
-        } else if (e.getButton() == MouseButton.SECONDARY) {
-            viewModel.removeTopElement();
-        }
-        setImage(viewModel.getStack());
-    }
 
     public void setImage(ObservableList<Element> stack) {
         this.getChildren().clear();

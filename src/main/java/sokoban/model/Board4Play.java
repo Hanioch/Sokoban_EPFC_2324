@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class Board4Play extends Board{
-    private Grid4Play grid4Play;
+    private Grid4Play grid;
 
     private BooleanBinding isFull;
     private BooleanProperty isModifiedProperty = new SimpleBooleanProperty(false);
@@ -20,9 +20,9 @@ public class Board4Play extends Board{
         this.isModifiedProperty.set(isModified);
     }
     public Board4Play(int width, int height) {
-        grid4Play = new Grid4Play(width, height);
+        grid = new Grid4Play(width, height);
     }
     public Grid4Play getGrid(){
-        return this.grid4Play;
+        return this.grid;
     }
 }

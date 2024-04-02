@@ -8,6 +8,7 @@ public class Cell4Design extends Cell{
 
     public Cell4Design() {
         super();
+        stack.add(new Ground4Design());
     }
 
     public void addElement(Element element) {
@@ -56,7 +57,4 @@ public class Cell4Design extends Cell{
             }
         }
     }
-
-
-
 }

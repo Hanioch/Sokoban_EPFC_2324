@@ -11,16 +11,28 @@ import javafx.collections.ObservableList;
 import java.util.List;
 
 public class Grid4Design extends Grid {
+    private  Cell4Design[][] matrix;
 
-    public  LongBinding filledCellsCount;
+    public LongBinding filledCellsCount;
     private final BooleanBinding characterMissed;
     private final BooleanBinding targetMissed ;
     private final BooleanBinding boxMissed;
     private final BooleanBinding sameNumberOfBoxAndTarget;
     private final BooleanBinding isAnError;
+    ReadOnlyListProperty<Element> valueProperty(int line, int col) {
+        return matrix[line][col].stackProperty();
+    }
 
     public Grid4Design(int width, int height) {
         super(width, height);
+
+        matrix = new Cell4Design[width][height];
+
+        for (int i = 0; i < width; i++){
+            for (int j = 0; j < height; j++){
+                matrix[i][j] = new Cell4Design();
+            }
+        }
 
         this.filledCellsCount = Bindings.createLongBinding(()-> {
             long count = 0;
@@ -46,45 +58,6 @@ public class Grid4Design extends Grid {
             cell4Design.addElement(element);
         }
     }
-
-    ReadOnlyListProperty<Element> valueProperty(int line, int col) {
-        return matrix[line][col].stackProperty();
-    }
-
-    public  int getWidth() {
-        return widthProperty.get();
-    }
-    public  int getGridWidth(){
-        return widthProperty.get();
-    }
-    public  int getGridHeight(){
-        return heightProperty.get();
-    }
-
-    public IntegerProperty widthProperty() {
-        return widthProperty;
-    }
-
-    public void setWidth(int width) {
-        widthProperty.set(width);
-    }
-
-    public  int getHeight() {
-        return heightProperty.get();
-    }
-
-    public IntegerProperty heightProperty() {
-        return heightProperty;
-    }
-
-    public void setHeight(int height) {
-        heightProperty.set(height);
-    }
-
-    public int getArea() {
-        return widthProperty.get() * heightProperty.get();
-    }
-
 
     public ObservableList<Element> getStack(int line, int col) {
         ObservableList<Element> stack  = matrix[line][col].getValue();

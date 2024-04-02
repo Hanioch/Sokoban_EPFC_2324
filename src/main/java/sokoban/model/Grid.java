@@ -2,9 +2,9 @@ package sokoban.model;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ObservableList;
 
 public abstract class Grid {
-    protected  Cell4Design[][] matrix;
     public int width;
     public int height;
     public IntegerProperty widthProperty ;
@@ -13,18 +13,39 @@ public abstract class Grid {
     public Grid(int width, int height) {
         this.width = width;
         this.height = height;
-        matrix = new Cell4Design[width][height];
         widthProperty = new SimpleIntegerProperty(width);
         heightProperty = new SimpleIntegerProperty(height);
-
-        for (int i = 0; i < width; i++){
-            // matrix[i] = new Cell[width];
-            for (int j = 0; j < height; j++){
-                matrix[i][j] = new Cell4Design();
-            }
-        }
     }
-    public Grid(){
+    public void setWidth(int width) {
+        widthProperty.set(width);
+    }
+    public void setHeight(int height) {
+        heightProperty.set(height);
+    }
 
+    public  int getWidth() {
+        return widthProperty.get();
+    }
+    public  int getGridWidth(){
+        return widthProperty.get();
+    }
+    public  int getGridHeight(){
+        return heightProperty.get();
+    }
+
+    public IntegerProperty widthProperty() {
+        return widthProperty;
+    }
+
+    public  int getHeight() {
+        return heightProperty.get();
+    }
+
+    public IntegerProperty heightProperty() {
+        return heightProperty;
+    }
+
+    public int getArea() {
+        return widthProperty.get() * heightProperty.get();
     }
 }
