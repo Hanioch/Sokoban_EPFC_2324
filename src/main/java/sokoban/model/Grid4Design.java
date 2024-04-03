@@ -11,7 +11,8 @@ import javafx.collections.ObservableList;
 import java.util.List;
 
 public class Grid4Design extends Grid {
-    private  Cell4Design[][] matrix;
+    private Cell4Design[][] matrix;
+    private Cell4Design player;
 
     public LongBinding filledCellsCount;
     private final BooleanBinding characterMissed;
@@ -81,6 +82,7 @@ public class Grid4Design extends Grid {
             matrix[oldX][oldY].removePlayer();
         }
         matrix[newX][newY].addElement(new Player4Design(newX, newY));
+        this.player = matrix[newX][newY];
     }
     public LongBinding filledCellsCountProperty() {
         return filledCellsCount;
@@ -192,6 +194,14 @@ public class Grid4Design extends Grid {
         targetMissed.invalidate();
         sameNumberOfBoxAndTarget.invalidate();
         isAnError.invalidate();
+    }
+
+    public Cell4Design[][] getMatrix() {
+        return matrix;
+    }
+    public void removePlayer() {
+        if(playerIsSet())
+            player.removePlayer();
     }
 
 }

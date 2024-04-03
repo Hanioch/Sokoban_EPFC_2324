@@ -277,7 +277,7 @@ public class Board4DesignView extends BoardView {
         int width = board4DesignViewModel.gridWidth();
         int height = board4DesignViewModel.gridHeight();
 
-        Board4Play board4Play = new Board4Play(width, height);
+        Board4Play board4Play = new Board4Play(width, height, board4DesignViewModel.getBoard().getGrid());
         Board4PlayViewModel vm= new Board4PlayViewModel(board4Play);
         new Board4PlayView(secondaryStage, primaryStage, vm);
     }
@@ -306,7 +306,4 @@ public class Board4DesignView extends BoardView {
         newLabel.managedProperty().bind(newLabel.visibleProperty());
         newLabel.setTextFill(Color.RED);
     }
-
-
-
 }

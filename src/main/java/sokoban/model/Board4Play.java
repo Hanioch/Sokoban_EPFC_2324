@@ -12,15 +12,19 @@ public class Board4Play extends Board{
     private BooleanBinding isFull;
     private BooleanProperty isModifiedProperty = new SimpleBooleanProperty(false);
 
+
+
+
+    public Board4Play(int width, int height, Grid4Design oldGrid) {
+        grid = new Grid4Play(width, height, oldGrid);
+
+    }
     public BooleanProperty isModifiedProperty() {
         return isModifiedProperty;
     }
 
     public void setModified(boolean isModified) {
         this.isModifiedProperty.set(isModified);
-    }
-    public Board4Play(int width, int height) {
-        grid = new Grid4Play(width, height);
     }
     public Grid4Play getGrid(){
         return this.grid;

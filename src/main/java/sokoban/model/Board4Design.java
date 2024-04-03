@@ -50,6 +50,7 @@ public class Board4Design extends Board {
         this.isFull = grid.filledCellsCountProperty().isEqualTo(maxFilledCells);
     }
     public void resetGrid(int width, int height) {
+        grid.removePlayer();
         grid.filledCellsCount.invalidate();
         this.grid = new Grid4Design(width, height);
         this.isModifiedProperty.set(false);
@@ -57,7 +58,6 @@ public class Board4Design extends Board {
         this.isFull = grid.filledCellsCountProperty().isEqualTo(maxFilledCells);
         grid.setHeight(height);
         grid.setWidth(width);
-
     }
     public boolean isFull() {
         return isFull.get();

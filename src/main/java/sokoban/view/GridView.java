@@ -2,6 +2,7 @@ package sokoban.view;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
+import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 import sokoban.viewmodel.BoardViewModel;
 import sokoban.viewmodel.Grid4DesignViewModel;
@@ -18,6 +19,6 @@ public class GridView extends GridPane {
         this.gridViewModel = gridViewModel;
 
         setGridLinesVisible(false);
-        //  setPadding(new Insets(PADDING));
+        setPadding(new Insets(PADDING));
     }
 }

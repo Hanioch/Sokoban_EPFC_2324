@@ -17,6 +17,6 @@ public class Cell4PlayViewModel extends CellViewModel{
         this.col = col;
         this.board4Play = board4Play;
         this.board4PlayViewModel = board4PlayViewModel;
-        this.stack = board4Play.getGrid().getCell(line, col).getStack();
+        this.stack = board4Play.getGrid().getStack(line, col);
     }
 }
