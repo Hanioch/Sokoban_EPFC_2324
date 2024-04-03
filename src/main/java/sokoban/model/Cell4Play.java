@@ -4,12 +4,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Cell4Play extends Cell{
+    private int  boxnumber ;
     public Cell4Play() {
         super();
         stack.add(new Ground4Play());
     }
-    public Cell4Play(ObservableList<Element> stack) {
+    public Cell4Play(ObservableList<Element> stack, int boxnumber) {
         super();
+        this.boxnumber = boxnumber;
+        stack.add(new Ground4Play());
         recreateStack(stack);
     }
     private void recreateStack(ObservableList<Element> stack) {
@@ -22,7 +25,7 @@ public class Cell4Play extends Cell{
             } else if (type.equals("Player4Design")) {
                 this.stack.add(new Player4Play());
             } else if (type.equals("Box4Design")) {
-                this.stack.add(new Box4Play());
+                this.stack.add(new Box4Play(boxnumber));
             } else if(type.equals("Target4Design")) {
                 this.stack.add(new Target4Play());
             }
