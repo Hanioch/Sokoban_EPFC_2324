@@ -7,8 +7,6 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public abstract class Element {
 
-    public Element() {
-
-    }
+    public Element() {}
 
 }
