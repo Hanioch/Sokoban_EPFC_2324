@@ -7,6 +7,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -56,6 +57,7 @@ public class Board4PlayView extends BoardView {
 
     private void configMainComponents() {
         createGrid();
+        configureKeyListeners();
     }
 
     private void createGrid() {
@@ -84,5 +86,46 @@ public class Board4PlayView extends BoardView {
         grid4PlayView.setAlignment(Pos.CENTER);
         grid4PlayView.setStyle("-fx-border-color: red; -fx-border-width: 5;");
         setCenter(grid4PlayView);
+    }
+
+    private void configureKeyListeners() {
+        this.setOnKeyPressed(event -> {
+            KeyCode keyCode = event.getCode();
+            // Rayan: fonctionne correctement avec zqsd mais je dois maintenir SHIFT pour que les flèches
+            // fonctionnent ??? une idée ?
+            switch (keyCode) {
+                case Q, LEFT:
+                    handleLeftArrowKeyPressed();
+                    break;
+                case D, RIGHT:
+                    handleRightArrowKeyPressed();
+                    break;
+                case Z, UP:
+                    handleUpArrowKeyPressed();
+                    break;
+                case S, DOWN:
+                    handleDownArrowKeyPressed();
+                    break;
+                // ctrl+z et ctrl+y à rajouter pour la troisième itération
+                default:
+                    break;
+            }
+        });
+    }
+
+    private void handleDownArrowKeyPressed() {
+        System.out.println("down");
+    }
+
+    private void handleUpArrowKeyPressed() {
+        System.out.println("up");
+    }
+
+    private void handleRightArrowKeyPressed() {
+        System.out.println("right");
+    }
+
+    private void handleLeftArrowKeyPressed() {
+        System.out.println("left");
     }
 }

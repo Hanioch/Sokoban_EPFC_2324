@@ -78,7 +78,6 @@ public class Board4DesignView extends BoardView {
     private void setupModificationListener() {
         board4DesignViewModel.isModifiedProperty().addListener((obs, oldVal, newVal) -> {
                 updateWindowTitle();
-
         });
     }
     private void createMenuBar() {
