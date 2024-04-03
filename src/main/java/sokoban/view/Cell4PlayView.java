@@ -17,5 +17,6 @@ public class Cell4PlayView extends CellView{
     private void configureBindings() {
         minWidthProperty().bind(widthProperty);
         minHeightProperty().bind(widthProperty);
+        cellViewModel.valueProperty().addListener((obs, old, newVal) -> setImage(cellViewModel.getStack()));
     }
 }

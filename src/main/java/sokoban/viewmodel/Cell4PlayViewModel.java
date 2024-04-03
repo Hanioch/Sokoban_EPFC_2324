@@ -1,6 +1,7 @@
 package sokoban.viewmodel;
 
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
 import sokoban.model.Board4Design;
@@ -18,5 +19,9 @@ public class Cell4PlayViewModel extends CellViewModel{
         this.board4Play = board4Play;
         this.board4PlayViewModel = board4PlayViewModel;
         this.stack = board4Play.getGrid().getStack(line, col);
+    }
+
+    public ReadOnlyListProperty<Element> valueProperty() {
+        return board4Play.valueProperty(line, col);
     }
 }

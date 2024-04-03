@@ -1,4 +1,4 @@
 package sokoban.model;
 
-public abstract class Box extends ComposableElement implements Movable  {
+public abstract class Box extends ComposableElement  {
 }

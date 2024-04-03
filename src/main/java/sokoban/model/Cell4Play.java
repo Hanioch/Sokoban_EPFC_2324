@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Cell4Play extends Cell{
+    private Player4Play player;
     public Cell4Play() {
         super();
         stack.add(new Ground4Play());
@@ -20,7 +21,8 @@ public class Cell4Play extends Cell{
             } else if (type.equals("Wall4Design")) {
                 this.stack.add(new Wall4Play());
             } else if (type.equals("Player4Design")) {
-                this.stack.add(new Player4Play());
+                this.player = new Player4Play(Player.getX(), Player.getY());
+                this.stack.add(this.player);
             } else if (type.equals("Box4Design")) {
                 this.stack.add(new Box4Play());
             } else if(type.equals("Target4Design")) {

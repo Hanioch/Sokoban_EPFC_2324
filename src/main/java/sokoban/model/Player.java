@@ -1,6 +1,9 @@
 package sokoban.model;
 
-public abstract class Player extends ComposableElement implements Movable{
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
+public abstract class Player extends ComposableElement {
     protected static int X, Y;
     public Player(int x, int y) {
         X = x;
@@ -9,6 +12,8 @@ public abstract class Player extends ComposableElement implements Movable{
 
     public Player() {
     }
+
+
 
     public static int getX() {
         return X;

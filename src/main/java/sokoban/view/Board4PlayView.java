@@ -46,6 +46,7 @@ public class Board4PlayView extends BoardView {
     private void start(Stage stage) {
         stage.setTitle("Sokoban");
         configMainComponents();
+        setupListener();
 
         Scene scene = new Scene(this, SCENE_MIN_WIDTH, SCENE_MIN_HEIGHT);
 
@@ -58,6 +59,11 @@ public class Board4PlayView extends BoardView {
     private void configMainComponents() {
         createGrid();
         configureKeyListeners();
+    }
+    private void setupListener() {
+        board4PlayViewModel.isModifiedProperty().addListener((obs, oldVal, newVal) -> {
+            createGrid();
+        });
     }
 
     private void createGrid() {
@@ -114,18 +120,18 @@ public class Board4PlayView extends BoardView {
     }
 
     private void handleDownArrowKeyPressed() {
-        System.out.println("down");
+        board4PlayViewModel.goDown();
     }
 
     private void handleUpArrowKeyPressed() {
-        System.out.println("up");
+        board4PlayViewModel.goUp();
     }
 
     private void handleRightArrowKeyPressed() {
-        System.out.println("right");
+        board4PlayViewModel.goRight();
     }
 
     private void handleLeftArrowKeyPressed() {
-        System.out.println("left");
+        board4PlayViewModel.goLeft();
     }
 }
