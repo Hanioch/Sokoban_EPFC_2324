@@ -37,9 +37,6 @@ public abstract class CellView extends StackPane {
         getChildren().add(imageView);
     }
 
-
-
-
     public void setImage(ObservableList<Element> stack) {
         this.getChildren().clear();
         for (Element element : stack) {
@@ -52,15 +49,15 @@ public abstract class CellView extends StackPane {
     }
 
     private Image getImageForElement(Element element) {
-        if (element instanceof Player4Design) {
+        if (element instanceof Player) {
             return new Image("player.png");
-        } else if (element instanceof Box4Design) {
+        } else if (element instanceof Box) {
             return new Image("box.png");
-        } else if (element instanceof Target4Design) {
+        } else if (element instanceof Target) {
             return new Image("goal.png");
-        } else if (element instanceof Wall4Design) {
+        } else if (element instanceof Wall) {
             return new Image("wall.png");
-        } else if (element instanceof Ground4Design) {
+        } else if (element instanceof Ground) {
             return new Image("ground.png");
         }
         return null;

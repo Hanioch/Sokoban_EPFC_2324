@@ -27,7 +27,7 @@ public class Grid4DesignView extends GridView {
 
         for(int i = 0 ; i < GRID_HEIGHT; ++i) {
             for (int j = 0 ; j < GRID_WIDTH; ++j) {
-                CellView cellView = new Cell4DesignView(gridViewModel.getCellViewModel(j,i),  cellSize, cellSize);
+                Cell4DesignView cellView = new Cell4DesignView(gridViewModel.getCellViewModel(j,i),  cellSize, cellSize);
                 add(cellView, j, i);
             }
         }

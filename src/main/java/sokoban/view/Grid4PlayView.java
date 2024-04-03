@@ -10,6 +10,7 @@ import sokoban.viewmodel.GridViewModel;
 public class Grid4PlayView extends GridView {
     public Grid4PlayView(Board4PlayViewModel boardViewModel, Grid4PlayViewModel gridViewModel, DoubleBinding gridWidth, DoubleBinding gridHeight) {
         super(boardViewModel, gridViewModel, gridWidth, gridHeight);
+
         int GRID_WIDTH = boardViewModel.gridWidth();
         int GRID_HEIGHT = boardViewModel.gridHeight();
 
@@ -23,7 +24,7 @@ public class Grid4PlayView extends GridView {
 
         for(int i = 0 ; i < GRID_HEIGHT; ++i) {
             for (int j = 0 ; j < GRID_WIDTH; ++j) {
-                CellView cellView = new Cell4PlayView(gridViewModel.getCellViewModel(j,i),  cellSize, cellSize);
+                Cell4PlayView cellView = new Cell4PlayView(gridViewModel.getCellViewModel(j,i),  cellSize, cellSize);
                 add(cellView, j, i);
             }
         }
