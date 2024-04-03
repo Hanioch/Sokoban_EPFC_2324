@@ -14,4 +14,5 @@ public abstract class BoardView extends BorderPane {
             default -> null;
         };
     }
+
 }

@@ -1,6 +1,8 @@
 package sokoban.view;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -30,6 +32,7 @@ public class Board4PlayView extends BoardView {
         HBox bottomContainer = new HBox(finishButton);
         bottomContainer.setAlignment(Pos.CENTER);
         setBottom(bottomContainer);
+        createGrid();
         start(secondaryStage);
     }
 
@@ -41,11 +44,39 @@ public class Board4PlayView extends BoardView {
     private void start(Stage stage) {
         stage.setTitle("Sokoban");
 
-        Scene scene = new Scene(this, 600, 600);
+        Scene scene = new Scene(this, 1200, 1200);
 
         stage.setScene(scene);
         stage.show();
         stage.setMinHeight(stage.getHeight());
         stage.setMinWidth(stage.getWidth());
+    }
+
+    private void createGrid() {
+        int GRID_WIDTH = board4PlayViewModel.gridWidth();
+        int GRID_HEIGHT = board4PlayViewModel.gridHeight();
+        DoubleBinding gridWidth = Bindings.createDoubleBinding(
+                () -> {
+                    var size = Math.min(widthProperty().get() , heightProperty().get());
+                    return Math.floor(size / GRID_WIDTH) * GRID_WIDTH;
+                },
+                widthProperty(),
+                heightProperty());
+
+        DoubleBinding gridHeight = Bindings.createDoubleBinding(
+                () -> {
+                    var size = Math.min(heightProperty().get() , widthProperty().get());
+                    return Math.floor(size / GRID_HEIGHT) * GRID_HEIGHT;
+                },
+                widthProperty(),
+                heightProperty());
+
+        Grid4PlayView grid4PlayView = new Grid4PlayView(board4PlayViewModel, board4PlayViewModel.getGridViewModel(), gridWidth, gridHeight);
+
+        grid4PlayView.minHeightProperty().bind(gridHeight);
+        grid4PlayView.minWidthProperty().bind(gridWidth);
+        grid4PlayView.setAlignment(Pos.CENTER);
+        grid4PlayView.setStyle("-fx-border-color: red; -fx-border-width: 5;");
+        setCenter(grid4PlayView);
     }
 }

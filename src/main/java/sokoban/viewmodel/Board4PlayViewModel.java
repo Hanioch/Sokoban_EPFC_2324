@@ -16,4 +16,7 @@ public class Board4PlayViewModel extends BoardViewModel {
     public int gridHeight(){
         return board.getGrid().getHeight();
     }
+    public Grid4PlayViewModel getGridViewModel(){
+        return gridViewModel;
+    }
 }
