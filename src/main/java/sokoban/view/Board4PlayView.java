@@ -3,6 +3,7 @@ package sokoban.view;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -22,20 +23,42 @@ public class Board4PlayView extends BoardView {
     private  Stage secondaryStage;
     private  Stage primaryStage;
     private Button finishButton;
+
+    private Label scoreLabel;
+    private Label movesLabel;
+    private Label goalsLabel;
     public Board4PlayView(Stage secondaryStage,Stage primaryStage, Board4PlayViewModel board4PlayViewModel) {
         this.board4PlayViewModel = board4PlayViewModel;
         this.secondaryStage = secondaryStage;
         this.primaryStage = primaryStage;
 
 
+        init();
+        start(secondaryStage);
+    }
+    private void init() {
         finishButton = new Button("Finish");
         finishButton.setOnAction(event -> onFinishClicked());
 
         HBox bottomContainer = new HBox(finishButton);
         bottomContainer.setAlignment(Pos.CENTER);
         setBottom(bottomContainer);
-        start(secondaryStage);
+
+        VBox topContainer = new VBox();
+        topContainer.setAlignment(Pos.CENTER_LEFT);
+        topContainer.setSpacing(10);
+        topContainer.setPadding(new Insets(10,0,0,300));
+
+        scoreLabel = new Label("Score");
+        scoreLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        movesLabel = new Label("Number of moves played: " );
+        goalsLabel = new Label("Number of goals reached: " );
+
+        topContainer.getChildren().addAll(scoreLabel, movesLabel, goalsLabel);
+
+        setTop(topContainer);
     }
+
 
     private void onFinishClicked() {
         secondaryStage.close();
