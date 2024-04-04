@@ -5,6 +5,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ObservableList;
 
 public class Board4Play extends Board{
     private Grid4Play grid;
@@ -37,6 +38,11 @@ public class Board4Play extends Board{
         boolean canGo = false;
         canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.DOWN);
         if(canGo) {
+            ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), Movable.Direction.DOWN);
+            if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
+                grid.getCell(player.getX(), player.getY()+1).getStack().removeIf(item -> item instanceof Box);
+                grid.getCell(player.getX(), player.getY()+2).getStack().add(new Box4Play());
+            }
             player.move(Movable.Direction.DOWN);
             grid.getCell(player.getX(), player.getY()-1).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
@@ -46,6 +52,11 @@ public class Board4Play extends Board{
         boolean canGo = false;
         canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.UP);
         if(canGo) {
+            ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), Movable.Direction.UP);
+            if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
+                grid.getCell(player.getX(), player.getY()-1).getStack().removeIf(item -> item instanceof Box);
+                grid.getCell(player.getX(), player.getY()-2).getStack().add(new Box4Play());
+            }
             player.move(Movable.Direction.UP);
             grid.getCell(player.getX(), player.getY()+1).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
@@ -55,6 +66,11 @@ public class Board4Play extends Board{
         boolean canGo = false;
         canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.RIGHT);
         if(canGo) {
+            ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), Movable.Direction.RIGHT);
+            if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
+                grid.getCell(player.getX()+1, player.getY()).getStack().removeIf(item -> item instanceof Box);
+                grid.getCell(player.getX()+2, player.getY()).getStack().add(new Box4Play());
+            }
             player.move(Movable.Direction.RIGHT);
             grid.getCell(player.getX()-1, player.getY()).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
@@ -64,6 +80,11 @@ public class Board4Play extends Board{
         boolean canGo = false;
         canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.LEFT);
         if(canGo) {
+            ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), Movable.Direction.LEFT);
+            if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
+                grid.getCell(player.getX()-1, player.getY()).getStack().removeIf(item -> item instanceof Box);
+                grid.getCell(player.getX()-2, player.getY()).getStack().add(new Box4Play());
+            }
             player.move(Movable.Direction.LEFT);
             grid.getCell(player.getX()+1, player.getY()).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);

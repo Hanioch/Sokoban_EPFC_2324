@@ -13,6 +13,7 @@ public class Grid4Play extends Grid {
     private int height;
     private Player4Play player;
     private int boxNumber = 0;
+
     public Grid4Play(int width, int height, Grid4Design oldGrid, Player4Play player) {
         super(width, height);
         this.matrix = new Cell4Play[width][height];
@@ -48,7 +49,7 @@ public class Grid4Play extends Grid {
 
     public ObservableList<Element> getStack(int line, int col) {
         ObservableList<Element> stack  = matrix[line][col].getValue();
-        return stack
+        return stack;
     }
 
 
@@ -57,7 +58,11 @@ public class Grid4Play extends Grid {
             return false;
         }
         ObservableList<Element> nextStack = getNextStack(playerX, playerY, direction);
-        // vérifie que tous les éléments contenus dans le stack visé soient Movable
+        // vérifie que les éléments contenus dans le stack visé soient Target ou Ground pour pouvoir aller dessus
+        if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
+            ObservableList<Element> secondNextStack = getSecondNextStack(playerX, playerY, direction);
+            return (secondNextStack.stream().allMatch(item -> item instanceof Target || item instanceof Ground));
+        }
         return (nextStack.stream().allMatch(item -> item instanceof Target || item instanceof Ground));
     }
 
@@ -71,12 +76,20 @@ public class Grid4Play extends Grid {
         return (playerX >= 0 && playerX < this.width && playerY >= 0 && playerY < this.height);
     }
 
-    private ObservableList<Element> getNextStack(int playerX, int playerY, Movable.Direction direction) {
+    public ObservableList<Element> getNextStack(int playerX, int playerY, Movable.Direction direction) {
         return switch (direction) {
             case UP -> getStack(playerX, playerY - 1);
             case DOWN -> getStack(playerX, playerY + 1);
             case LEFT -> getStack(playerX - 1, playerY);
             case RIGHT -> getStack(playerX + 1, playerY);
+        };
+    }
+    private ObservableList<Element> getSecondNextStack(int playerX, int playerY, Movable.Direction direction) {
+        return switch (direction) {
+            case UP -> getStack(playerX, playerY - 2);
+            case DOWN -> getStack(playerX, playerY + 2);
+            case LEFT -> getStack(playerX - 2, playerY);
+            case RIGHT -> getStack(playerX + 2, playerY);
         };
     }
 }

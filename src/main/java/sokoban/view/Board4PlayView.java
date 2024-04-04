@@ -40,6 +40,7 @@ public class Board4PlayView extends BoardView {
 
         init();
         start(secondaryStage);
+        this.requestFocus();
     }
     private void init() {
         finishButton = new Button("Finish");
@@ -49,7 +50,7 @@ public class Board4PlayView extends BoardView {
         HBox bottomContainer = new HBox(finishButton);
         bottomContainer.setAlignment(Pos.CENTER);
         bottomContainer.setPadding(new Insets(10));
-        bottomContainer.getChildren().addAll(finishButton);
+        //bottomContainer.getChildren().addAll(finishButton);
         setBottom(bottomContainer);
 
         topContainer.setAlignment(Pos.CENTER_LEFT);

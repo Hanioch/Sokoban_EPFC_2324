@@ -8,6 +8,9 @@ public class Box4Play extends Box implements Movable {
         this.number = number;
     }
 
+    public Box4Play() {
+    }
+
     public int getNumber() {
         return this.number;
     }
