@@ -12,7 +12,6 @@ public class Cell4Play extends Cell{
     public Cell4Play(ObservableList<Element> stack, int boxnumber) {
         super();
         this.boxnumber = boxnumber;
-        stack.add(new Ground4Play());
         recreateStack(stack);
     }
     private void recreateStack(ObservableList<Element> stack) {
