@@ -23,13 +23,6 @@ public class Grid4Play extends Grid {
         this.height = height;
         this.player = player;
 
-        /*matrix = new Cell4Play[width][height];
-
-        for (int i = 0; i < width; i++){
-            for (int j = 0; j < height; j++){
-                matrix[i][j] = new Cell4Play();
-            }
-        }*/
         recreateMatrix();
     }
 

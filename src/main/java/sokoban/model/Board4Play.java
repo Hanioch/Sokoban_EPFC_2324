@@ -40,7 +40,6 @@ public class Board4Play extends Board{
             player.move(Movable.Direction.DOWN);
             grid.getCell(player.getX(), player.getY()-1).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
-            System.out.println("y : " + player.getY());
         }
     }
     public void goUp() {
@@ -50,7 +49,6 @@ public class Board4Play extends Board{
             player.move(Movable.Direction.UP);
             grid.getCell(player.getX(), player.getY()+1).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
-            System.out.println("y : " + player.getY());
         }
     }
     public void goRight() {
@@ -60,7 +58,6 @@ public class Board4Play extends Board{
             player.move(Movable.Direction.RIGHT);
             grid.getCell(player.getX()-1, player.getY()).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
-            System.out.println("x : " + player.getX());
         }
     }
     public void goLeft() {
@@ -70,7 +67,6 @@ public class Board4Play extends Board{
             player.move(Movable.Direction.LEFT);
             grid.getCell(player.getX()+1, player.getY()).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
-            System.out.println("x : " + player.getX());
         }
     }
     public Player4Play getPlayer(){

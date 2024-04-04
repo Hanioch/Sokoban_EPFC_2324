@@ -22,9 +22,6 @@ public class Board4PlayViewModel extends BoardViewModel {
     public Grid4PlayViewModel getGridViewModel(){
         return gridViewModel;
     }
-    public BooleanProperty isModifiedProperty() {
-        return board.isModifiedProperty();
-    }
 
 
     public void goDown() {
