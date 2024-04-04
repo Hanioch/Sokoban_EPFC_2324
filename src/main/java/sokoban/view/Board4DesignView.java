@@ -276,7 +276,7 @@ public class Board4DesignView extends BoardView {
         int width = board4DesignViewModel.gridWidth();
         int height = board4DesignViewModel.gridHeight();
 
-        Board4Play board4Play = new Board4Play(width, height, board4DesignViewModel.getBoard().getGrid());
+        Board4Play board4Play = new Board4Play(width, height, board4DesignViewModel.getBoard().getGrid(), this.board4DesignViewModel.getBoard().getPlayer());
         Board4PlayViewModel vm= new Board4PlayViewModel(board4Play);
         new Board4PlayView(secondaryStage, primaryStage, vm);
     }

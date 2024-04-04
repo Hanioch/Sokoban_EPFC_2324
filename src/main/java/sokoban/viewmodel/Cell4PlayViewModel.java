@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import sokoban.model.Board4Design;
 import sokoban.model.Board4Play;
 import sokoban.model.Element;
+import sokoban.model.Player4Play;
 
 public class Cell4PlayViewModel extends CellViewModel{
     private Board4PlayViewModel board4PlayViewModel;
@@ -23,5 +24,8 @@ public class Cell4PlayViewModel extends CellViewModel{
 
     public ReadOnlyListProperty<Element> valueProperty() {
         return board4Play.valueProperty(line, col);
+    }
+    public Player4Play getPlayer() {
+        return board4Play.getPlayer();
     }
 }

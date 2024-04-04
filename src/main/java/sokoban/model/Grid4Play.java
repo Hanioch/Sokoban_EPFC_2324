@@ -10,16 +10,18 @@ public class Grid4Play extends Grid {
     private Grid4Design oldGrid;
     private int width;
     private int height;
+    private Player4Play player;
     ReadOnlyListProperty<Element> valueProperty(int line, int col) {
         return matrix[line][col].stackProperty();
     }
 
-    public Grid4Play(int width, int height, Grid4Design oldGrid) {
+    public Grid4Play(int width, int height, Grid4Design oldGrid, Player4Play player) {
         super(width, height);
         this.matrix = new Cell4Play[width][height];
         this.oldGrid = oldGrid;
         this.width = width;
         this.height = height;
+        this.player = player;
 
         /*matrix = new Cell4Play[width][height];
 
@@ -36,7 +38,7 @@ public class Grid4Play extends Grid {
         Cell4Design[][] oldMatrix = oldGrid.getMatrix();
         for (int i = 0; i < width; i++){
             for (int j = 0; j < height; j++){
-                this.matrix[i][j] = new Cell4Play(oldMatrix[i][j].getStack());
+                this.matrix[i][j] = new Cell4Play(oldMatrix[i][j].getStack(), this.player, i, j);
             }
         }
     }

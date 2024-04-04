@@ -4,6 +4,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import sokoban.model.Board4Design;
 import sokoban.model.Board4Play;
+import sokoban.model.Player4Play;
 
 public class Board4PlayViewModel extends BoardViewModel {
     private Grid4PlayViewModel gridViewModel;
@@ -41,28 +42,7 @@ public class Board4PlayViewModel extends BoardViewModel {
     public void goLeft() {
         board.goLeft();
     }
-
-    /*public IntegerProperty playerXProperty() {
-        return player.xProperty();
+    public Player4Play getPlayer() {
+        return this.board.getPlayer();
     }
-
-    public int getPlayerX() {
-        return player.getX();
-    }
-
-    public void setPlayerX(int x) {
-        player.setX(x);
-    }
-
-    public IntegerProperty playerYProperty() {
-        return player.yProperty();
-    }
-
-    public int getPlayerY() {
-        return player.getY();
-    }
-
-    public void setPlayerY(int y) {
-        player.setY(y);
-    }*/
 }

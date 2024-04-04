@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import sokoban.model.Player4Play;
 import sokoban.viewmodel.Board4DesignViewModel;
 import sokoban.viewmodel.Board4PlayViewModel;
 
@@ -46,7 +47,7 @@ public class Board4PlayView extends BoardView {
     private void start(Stage stage) {
         stage.setTitle("Sokoban");
         configMainComponents();
-        setupListener();
+        //setupListener();
 
         Scene scene = new Scene(this, SCENE_MIN_WIDTH, SCENE_MIN_HEIGHT);
 
@@ -60,11 +61,12 @@ public class Board4PlayView extends BoardView {
         createGrid();
         configureKeyListeners();
     }
-    private void setupListener() {
+
+    /*private void setupListener() {
         board4PlayViewModel.isModifiedProperty().addListener((obs, oldVal, newVal) -> {
             createGrid();
         });
-    }
+    }*/
 
     private void createGrid() {
         int GRID_WIDTH = board4PlayViewModel.gridWidth();
@@ -86,6 +88,7 @@ public class Board4PlayView extends BoardView {
                 heightProperty());
 
         Grid4PlayView grid4PlayView = new Grid4PlayView(board4PlayViewModel, board4PlayViewModel.getGridViewModel(), gridWidth, gridHeight);
+
 
         //grid4PlayView.minHeightProperty().bind(gridHeight);
         //grid4PlayView.minWidthProperty().bind(gridWidth);
