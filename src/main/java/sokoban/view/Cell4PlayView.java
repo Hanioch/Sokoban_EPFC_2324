@@ -1,7 +1,11 @@
 package sokoban.view;
 
 import javafx.beans.binding.DoubleBinding;
+import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
+import sokoban.model.*;
 import sokoban.viewmodel.Cell4PlayViewModel;
 import sokoban.viewmodel.CellViewModel;
 

@@ -4,8 +4,8 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public abstract class Player extends ComposableElement {
-    private final IntegerProperty x = new SimpleIntegerProperty();
-    private final IntegerProperty y = new SimpleIntegerProperty();
+    private IntegerProperty x = new SimpleIntegerProperty();
+    private IntegerProperty y = new SimpleIntegerProperty();
     public Player(int x, int y) {
         setX(x);
         setY(y);

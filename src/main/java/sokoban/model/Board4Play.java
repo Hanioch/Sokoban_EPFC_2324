@@ -38,7 +38,8 @@ public class Board4Play extends Board{
         canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.DOWN);
         if(canGo) {
             player.move(Movable.Direction.DOWN);
-            setModified(true);
+            grid.getCell(player.getX(), player.getY()-1).getStack().remove(player);
+            grid.getCell(player.getX(), player.getY()).getStack().add(player);
             System.out.println("y : " + player.getY());
         }
     }
@@ -47,7 +48,8 @@ public class Board4Play extends Board{
         canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.UP);
         if(canGo) {
             player.move(Movable.Direction.UP);
-            setModified(true);
+            grid.getCell(player.getX(), player.getY()+1).getStack().remove(player);
+            grid.getCell(player.getX(), player.getY()).getStack().add(player);
             System.out.println("y : " + player.getY());
         }
     }
@@ -56,7 +58,8 @@ public class Board4Play extends Board{
         canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.RIGHT);
         if(canGo) {
             player.move(Movable.Direction.RIGHT);
-            setModified(true);
+            grid.getCell(player.getX()-1, player.getY()).getStack().remove(player);
+            grid.getCell(player.getX(), player.getY()).getStack().add(player);
             System.out.println("x : " + player.getX());
         }
     }
@@ -65,7 +68,8 @@ public class Board4Play extends Board{
         canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.LEFT);
         if(canGo) {
             player.move(Movable.Direction.LEFT);
-            setModified(true);
+            grid.getCell(player.getX()+1, player.getY()).getStack().remove(player);
+            grid.getCell(player.getX(), player.getY()).getStack().add(player);
             System.out.println("x : " + player.getX());
         }
     }

@@ -31,10 +31,9 @@ public class Grid4Play extends Grid {
             }
         }*/
         recreateMatrix();
-
     }
 
-    private void recreateMatrix() {
+    public void recreateMatrix() {
         Cell4Design[][] oldMatrix = oldGrid.getMatrix();
         for (int i = 0; i < width; i++){
             for (int j = 0; j < height; j++){
@@ -62,7 +61,7 @@ public class Grid4Play extends Grid {
         }
         ObservableList<Element> nextStack = getNextStack(playerX, playerY, direction);
         // vérifie que tous les éléments contenus dans le stack visé soient Movable
-        return (nextStack.stream().allMatch(item -> item instanceof Movable || item instanceof Ground));
+        return (nextStack.stream().allMatch(item -> item instanceof Target || item instanceof Ground));
     }
 
     private boolean isStillOnGrid(int playerX, int playerY, Movable.Direction direction) {

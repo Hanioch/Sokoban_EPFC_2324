@@ -62,12 +62,6 @@ public class Board4PlayView extends BoardView {
         configureKeyListeners();
     }
 
-    /*private void setupListener() {
-        board4PlayViewModel.isModifiedProperty().addListener((obs, oldVal, newVal) -> {
-            createGrid();
-        });
-    }*/
-
     private void createGrid() {
         int GRID_WIDTH = board4PlayViewModel.gridWidth();
         int GRID_HEIGHT = board4PlayViewModel.gridHeight();
@@ -90,8 +84,6 @@ public class Board4PlayView extends BoardView {
         Grid4PlayView grid4PlayView = new Grid4PlayView(board4PlayViewModel, board4PlayViewModel.getGridViewModel(), gridWidth, gridHeight);
 
 
-        //grid4PlayView.minHeightProperty().bind(gridHeight);
-        //grid4PlayView.minWidthProperty().bind(gridWidth);
         grid4PlayView.setAlignment(Pos.CENTER);
         grid4PlayView.setStyle("-fx-border-color: red; -fx-border-width: 5;");
         setCenter(grid4PlayView);
