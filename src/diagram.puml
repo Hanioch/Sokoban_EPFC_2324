@@ -1,0 +1,70 @@
+@startuml Sokoban
+
+class Grid {
+  - width : int
+  - height : int
+  - cells : Cell[][]
+  + addElement()
+  + removeElement()
+  + validateLevel()
+}
+
+class Cell {
+  - position
+  - elements : ElementStack
+  + modifyContent()
+  + clear()
+}
+
+abstract class Element {
+}
+
+class Ground extends ComposableElement {
+}
+
+class Wall extends Element {
+}
+
+abstract class ComposableElement extends Element {
+}
+
+class Target extends ComposableElement {
+}
+
+class Player extends ComposableElement implements Movable {
+}
+
+class Box extends ComposableElement implements Movable {
+}
+
+class ElementStack {
+  + addElement()
+  + removeElement()
+}
+
+interface Movable {
+}
+
+class Sokoban {
+  - grid
+  - currentLevel
+  + createNewLevel()
+  + saveLevel()
+  + loadLevel()
+  + validateLevel()
+}
+
+class LevelFile {
+  - filePath : String
+  + save()
+  + load()
+}
+
+Grid --> "many" Cell : contains
+Cell --> ElementStack : uses
+Cell --> Element :contains
+ElementStack --> ComposableElement : contains
+Sokoban *-- Grid
+Sokoban *-- LevelFile
+
+@enduml
