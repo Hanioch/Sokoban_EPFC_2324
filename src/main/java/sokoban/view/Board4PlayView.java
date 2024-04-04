@@ -91,13 +91,14 @@ public class Board4PlayView extends BoardView {
         setCenter(grid4PlayView);
     }
     private void setupKeyEvents() {
-        System.out.println("check");
-        getScene().setOnKeyPressed(event -> {
+        this.setFocusTraversable(true);
+        this.setOnKeyPressed(event -> {
+            this.requestFocus();
             switch(event.getCode()) {
-                case Z -> board4PlayViewModel.movePlayer(Move.UP);
-                case Q -> board4PlayViewModel.movePlayer(Move.LEFT);
-                case D -> board4PlayViewModel.movePlayer(Move.RIGHT);
-                case S -> board4PlayViewModel.movePlayer(Move.DOWN);
+                case Z,UP -> board4PlayViewModel.movePlayer(Move.UP);
+                case Q,LEFT -> board4PlayViewModel.movePlayer(Move.LEFT);
+                case D,RIGHT -> board4PlayViewModel.movePlayer(Move.RIGHT);
+                case S,DOWN -> board4PlayViewModel.movePlayer(Move.DOWN);
             }
         });
 

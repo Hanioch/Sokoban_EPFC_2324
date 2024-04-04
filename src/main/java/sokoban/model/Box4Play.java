@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Box4Play extends Box implements Movable{
     private int number;
+    private int x, y;
 
     public Box4Play(int number) {
         this.number = number;
@@ -16,13 +17,18 @@ public class Box4Play extends Box implements Movable{
         return this.number;
     }
 
-    public ArrayList<Integer> move(Move direction, int x , int y) {
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public ArrayList<Integer> move(Move direction) {
         ArrayList<Integer> list = new ArrayList<>();
 
         switch (direction){
             case UP ->  {
                 list.add(x);
-                list.add(y+1);
+                list.add(y-1);
             }
             case LEFT -> {
                 list.add(x-1);
@@ -34,7 +40,7 @@ public class Box4Play extends Box implements Movable{
             }
             case DOWN ->  {
                 list.add(x);
-                list.add(y-1);
+                list.add(y+1);
             }
             default -> {
                 list.add(x);
@@ -44,11 +50,5 @@ public class Box4Play extends Box implements Movable{
 
         return list;
 
-    }
-
-
-    @Override
-    public List<Integer> move(Move direction) {
-        return null;
     }
 }

@@ -15,6 +15,7 @@ public class Cell4Play extends Cell{
         recreateStack(stack);
     }
     private void recreateStack(ObservableList<Element> stack) {
+        int i = 0;
         for(Element elem : stack) {
             String type = elem.getClass().getSimpleName();
             if(type.equals("Ground4Design")) {
@@ -29,6 +30,16 @@ public class Cell4Play extends Cell{
                 this.stack.add(new Target4Play());
             }
         }
+    }
+
+    public void addElement(Element element){
+            boolean containsTarget =  stack.stream().anyMatch(item -> item instanceof Target4Play);
+            stack.clear();
+            stack.add(new Ground4Design());
+            stack.add(element);
+
+            if (containsTarget)
+                stack.add(new Target4Play());
     }
     public boolean containsWall(){
         return stack.stream().anyMatch(item -> item instanceof Wall4Play);
@@ -50,6 +61,19 @@ public class Cell4Play extends Cell{
         }
         return new Box4Play(0);
 
+    }
+    public void removeElement(Element element) {
+        stack.remove(element);
+    }
+
+    public void removePlayer(){
+        for (Element element : stackProperty()) {
+            if (element instanceof Player4Play) {
+                removeElement(element);
+                ((Player4Play) element).removePlayer();
+                break;
+            }
+        }
     }
 
 }
