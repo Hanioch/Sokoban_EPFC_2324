@@ -8,16 +8,19 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 public class Board4Play extends Board{
     private Grid4Play grid;
+    private Player4Play player = new Player4Play();
 
     private BooleanBinding isFull;
     private BooleanProperty isModifiedProperty = new SimpleBooleanProperty(false);
+    public ReadOnlyListProperty<Element> valueProperty(int line, int col) {
+        return grid.valueProperty(line, col);
+    }
 
 
-
-
-    public Board4Play(int width, int height, Grid4Design oldGrid) {
-        grid = new Grid4Play(width, height, oldGrid);
-
+    public Board4Play(int width, int height, Grid4Design oldGrid, Player4Design player) {
+        this.player.setX(player.getX());
+        this.player.setY(player.getY());
+        grid = new Grid4Play(width, height, oldGrid, this.player);
     }
     public BooleanProperty isModifiedProperty() {
         return isModifiedProperty;
@@ -28,5 +31,45 @@ public class Board4Play extends Board{
     }
     public Grid4Play getGrid(){
         return this.grid;
+    }
+
+    public void goDown() {
+        boolean canGo = false;
+        canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.DOWN);
+        if(canGo) {
+            player.move(Movable.Direction.DOWN);
+            grid.getCell(player.getX(), player.getY()-1).getStack().remove(player);
+            grid.getCell(player.getX(), player.getY()).getStack().add(player);
+        }
+    }
+    public void goUp() {
+        boolean canGo = false;
+        canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.UP);
+        if(canGo) {
+            player.move(Movable.Direction.UP);
+            grid.getCell(player.getX(), player.getY()+1).getStack().remove(player);
+            grid.getCell(player.getX(), player.getY()).getStack().add(player);
+        }
+    }
+    public void goRight() {
+        boolean canGo = false;
+        canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.RIGHT);
+        if(canGo) {
+            player.move(Movable.Direction.RIGHT);
+            grid.getCell(player.getX()-1, player.getY()).getStack().remove(player);
+            grid.getCell(player.getX(), player.getY()).getStack().add(player);
+        }
+    }
+    public void goLeft() {
+        boolean canGo = false;
+        canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.LEFT);
+        if(canGo) {
+            player.move(Movable.Direction.LEFT);
+            grid.getCell(player.getX()+1, player.getY()).getStack().remove(player);
+            grid.getCell(player.getX(), player.getY()).getStack().add(player);
+        }
+    }
+    public Player4Play getPlayer(){
+        return player;
     }
 }

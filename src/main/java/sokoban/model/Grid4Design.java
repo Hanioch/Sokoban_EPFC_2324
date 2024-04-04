@@ -3,16 +3,15 @@ package sokoban.model;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.LongBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyListProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 
 import java.util.List;
 
 public class Grid4Design extends Grid {
     private Cell4Design[][] matrix;
-    private Cell4Design player;
+    private Cell4Design playerCell;
+    private Player4Design player;
 
     public LongBinding filledCellsCount;
     private final BooleanBinding characterMissed;
@@ -24,8 +23,9 @@ public class Grid4Design extends Grid {
         return matrix[line][col].stackProperty();
     }
 
-    public Grid4Design(int width, int height) {
+    public Grid4Design(int width, int height, Player4Design player) {
         super(width, height);
+        this.player = player;
 
         matrix = new Cell4Design[width][height];
 
@@ -53,6 +53,9 @@ public class Grid4Design extends Grid {
         sameNumberOfBoxAndTarget = isNotSameNumberBoxAndTarget();
         isAnError = checkErrorsProperty();
     }
+    public Grid4Design(int width, int height) {
+        this(width, height, new Player4Design());
+    }
     public void addElementsToCell(int x, int y, List<Element> elements) {
         Cell4Design cell4Design = getCell(x, y);
         for (Element element : elements) {
@@ -76,13 +79,19 @@ public class Grid4Design extends Grid {
     }
 
     public void placePlayer(int newX, int newY) {
-        int oldX = Player4Design.getX();
+        /*int oldX = Player4Design.getX();
         int oldY = Player4Design.getY();
         if (oldX >= 0 || oldY >= 0) {
             matrix[oldX][oldY].removePlayer();
+        }*/
+        if(player.playerIsSet()) {
+            matrix[player.getX()][player.getY()].removePlayer();
+            player.removePlayer();
         }
-        matrix[newX][newY].addElement(new Player4Design(newX, newY));
-        this.player = matrix[newX][newY];
+        this.player = new Player4Design(newX, newY);
+        this.player.setX(newX);
+        this.player.setY(newY);
+        matrix[newX][newY].addElement(this.player);
     }
     public LongBinding filledCellsCountProperty() {
         return filledCellsCount;
@@ -121,7 +130,7 @@ public class Grid4Design extends Grid {
     }
 
     public boolean playerIsAlone() {
-        ReadOnlyListProperty<Element> stack = valueProperty(Player4Design.getX(), Player4Design.getY());
+        ReadOnlyListProperty<Element> stack = valueProperty(player.getX(), player.getY());
         return stack.size() == 2;
     }
 

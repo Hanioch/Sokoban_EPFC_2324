@@ -2,13 +2,12 @@ package sokoban.model;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.LongBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyListProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.*;
 
 public class Board4Design extends Board {
     private Grid4Design grid;
     private int maxFilledCells;
+    private Player4Design player = new Player4Design();
 
     private BooleanBinding isFull;
     private BooleanProperty isModifiedProperty = new SimpleBooleanProperty(false);
@@ -21,7 +20,7 @@ public class Board4Design extends Board {
         this.isModifiedProperty.set(isModified);
     }
     public Board4Design() {
-        grid = new Grid4Design(15,10);
+        grid = new Grid4Design(15,10, this.player);
         maxFilledCells = grid.getArea()/2;
         isFull = grid.filledCellsCountProperty().isEqualTo(maxFilledCells);
     }
@@ -52,12 +51,15 @@ public class Board4Design extends Board {
     public void resetGrid(int width, int height) {
         grid.removePlayer();
         grid.filledCellsCount.invalidate();
-        this.grid = new Grid4Design(width, height);
+        this.grid = new Grid4Design(width, height, player);
         this.isModifiedProperty.set(false);
         this.maxFilledCells = this.grid.getArea() / 2;
         this.isFull = grid.filledCellsCountProperty().isEqualTo(maxFilledCells);
         grid.setHeight(height);
         grid.setWidth(width);
+    }
+    public Player4Design getPlayer(){
+        return player;
     }
     public boolean isFull() {
         return isFull.get();
