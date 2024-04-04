@@ -27,6 +27,9 @@ public class Board4PlayView extends BoardView {
     private Label scoreLabel;
     private Label movesLabel;
     private Label goalsLabel;
+
+    private HBox bottomContainer = new HBox();
+    private VBox topContainer = new VBox();
     public Board4PlayView(Stage secondaryStage,Stage primaryStage, Board4PlayViewModel board4PlayViewModel) {
         this.board4PlayViewModel = board4PlayViewModel;
         this.secondaryStage = secondaryStage;
@@ -38,13 +41,14 @@ public class Board4PlayView extends BoardView {
     }
     private void init() {
         finishButton = new Button("Finish");
+        finishButton.setPrefSize(80,30);
         finishButton.setOnAction(event -> onFinishClicked());
 
-        HBox bottomContainer = new HBox(finishButton);
         bottomContainer.setAlignment(Pos.CENTER);
+        bottomContainer.setPadding(new Insets(10));
+        bottomContainer.getChildren().addAll(finishButton);
         setBottom(bottomContainer);
 
-        VBox topContainer = new VBox();
         topContainer.setAlignment(Pos.CENTER_LEFT);
         topContainer.setSpacing(10);
         topContainer.setPadding(new Insets(10,0,0,300));
@@ -86,7 +90,7 @@ public class Board4PlayView extends BoardView {
         int GRID_HEIGHT = board4PlayViewModel.gridHeight();
         DoubleBinding gridWidth = Bindings.createDoubleBinding(
                 () -> {
-                    var size = Math.min(widthProperty().get() , heightProperty().get());
+                    var size = Math.min(widthProperty().get() , heightProperty().get()-topContainer.heightProperty().get()-bottomContainer.heightProperty().get());
                     return Math.floor(size / GRID_WIDTH) * GRID_WIDTH;
                 },
                 widthProperty(),
@@ -94,7 +98,7 @@ public class Board4PlayView extends BoardView {
 
         DoubleBinding gridHeight = Bindings.createDoubleBinding(
                 () -> {
-                    var size = Math.min(heightProperty().get() , widthProperty().get());
+                    var size = Math.min(heightProperty().get()-topContainer.heightProperty().get()-bottomContainer.heightProperty().get() , widthProperty().get());
                     return Math.floor(size / GRID_HEIGHT) * GRID_HEIGHT;
                 },
                 widthProperty(),
@@ -102,10 +106,7 @@ public class Board4PlayView extends BoardView {
 
         Grid4PlayView grid4PlayView = new Grid4PlayView(board4PlayViewModel, board4PlayViewModel.getGridViewModel(), gridWidth, gridHeight);
 
-        //grid4PlayView.minHeightProperty().bind(gridHeight);
-        //grid4PlayView.minWidthProperty().bind(gridWidth);
         grid4PlayView.setAlignment(Pos.CENTER);
-        grid4PlayView.setStyle("-fx-border-color: red; -fx-border-width: 5;");
         setCenter(grid4PlayView);
     }
 }
