@@ -93,5 +93,16 @@ public class Board4Design extends Board {
     public Grid4Design getGrid(){
         return this.grid;
     }
+
+    public void clearGrid() {
+        for (int i = 0; i < grid.getWidth(); i++) {
+            for (int j = 0; j < grid.getHeight(); j++) {
+                getGrid().getStack(i,j).clear();
+                getGrid().getStack(i,j).add(new Ground4Design());
+                grid.filledCellsCount.invalidate();
+                grid.invalidateBinding();
+            }
+        }
+    }
 }
 
