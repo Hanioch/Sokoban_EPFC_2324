@@ -1,8 +1,10 @@
 package sokoban.model;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 
 import java.util.List;
 import java.util.Random;
@@ -143,6 +145,20 @@ public class Board4Design extends Board {
             set.add(randomGen.nextInt(origin, end));
         }
         return set;
+    }
+
+    public BooleanBinding gridIsEmpty() {
+
+        return Bindings.createBooleanBinding(() -> {
+            for (int i = 0; i < getGrid().getGridWidth(); i++) {
+                for (int j = 0; j < getGrid().getGridHeight(); j++) {
+                    if (!(grid.isEmpty(i,j))) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        });
     }
 }
 
