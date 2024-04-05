@@ -76,4 +76,8 @@ public class Board4DesignViewModel extends BoardViewModel{
     public void clearGrid() {
         this.board.clearGrid();
     }
+    public void createRandomGrid() {
+        clearGrid();
+        this.board.createRandomGrid();
+    }
 }

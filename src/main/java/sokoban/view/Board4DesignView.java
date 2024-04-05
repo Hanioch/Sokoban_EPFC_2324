@@ -39,9 +39,10 @@ public class Board4DesignView extends BoardView {
     private final VBox errorBox = new VBox();
     private HBox buttonsBox = new HBox();
     private StackPane selectedTool;
-    private  Stage primaryStage;
+    private Stage primaryStage;
     private Button playButton;
     private Button clearButton;
+    private Button randomButton;
     public Board4DesignView(Stage primaryStage, Board4DesignViewModel board4DesignViewModel) {
         this.primaryStage = primaryStage;
         this.board4DesignViewModel = board4DesignViewModel;
@@ -69,6 +70,7 @@ public class Board4DesignView extends BoardView {
         setTop(top);
         createPlayButton();
         createClearButton();
+        createRandomButton();
     }
     private void updateWindowTitle() {
         String title = "Sokoban";
@@ -250,6 +252,7 @@ public class Board4DesignView extends BoardView {
         playButton.setOnAction(e -> onPlayClicked());
         buttonsBox.setAlignment(Pos.CENTER);
         buttonsBox.setPadding(new Insets(10));
+        buttonsBox.setSpacing(20);
         playButton.disableProperty().bind(board4DesignViewModel.isAnError());
 
         setBottom(buttonsBox);
@@ -260,8 +263,14 @@ public class Board4DesignView extends BoardView {
         clearButton.setPrefSize(80,30);
         buttonsBox.getChildren().add(clearButton);
         clearButton.setOnAction(e -> onClearClicked());
-        buttonsBox.setAlignment(Pos.CENTER);
-        buttonsBox.setPadding(new Insets(10));
+
+        setBottom(buttonsBox);
+    }
+    private void createRandomButton() {
+        randomButton = new Button("Random Grid");
+        randomButton.setPrefSize(130,30);
+        buttonsBox.getChildren().add(randomButton);
+        randomButton.setOnAction(e -> onRandomClicked());
 
         setBottom(buttonsBox);
     }
@@ -285,6 +294,9 @@ public class Board4DesignView extends BoardView {
 
     private void onClearClicked() {
         board4DesignViewModel.clearGrid();
+    }
+    private void onRandomClicked() {
+        board4DesignViewModel.createRandomGrid();
     }
 
     public void startPlay(Stage secondaryStage) {
