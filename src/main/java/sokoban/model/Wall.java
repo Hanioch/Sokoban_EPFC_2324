@@ -1,7 +1,4 @@
 package sokoban.model;
 
-public class Wall extends Element {
-    public Wall() {
-        super();
-    }
+public abstract class Wall extends Element{
 }

@@ -1,34 +1,41 @@
 package sokoban.model;
 
-import javafx.beans.property.* ;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
-public class Player extends ComposableElement implements Movable {
-
-    private static int X, Y;
-
+public abstract class Player extends ComposableElement {
+    private IntegerProperty x = new SimpleIntegerProperty();
+    private IntegerProperty y = new SimpleIntegerProperty();
     public Player(int x, int y) {
-        super();
-        X = x;
-        Y = y;
+        setX(x);
+        setY(y);
     }
 
     public Player() {
-        super();
+        this(-1, -1);
     }
 
-    public static int getX() {
-        return X;
+    public final int getX() {
+        return x.getValue();
     }
 
-    public static int getY() {
-        return Y;
+    public void setX(int value) {
+        x.set(value);
     }
 
-    public boolean playerIsSet() {
-        return getX() >= 0;
+    public IntegerProperty xProperty() {
+        return x;
     }
-    public void removePlayer() {
-        X = -1;
-        Y = -1;
+
+    public final int getY() {
+        return y.getValue();
+    }
+
+    public final void setY(int value) {
+        y.set(value);
+    }
+
+    public IntegerProperty yProperty() {
+        return y;
     }
 }
