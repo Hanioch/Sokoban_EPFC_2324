@@ -59,7 +59,8 @@ public class Board4PlayView extends BoardView {
 
         scoreLabel = new Label("Score");
         scoreLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-        movesLabel = new Label("Number of moves played: " );
+        movesLabel = new Label();
+        movesLabel.textProperty().bind(board4PlayViewModel.moves().asString("Number of moves played: %d"));
         goalsLabel = new Label("Number of goals reached: " );
 
         topContainer.getChildren().addAll(scoreLabel, movesLabel, goalsLabel);
