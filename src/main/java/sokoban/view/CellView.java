@@ -43,7 +43,16 @@ public abstract class CellView extends StackPane {
         for (Element element : stack) {
             if (element instanceof Box4Play) {
                 addBoxWithNumber((Box4Play)element);
-            } else {
+            } else if(!(element instanceof Target4Play)) {
+                ImageView imageView = new ImageView(getImageForElement(element));
+                imageView.setPreserveRatio(true);
+                imageView.fitWidthProperty().bind(this.widthProperty);
+                imageView.fitHeightProperty().bind(this.heightProperty);
+                this.getChildren().add(imageView);
+            }
+        }
+        for (Element element : stack) {
+            if(element instanceof Target4Play) {
                 ImageView imageView = new ImageView(getImageForElement(element));
                 imageView.setPreserveRatio(true);
                 imageView.fitWidthProperty().bind(this.widthProperty);

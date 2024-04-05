@@ -35,7 +35,13 @@ public class Grid4Play extends Grid {
         Cell4Design[][] oldMatrix = oldGrid.getMatrix();
         for (int i = 0; i < width; i++){
             for (int j = 0; j < height; j++){
-                this.matrix[i][j] = new Cell4Play(oldMatrix[i][j].getStack(), this.player, i, j);
+                ObservableList<Element> oldStack = oldGrid.getCell(i, j).getStack();
+                for (Element elem : oldStack) {
+                    if (elem instanceof Box4Design) {
+                        boxNumber++;
+                    }
+                }
+                this.matrix[i][j] = new Cell4Play(oldMatrix[i][j].getStack(), this.player, i, j, boxNumber);
             }
         }
     }
