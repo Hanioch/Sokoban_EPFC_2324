@@ -37,6 +37,7 @@ public class Board4PlayView extends BoardView {
         bottomContainer.setAlignment(Pos.CENTER);
         setBottom(bottomContainer);
         start(secondaryStage);
+        this.requestFocus();
     }
 
     private void onFinishClicked() {
@@ -93,7 +94,6 @@ public class Board4PlayView extends BoardView {
     private void setupKeyEvents() {
         this.setFocusTraversable(true);
         this.setOnKeyPressed(event -> {
-            this.requestFocus();
             switch(event.getCode()) {
                 case Z,UP -> board4PlayViewModel.movePlayer(Move.UP);
                 case Q,LEFT -> board4PlayViewModel.movePlayer(Move.LEFT);
