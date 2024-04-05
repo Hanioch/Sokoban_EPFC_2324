@@ -1,6 +1,7 @@
 package sokoban.model;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
@@ -13,7 +14,15 @@ public class Grid4Play extends Grid {
     private int height;
     private Player4Play player;
     private int boxNumber = 0;
+    private IntegerProperty boxesOnTargetsProperty = new SimpleIntegerProperty(0);
+    private IntegerProperty totalTargetProperty = new SimpleIntegerProperty(0);
 
+    public IntegerProperty totalTargetProperty() {
+        return totalTargetProperty;
+    }
+    public IntegerProperty boxesOnTargetsProperty() {
+        return boxesOnTargetsProperty;
+    }
     public Grid4Play(int width, int height, Grid4Design oldGrid, Player4Play player) {
         super(width, height);
         this.matrix = new Cell4Play[width][height];
@@ -24,7 +33,7 @@ public class Grid4Play extends Grid {
         this.player = player;
 
         recreateMatrix();
-
+        recalculateBoxesAndTargets();
     }
 
     ReadOnlyListProperty<Element> valueProperty(int line, int col) {
@@ -45,7 +54,23 @@ public class Grid4Play extends Grid {
             }
         }
     }
-
+    public void recalculateBoxesAndTargets() {
+        int count = 0;
+        int target = 0;
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                ObservableList<Element> stack = matrix[i][j].getValue();
+                if (stack.stream().anyMatch(item -> item instanceof Target)){
+                    target++;
+                    if( stack.stream().anyMatch(item -> item instanceof Box)) {
+                        count++;
+                    }
+                }
+            }
+        }
+        boxesOnTargetsProperty.set(count);
+        totalTargetProperty.set(target);
+    }
     public Cell4Play getCell(int x, int y) {
         if (matrix[x][y] == null) {
             return new Cell4Play();
