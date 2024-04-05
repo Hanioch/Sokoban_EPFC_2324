@@ -20,14 +20,14 @@ public class Cell4Play extends Cell{
         this.y = y;
         recreateStack(stack);
     }
-    public Cell4Play(ObservableList<Element> stack, Player4Play player, int x, int y) {
-        super();
-        this.boxnumber = boxnumber;
-        this.player = player;
-        this.x = x;
-        this.y = y;
-        recreateStack(stack);
-    }
+//    public Cell4Play(ObservableList<Element> stack, Player4Play player, int x, int y) {
+//        super();
+//        this.boxnumber = boxnumber;
+//        this.player = player;
+//        this.x = x;
+//        this.y = y;
+//        recreateStack(stack);
+//    }
     public void recreateStack(ObservableList<Element> stack) {
         for(Element elem : stack) {
             String type = elem.getClass().getSimpleName();
@@ -37,7 +37,7 @@ public class Cell4Play extends Cell{
                 case "Player4Design" -> {this.player.setX(x);
                                             this.player.setY(y);
                                             this.stack.add(this.player);}
-                case "Box4Design" -> this.stack.add(new Box4Play());
+                case "Box4Design" -> this.stack.add(new Box4Play(boxnumber));
                 case "Target4Design" -> this.stack.add(new Target4Play());
             }
         }
