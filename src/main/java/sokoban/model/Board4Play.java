@@ -34,6 +34,8 @@ public class Board4Play extends Board{
         return this.grid;
     }
 
+    // goDown, goUp, goLeft, goRight à factoriser
+
     public void goDown() {
         Movable.Direction direction = Movable.Direction.DOWN;
         boolean canGo = false;
@@ -41,8 +43,14 @@ public class Board4Play extends Board{
         if(canGo) {
             ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), direction);
             if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
+                Box4Play box = new Box4Play();
+                for(Element elem : grid.getCell(player.getX(), player.getY()+1).getStack()){
+                    if(elem instanceof Box) {
+                        box = (Box4Play)elem;
+                    }
+                }
                 grid.getCell(player.getX(), player.getY()+1).getStack().removeIf(item -> item instanceof Box);
-                grid.getCell(player.getX(), player.getY()+2).getStack().add(new Box4Play());
+                grid.getCell(player.getX(), player.getY()+2).getStack().add(box);
             }
             player.move(direction);
             grid.getCell(player.getX(), player.getY()-1).getStack().remove(player);
@@ -57,8 +65,14 @@ public class Board4Play extends Board{
         if(canGo) {
             ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), direction);
             if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
+                Box4Play box = new Box4Play();
+                for(Element elem : grid.getCell(player.getX(), player.getY()-1).getStack()){
+                    if(elem instanceof Box) {
+                        box = (Box4Play)elem;
+                    }
+                }
                 grid.getCell(player.getX(), player.getY()-1).getStack().removeIf(item -> item instanceof Box);
-                grid.getCell(player.getX(), player.getY()-2).getStack().add(new Box4Play());
+                grid.getCell(player.getX(), player.getY()-2).getStack().add(box);
             }
             player.move(direction);
             grid.getCell(player.getX(), player.getY()+1).getStack().remove(player);
@@ -72,8 +86,14 @@ public class Board4Play extends Board{
         if(canGo) {
             ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), direction);
             if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
+                Box4Play box = new Box4Play();
+                for(Element elem : grid.getCell(player.getX()+1, player.getY()).getStack()){
+                    if(elem instanceof Box) {
+                        box = (Box4Play)elem;
+                    }
+                }
                 grid.getCell(player.getX()+1, player.getY()).getStack().removeIf(item -> item instanceof Box);
-                grid.getCell(player.getX()+2, player.getY()).getStack().add(new Box4Play());
+                grid.getCell(player.getX()+2, player.getY()).getStack().add(box);
             }
             player.move(direction);
             grid.getCell(player.getX()-1, player.getY()).getStack().remove(player);
@@ -87,13 +107,22 @@ public class Board4Play extends Board{
         if(canGo) {
             ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), direction);
             if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
+                Box4Play box = new Box4Play();
+                for(Element elem : grid.getCell(player.getX()-1, player.getY()).getStack()){
+                    if(elem instanceof Box) {
+                        box = (Box4Play)elem;
+                    }
+                }
                 grid.getCell(player.getX()-1, player.getY()).getStack().removeIf(item -> item instanceof Box);
-                grid.getCell(player.getX()-2, player.getY()).getStack().add(new Box4Play());
+                grid.getCell(player.getX()-2, player.getY()).getStack().add(box);
             }
             player.move(direction);
             grid.getCell(player.getX()+1, player.getY()).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
         }
+    }
+    private void go(){
+
     }
     public Player4Play getPlayer(){
         return player;
