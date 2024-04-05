@@ -37,10 +37,12 @@ public class Board4DesignView extends BoardView {
     private  VBox toolBox = new VBox();
     private  VBox top = new VBox();
     private final VBox errorBox = new VBox();
-    private HBox playButtonBox= new HBox();
+    private HBox buttonsBox = new HBox();
     private StackPane selectedTool;
-    private  Stage primaryStage;
+    private Stage primaryStage;
     private Button playButton;
+    private Button clearButton;
+    private Button randomButton;
     public Board4DesignView(Stage primaryStage, Board4DesignViewModel board4DesignViewModel) {
         this.primaryStage = primaryStage;
         this.board4DesignViewModel = board4DesignViewModel;
@@ -67,6 +69,8 @@ public class Board4DesignView extends BoardView {
         createToolBox();
         setTop(top);
         createPlayButton();
+        createClearButton();
+        createRandomButton();
     }
     private void updateWindowTitle() {
         String title = "Sokoban";
@@ -160,7 +164,7 @@ public class Board4DesignView extends BoardView {
         headerBox.getChildren().clear();
         top.getChildren().clear();
         errorBox.getChildren().clear();
-        playButtonBox.getChildren().clear();
+        buttonsBox.getChildren().clear();
         configMainComponents();
     }
 
@@ -189,7 +193,7 @@ public class Board4DesignView extends BoardView {
 
         DoubleBinding gridWidth = Bindings.createDoubleBinding(() -> {
                     var size = Math.min(widthProperty().get() - toolBox.widthProperty().get(), heightProperty().get()
-                            - top.heightProperty().get() - playButtonBox.heightProperty().get());
+                            - top.heightProperty().get() - buttonsBox.heightProperty().get());
                     return Math.floor(size / GRID_WIDTH) * GRID_WIDTH;
                 },
                 widthProperty(),
@@ -197,7 +201,7 @@ public class Board4DesignView extends BoardView {
                 headerBox.heightProperty());
 
         DoubleBinding gridHeight = Bindings.createDoubleBinding(() -> {
-                    var size = Math.min(heightProperty().get() - top.heightProperty().get() - playButtonBox.heightProperty().get(), widthProperty().get()
+                    var size = Math.min(heightProperty().get() - top.heightProperty().get() - buttonsBox.heightProperty().get(), widthProperty().get()
                             - toolBox.widthProperty().get());
                     return Math.floor(size / GRID_HEIGHT) * GRID_HEIGHT;
                 },
@@ -244,14 +248,33 @@ public class Board4DesignView extends BoardView {
     private void createPlayButton() {
         playButton = new Button("Play");
         playButton.setPrefSize(80,30);
-        playButtonBox.getChildren().add(playButton);
+        buttonsBox.getChildren().add(playButton);
         playButton.setOnAction(e -> onPlayClicked());
-        playButtonBox.setAlignment(Pos.CENTER);
-        playButtonBox.setPadding(new Insets(10));
+        buttonsBox.setAlignment(Pos.CENTER);
+        buttonsBox.setPadding(new Insets(10));
+        buttonsBox.setSpacing(20);
         playButton.disableProperty().bind(board4DesignViewModel.isAnError());
 
-        setBottom(playButtonBox);
+        setBottom(buttonsBox);
     }
+
+    private void createClearButton() {
+        clearButton = new Button("Clear");
+        clearButton.setPrefSize(80,30);
+        buttonsBox.getChildren().add(clearButton);
+        clearButton.setOnAction(e -> onClearClicked());
+
+        setBottom(buttonsBox);
+    }
+    private void createRandomButton() {
+        randomButton = new Button("Random Grid");
+        randomButton.setPrefSize(130,30);
+        buttonsBox.getChildren().add(randomButton);
+        randomButton.setOnAction(e -> onRandomClicked());
+
+        setBottom(buttonsBox);
+    }
+
     private void onPlayClicked() {
         if (board4DesignViewModel.isModifiedProperty().get()) {
             boolean proceed = confirmSaveChanges();
@@ -268,6 +291,14 @@ public class Board4DesignView extends BoardView {
         }
 
     }
+
+    private void onClearClicked() {
+        board4DesignViewModel.clearGrid();
+    }
+    private void onRandomClicked() {
+        board4DesignViewModel.createRandomGrid();
+    }
+
     public void startPlay(Stage secondaryStage) {
         int width = board4DesignViewModel.gridWidth();
         int height = board4DesignViewModel.gridHeight();

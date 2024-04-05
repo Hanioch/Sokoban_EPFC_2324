@@ -72,4 +72,12 @@ public class Board4DesignViewModel extends BoardViewModel{
     public int gridHeight(){
         return board.getGrid().getHeight();
     }
+
+    public void clearGrid() {
+        this.board.clearGrid();
+    }
+    public void createRandomGrid() {
+        clearGrid();
+        this.board.createRandomGrid();
+    }
 }
