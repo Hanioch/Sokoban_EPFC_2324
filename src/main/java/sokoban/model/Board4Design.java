@@ -111,8 +111,7 @@ public class Board4Design extends Board {
         }
     }
 
-    // Rayan : actuellement le RandomGrid a ses limites : ne fonctionnera pas correctement si grid trop petit.
-    // Sert bien pour tester avec grid par défaut.
+    // Rayan : le RandomGrid a ses limites et construit un niveau très simple de test
     public void createRandomGrid() {
         int playerHeight = randomGen.nextInt(2, grid.getWidth()-1);
         Set<Integer> threeBoxWidths = createThreeWidths("box");
