@@ -28,7 +28,7 @@ public class Cell4Play extends Cell{
         this.y = y;
         recreateStack(stack);
     }
-    private void recreateStack(ObservableList<Element> stack) {
+    public void recreateStack(ObservableList<Element> stack) {
         for(Element elem : stack) {
             String type = elem.getClass().getSimpleName();
             switch (type) {

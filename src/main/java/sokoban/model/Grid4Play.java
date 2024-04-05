@@ -60,6 +60,10 @@ public class Grid4Play extends Grid {
         ObservableList<Element> nextStack = getNextStack(playerX, playerY, direction);
         // vérifie que les éléments contenus dans le stack visé soient Target ou Ground pour pouvoir aller dessus
         if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
+            //vérifie qu'on ne pousse pas une box hors du grid
+            if (!boxIsStillOnGrid(playerX, playerY, direction)) {
+                return false;
+            }
             ObservableList<Element> secondNextStack = getSecondNextStack(playerX, playerY, direction);
             return (secondNextStack.stream().allMatch(item -> item instanceof Target || item instanceof Ground));
         }
@@ -72,6 +76,16 @@ public class Grid4Play extends Grid {
             case DOWN -> playerY ++;
             case LEFT -> playerX --;
             case RIGHT -> playerX ++;
+        }
+        return (playerX >= 0 && playerX < this.width && playerY >= 0 && playerY < this.height);
+    }
+
+    private boolean boxIsStillOnGrid(int playerX, int playerY, Movable.Direction direction) {
+        switch(direction) {
+            case UP -> playerY -=2;
+            case DOWN -> playerY +=2;
+            case LEFT -> playerX -=2;
+            case RIGHT -> playerX +=2;
         }
         return (playerX >= 0 && playerX < this.width && playerY >= 0 && playerY < this.height);
     }

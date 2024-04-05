@@ -35,57 +35,62 @@ public class Board4Play extends Board{
     }
 
     public void goDown() {
+        Movable.Direction direction = Movable.Direction.DOWN;
         boolean canGo = false;
-        canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.DOWN);
+        canGo = grid.canGo(player.getX(), player.getY(), direction);
         if(canGo) {
-            ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), Movable.Direction.DOWN);
+            ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), direction);
             if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
                 grid.getCell(player.getX(), player.getY()+1).getStack().removeIf(item -> item instanceof Box);
                 grid.getCell(player.getX(), player.getY()+2).getStack().add(new Box4Play());
             }
-            player.move(Movable.Direction.DOWN);
+            player.move(direction);
             grid.getCell(player.getX(), player.getY()-1).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
         }
     }
+
     public void goUp() {
+        Movable.Direction direction = Movable.Direction.UP;
         boolean canGo = false;
-        canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.UP);
+        canGo = grid.canGo(player.getX(), player.getY(), direction);
         if(canGo) {
-            ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), Movable.Direction.UP);
+            ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), direction);
             if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
                 grid.getCell(player.getX(), player.getY()-1).getStack().removeIf(item -> item instanceof Box);
                 grid.getCell(player.getX(), player.getY()-2).getStack().add(new Box4Play());
             }
-            player.move(Movable.Direction.UP);
+            player.move(direction);
             grid.getCell(player.getX(), player.getY()+1).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
         }
     }
     public void goRight() {
+        Movable.Direction direction = Movable.Direction.RIGHT;
         boolean canGo = false;
-        canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.RIGHT);
+        canGo = grid.canGo(player.getX(), player.getY(), direction);
         if(canGo) {
-            ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), Movable.Direction.RIGHT);
+            ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), direction);
             if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
                 grid.getCell(player.getX()+1, player.getY()).getStack().removeIf(item -> item instanceof Box);
                 grid.getCell(player.getX()+2, player.getY()).getStack().add(new Box4Play());
             }
-            player.move(Movable.Direction.RIGHT);
+            player.move(direction);
             grid.getCell(player.getX()-1, player.getY()).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
         }
     }
     public void goLeft() {
+        Movable.Direction direction = Movable.Direction.LEFT;
         boolean canGo = false;
-        canGo = grid.canGo(player.getX(), player.getY(), Movable.Direction.LEFT);
+        canGo = grid.canGo(player.getX(), player.getY(), direction);
         if(canGo) {
-            ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), Movable.Direction.LEFT);
+            ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), direction);
             if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
                 grid.getCell(player.getX()-1, player.getY()).getStack().removeIf(item -> item instanceof Box);
                 grid.getCell(player.getX()-2, player.getY()).getStack().add(new Box4Play());
             }
-            player.move(Movable.Direction.LEFT);
+            player.move(direction);
             grid.getCell(player.getX()+1, player.getY()).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
         }
