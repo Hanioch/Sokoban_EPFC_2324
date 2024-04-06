@@ -1,6 +1,5 @@
 package sokoban.view;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
@@ -10,12 +9,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import sokoban.model.Player4Play;
-import sokoban.viewmodel.Board4DesignViewModel;
 import sokoban.viewmodel.Board4PlayViewModel;
+import sokoban.model.Movable.Direction;
+
 
 
 public class Board4PlayView extends BoardView {
@@ -36,7 +34,6 @@ public class Board4PlayView extends BoardView {
         this.board4PlayViewModel = board4PlayViewModel;
         this.secondaryStage = secondaryStage;
         this.primaryStage = primaryStage;
-
 
         init();
         start(secondaryStage);
@@ -108,60 +105,20 @@ public class Board4PlayView extends BoardView {
 
         Grid4PlayView grid4PlayView = new Grid4PlayView(board4PlayViewModel, board4PlayViewModel.getGridViewModel(), gridWidth, gridHeight);
 
-
         grid4PlayView.setAlignment(Pos.CENTER);
         setCenter(grid4PlayView);
     }
 
     private void configureKeyListeners() {
         this.setOnKeyPressed(event -> {
-            if (!board4PlayViewModel.gameWon().get()) {
-                KeyCode keyCode = event.getCode();
-                // Rayan: fonctionne correctement avec zqsd mais je dois maintenir SHIFT pour que les flèches
-                // fonctionnent ??? une idée ?
-                switch (keyCode) {
-                    case Q, LEFT:
-                        handleLeftArrowKeyPressed();
-                        break;
-                    case D, RIGHT:
-                        handleRightArrowKeyPressed();
-                        break;
-                    case Z, UP:
-                        handleUpArrowKeyPressed();
-                        break;
-                    case S, DOWN:
-                        handleDownArrowKeyPressed();
-                        break;
-                    // ctrl+z et ctrl+y à rajouter pour la troisième itération
-                    default:
-                        break;
-                }
+            KeyCode keyCode = event.getCode();
+            switch (keyCode) {
+                case Z, UP -> board4PlayViewModel.movePlayer(Direction.UP);
+                case Q, LEFT -> board4PlayViewModel.movePlayer(Direction.LEFT);
+                case D, RIGHT -> board4PlayViewModel.movePlayer(Direction.RIGHT);
+                case S, DOWN -> board4PlayViewModel.movePlayer(Direction.DOWN);
             }
         });
     }
 
-    private void handleDownArrowKeyPressed() {
-        board4PlayViewModel.goDown();
-        checkGameStatus();
-    }
-
-    private void handleUpArrowKeyPressed() {
-        board4PlayViewModel.goUp();
-        checkGameStatus();
-    }
-
-    private void handleRightArrowKeyPressed() {
-        board4PlayViewModel.goRight();
-        checkGameStatus();
-    }
-
-    private void handleLeftArrowKeyPressed() {
-        board4PlayViewModel.goLeft();
-        checkGameStatus();
-    }
-    private void checkGameStatus() {
-        if (board4PlayViewModel.gameWon().get()) {
-            winMessageLabel.setText("You won in " + board4PlayViewModel.moves().get() + " moves, congratulations!");
-        }
-    }
 }

@@ -6,6 +6,10 @@ import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import sokoban.model.Movable.Direction;
+
+
+import java.util.ArrayList;
 
 public class Grid4Play extends Grid {
     private Cell4Play[][] matrix;
@@ -16,6 +20,10 @@ public class Grid4Play extends Grid {
     private int boxNumber = 0;
     private IntegerProperty boxesOnTargetsProperty = new SimpleIntegerProperty(0);
     private IntegerProperty totalTargetProperty = new SimpleIntegerProperty(0);
+
+    ReadOnlyListProperty<Element> valueProperty(int line, int col) {
+        return matrix[line][col].stackProperty();
+    }
 
     public IntegerProperty totalTargetProperty() {
         return totalTargetProperty;
@@ -35,11 +43,6 @@ public class Grid4Play extends Grid {
         recreateMatrix();
         recalculateBoxesAndTargets();
     }
-
-    ReadOnlyListProperty<Element> valueProperty(int line, int col) {
-        return matrix[line][col].stackProperty();
-    }
-
     public void recreateMatrix() {
         Cell4Design[][] oldMatrix = oldGrid.getMatrix();
         for (int i = 0; i < width; i++){
@@ -72,9 +75,10 @@ public class Grid4Play extends Grid {
         totalTargetProperty.set(target);
     }
     public Cell4Play getCell(int x, int y) {
-        if (matrix[x][y] == null) {
-            return new Cell4Play();
-        }
+        if (x<0 || x>=getWidth() || y<0 || y>=getHeight()) return null;
+
+        if (matrix[x][y] == null) return new Cell4Play();
+
         return matrix[x][y];
     }
 
@@ -83,58 +87,58 @@ public class Grid4Play extends Grid {
         return stack;
     }
 
+    public boolean movePlayer(Direction direction){
+        ArrayList<Integer> position = player.move(direction);
+        int x = position.get(0);
+        int y = position.get(1);
 
-    public boolean canGo(int playerX, int playerY, Movable.Direction direction) {
-        if (!isStillOnGrid(playerX, playerY, direction)) {
-            return false;
-        }
-        ObservableList<Element> nextStack = getNextStack(playerX, playerY, direction);
-        // vérifie que les éléments contenus dans le stack visé soient Target ou Ground pour pouvoir aller dessus
-        if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
-            //vérifie qu'on ne pousse pas une box hors du grid
-            if (!boxIsStillOnGrid(playerX, playerY, direction)) {
-                return false;
-            }
-            ObservableList<Element> secondNextStack = getSecondNextStack(playerX, playerY, direction);
-            return (secondNextStack.stream().allMatch(item -> item instanceof Target || item instanceof Ground));
-        }
-        return (nextStack.stream().allMatch(item -> item instanceof Target || item instanceof Ground));
-    }
+        Cell4Play cell = getCell(x,y);
 
-    private boolean isStillOnGrid(int playerX, int playerY, Movable.Direction direction) {
-        switch(direction) {
-            case UP -> playerY --;
-            case DOWN -> playerY ++;
-            case LEFT -> playerX --;
-            case RIGHT -> playerX ++;
-        }
-        return (playerX >= 0 && playerX < this.width && playerY >= 0 && playerY < this.height);
-    }
+        if (cell == null) return false;
 
-    private boolean boxIsStillOnGrid(int playerX, int playerY, Movable.Direction direction) {
-        switch(direction) {
-            case UP -> playerY -=2;
-            case DOWN -> playerY +=2;
-            case LEFT -> playerX -=2;
-            case RIGHT -> playerX +=2;
+        boolean cellContainBoxAndCannotMove =false;
+
+        if (cell.containsBox()){
+            Box4Play box = (Box4Play) cell.getBox();
+            box.setPosition(x,y);
+            ArrayList<Integer> positionBox = box.move(direction);
+            int currentBoxNumber = box.getNumber();
+            boolean nextCellCanMove = moveBox(positionBox.get(0), positionBox.get(1),currentBoxNumber);
+            cellContainBoxAndCannotMove = !nextCellCanMove;
         }
-        return (playerX >= 0 && playerX < this.width && playerY >= 0 && playerY < this.height);
+        boolean cannotMove= cell.containsWall() || cellContainBoxAndCannotMove ;
+
+        if (cannotMove) {
+          return false;
+        }
+
+        matrix[x][y].addElement(new Player4Play(x,y));
+        player.setX(x);
+        player.setY(y);
+        recalculateBoxesAndTargets();
+        return true;
+
     }
 
-    public ObservableList<Element> getNextStack(int playerX, int playerY, Movable.Direction direction) {
-        return switch (direction) {
-            case UP -> getStack(playerX, playerY - 1);
-            case DOWN -> getStack(playerX, playerY + 1);
-            case LEFT -> getStack(playerX - 1, playerY);
-            case RIGHT -> getStack(playerX + 1, playerY);
-        };
+    public boolean moveBox(int x, int y, int boxNumber){
+        Cell4Play cell = getCell(x,y);
+
+        if (cell == null || cell.containsBox() || cell.containsWall() )return false;
+
+        matrix[x][y].addElement(new Box4Play(boxNumber));
+
+
+        return true;
+
     }
-    private ObservableList<Element> getSecondNextStack(int playerX, int playerY, Movable.Direction direction) {
-        return switch (direction) {
-            case UP -> getStack(playerX, playerY - 2);
-            case DOWN -> getStack(playerX, playerY + 2);
-            case LEFT -> getStack(playerX - 2, playerY);
-            case RIGHT -> getStack(playerX + 2, playerY);
-        };
+
+    public Element getPlayerElement() {
+        Cell4Play cellPlayer = getCell(player.getX(),player.getY());
+        for (Element elem : cellPlayer.stack  )
+            if (elem instanceof Player4Play) return elem;
+        return null;
     }
+
+
+
 }

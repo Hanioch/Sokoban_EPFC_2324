@@ -1,10 +1,9 @@
 package sokoban.model;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Cell4Play extends Cell{
-    private int  boxnumber ;
+    private int boxNumber;
     private Player4Play player;
     private int x;
     private int y;
@@ -12,16 +11,16 @@ public class Cell4Play extends Cell{
         super();
         stack.add(new Ground4Play());
     }
-    public Cell4Play(ObservableList<Element> stack, Player4Play player, int x, int y, int boxnumber) {
+    public Cell4Play(ObservableList<Element> stack, Player4Play player, int x, int y, int boxNumber) {
         super();
-        this.boxnumber = boxnumber;
+        this.boxNumber = boxNumber;
         this.player = player;
         this.x = x;
         this.y = y;
+
         recreateStack(stack);
     }
-
-    public void recreateStack(ObservableList<Element> stack) {
+    private void recreateStack(ObservableList<Element> stack) {
         for(Element elem : stack) {
             String type = elem.getClass().getSimpleName();
             switch (type) {
@@ -30,9 +29,43 @@ public class Cell4Play extends Cell{
                 case "Player4Design" -> {this.player.setX(x);
                                             this.player.setY(y);
                                             this.stack.add(this.player);}
-                case "Box4Design" -> this.stack.add(new Box4Play(boxnumber));
+                case "Box4Design" -> this.stack.add(new Box4Play(boxNumber));
                 case "Target4Design" -> this.stack.add(new Target4Play());
             }
         }
+    }
+
+    public void addElement(Element element){
+            boolean containsTarget =  stack.stream().anyMatch(item -> item instanceof Target4Play);
+            stack.clear();
+            stack.add(new Ground4Design());
+            stack.add(element);
+
+            if (containsTarget)
+                stack.add(new Target4Play());
+    }
+    public boolean containsWall(){
+        return stack.stream().anyMatch(item -> item instanceof Wall4Play);
+    }
+
+    public boolean containsOnlyTarget(){
+       return stack.size() == 2 && stack.get(1) instanceof Target4Play;
+    }
+
+    public boolean containsBox(){
+        return stack.stream().anyMatch(item -> item instanceof Box4Play);
+    }
+    public Element getBox(){
+        if (containsBox()){
+            for (Element elem : stack) {
+                if (elem instanceof Box4Play)
+                    return elem;
+            }
+        }
+        return new Box4Play(0);
+
+    }
+    public void removeElement(Element element) {
+        stack.remove(element);
     }
 }
