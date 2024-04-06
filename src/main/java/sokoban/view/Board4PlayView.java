@@ -1,43 +1,69 @@
 package sokoban.view;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import sokoban.Move;
-import sokoban.viewmodel.Board4DesignViewModel;
 import sokoban.viewmodel.Board4PlayViewModel;
+import sokoban.model.Movable.Direction;
+
 
 
 public class Board4PlayView extends BoardView {
-    private static  int SCENE_MIN_WIDTH = 1000;
-    private static  int SCENE_MIN_HEIGHT = 800;
+    private static int SCENE_MIN_WIDTH = 1000;
+    private static int SCENE_MIN_HEIGHT = 800;
     private Board4PlayViewModel board4PlayViewModel;
-    private  Stage secondaryStage;
-    private  Stage primaryStage;
+    private Stage secondaryStage;
+    private Stage primaryStage;
     private Button finishButton;
-    public Board4PlayView(Stage secondaryStage,Stage primaryStage, Board4PlayViewModel board4PlayViewModel) {
+
+    private Label scoreLabel;
+    private Label movesLabel;
+    private Label goalsLabel;
+
+    private HBox bottomContainer = new HBox();
+    private VBox topContainer = new VBox();
+
+    public Board4PlayView(Stage secondaryStage, Stage primaryStage, Board4PlayViewModel board4PlayViewModel) {
         this.board4PlayViewModel = board4PlayViewModel;
         this.secondaryStage = secondaryStage;
         this.primaryStage = primaryStage;
 
+        init();
+        start(secondaryStage);
+        this.requestFocus();
+    }
 
+    private void init() {
         finishButton = new Button("Finish");
+        finishButton.setPrefSize(80, 30);
         finishButton.setOnAction(event -> onFinishClicked());
 
         HBox bottomContainer = new HBox(finishButton);
         bottomContainer.setAlignment(Pos.CENTER);
+        bottomContainer.setPadding(new Insets(10));
+        //bottomContainer.getChildren().addAll(finishButton);
         setBottom(bottomContainer);
-        start(secondaryStage);
-        this.requestFocus();
+
+        topContainer.setAlignment(Pos.CENTER_LEFT);
+        topContainer.setSpacing(10);
+        topContainer.setPadding(new Insets(10, 0, 0, 300));
+
+        scoreLabel = new Label("Score");
+        scoreLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        movesLabel = new Label("Number of moves played: ");
+        goalsLabel = new Label("Number of goals reached: ");
+
+        topContainer.getChildren().addAll(scoreLabel, movesLabel, goalsLabel);
+
+        setTop(topContainer);
     }
 
     private void onFinishClicked() {
@@ -52,16 +78,14 @@ public class Board4PlayView extends BoardView {
         Scene scene = new Scene(this, SCENE_MIN_WIDTH, SCENE_MIN_HEIGHT);
 
         stage.setScene(scene);
-        setupKeyEvents();
         stage.show();
         stage.setMinHeight(stage.getHeight());
         stage.setMinWidth(stage.getWidth());
-
-
     }
 
     private void configMainComponents() {
         createGrid();
+        configureKeyListeners();
     }
 
     private void createGrid() {
@@ -69,7 +93,7 @@ public class Board4PlayView extends BoardView {
         int GRID_HEIGHT = board4PlayViewModel.gridHeight();
         DoubleBinding gridWidth = Bindings.createDoubleBinding(
                 () -> {
-                    var size = Math.min(widthProperty().get() , heightProperty().get());
+                    var size = Math.min(widthProperty().get(), heightProperty().get() - topContainer.heightProperty().get() - bottomContainer.heightProperty().get());
                     return Math.floor(size / GRID_WIDTH) * GRID_WIDTH;
                 },
                 widthProperty(),
@@ -77,7 +101,7 @@ public class Board4PlayView extends BoardView {
 
         DoubleBinding gridHeight = Bindings.createDoubleBinding(
                 () -> {
-                    var size = Math.min(heightProperty().get() , widthProperty().get());
+                    var size = Math.min(heightProperty().get() - topContainer.heightProperty().get() - bottomContainer.heightProperty().get(), widthProperty().get());
                     return Math.floor(size / GRID_HEIGHT) * GRID_HEIGHT;
                 },
                 widthProperty(),
@@ -85,24 +109,21 @@ public class Board4PlayView extends BoardView {
 
         Grid4PlayView grid4PlayView = new Grid4PlayView(board4PlayViewModel, board4PlayViewModel.getGridViewModel(), gridWidth, gridHeight);
 
-        //grid4PlayView.minHeightProperty().bind(gridHeight);
-        //grid4PlayView.minWidthProperty().bind(gridWidth);
         grid4PlayView.setAlignment(Pos.CENTER);
         grid4PlayView.setStyle("-fx-border-color: red; -fx-border-width: 5;");
         setCenter(grid4PlayView);
     }
-    private void setupKeyEvents() {
-        this.setFocusTraversable(true);
+
+    private void configureKeyListeners() {
         this.setOnKeyPressed(event -> {
-            switch(event.getCode()) {
-                case Z,UP -> board4PlayViewModel.movePlayer(Move.UP);
-                case Q,LEFT -> board4PlayViewModel.movePlayer(Move.LEFT);
-                case D,RIGHT -> board4PlayViewModel.movePlayer(Move.RIGHT);
-                case S,DOWN -> board4PlayViewModel.movePlayer(Move.DOWN);
+            KeyCode keyCode = event.getCode();
+            switch (keyCode) {
+                case Z, UP -> board4PlayViewModel.movePlayer(Direction.UP);
+                case Q, LEFT -> board4PlayViewModel.movePlayer(Direction.LEFT);
+                case D, RIGHT -> board4PlayViewModel.movePlayer(Direction.RIGHT);
+                case S, DOWN -> board4PlayViewModel.movePlayer(Direction.DOWN);
             }
         });
-
     }
 
 }
-

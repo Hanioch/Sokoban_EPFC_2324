@@ -1,15 +1,13 @@
 package sokoban.model;
 
-import sokoban.Move;
-
 import java.util.ArrayList;
-import java.util.List;
 
-public class Box4Play extends Box implements Movable{
+public class Box4Play extends Box implements Movable {
     private int number;
     private int x, y;
 
     public Box4Play(int number) {
+        super();
         this.number = number;
     }
 
@@ -22,7 +20,7 @@ public class Box4Play extends Box implements Movable{
         this.y = y;
     }
 
-    public ArrayList<Integer> move(Move direction) {
+    public ArrayList<Integer> move(Direction direction) {
         ArrayList<Integer> list = new ArrayList<>();
 
         switch (direction){

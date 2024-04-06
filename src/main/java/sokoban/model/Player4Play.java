@@ -1,19 +1,19 @@
 package sokoban.model;
 
-import sokoban.Move;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class Player4Play extends Player implements Movable {
+
     public Player4Play(int x, int y) {
-        super(x, y);
+        super();
+        setX(x);
+        setY(y);
     }
     public Player4Play() {
-
+        super();
     }
 
-    public ArrayList<Integer> move(Move direction) {
+    public ArrayList<Integer> move(Direction direction) {
         ArrayList<Integer> list = new ArrayList<>();
 
         switch (direction){

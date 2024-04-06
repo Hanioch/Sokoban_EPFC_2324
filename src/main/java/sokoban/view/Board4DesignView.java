@@ -78,7 +78,6 @@ public class Board4DesignView extends BoardView {
     private void setupModificationListener() {
         board4DesignViewModel.isModifiedProperty().addListener((obs, oldVal, newVal) -> {
                 updateWindowTitle();
-
         });
     }
     private void createMenuBar() {
@@ -186,19 +185,19 @@ public class Board4DesignView extends BoardView {
     private void createGrid() {
         int GRID_WIDTH = board4DesignViewModel.gridWidth();
         int GRID_HEIGHT = board4DesignViewModel.gridHeight();
-        DoubleBinding gridWidth = Bindings.createDoubleBinding(
-            () -> {
-                    var size = Math.min(widthProperty().get() - toolBox.widthProperty().get(), heightProperty().get()
-                            - headerBox.heightProperty().get());
-                    return Math.floor(size / GRID_WIDTH) * GRID_WIDTH;
-        },
-        widthProperty(),
-        heightProperty(),
-        headerBox.heightProperty());
 
-        DoubleBinding gridHeight = Bindings.createDoubleBinding(
-                () -> {
-                    var size = Math.min(heightProperty().get() - headerBox.heightProperty().get(), widthProperty().get()
+
+        DoubleBinding gridWidth = Bindings.createDoubleBinding(() -> {
+                    var size = Math.min(widthProperty().get() - toolBox.widthProperty().get(), heightProperty().get()
+                            - top.heightProperty().get() - playButtonBox.heightProperty().get());
+                    return Math.floor(size / GRID_WIDTH) * GRID_WIDTH;
+                },
+                widthProperty(),
+                heightProperty(),
+                headerBox.heightProperty());
+
+        DoubleBinding gridHeight = Bindings.createDoubleBinding(() -> {
+                    var size = Math.min(heightProperty().get() - top.heightProperty().get() - playButtonBox.heightProperty().get(), widthProperty().get()
                             - toolBox.widthProperty().get());
                     return Math.floor(size / GRID_HEIGHT) * GRID_HEIGHT;
                 },
@@ -207,11 +206,7 @@ public class Board4DesignView extends BoardView {
                 headerBox.heightProperty());
 
         Grid4DesignView grid4DesignView = new Grid4DesignView(board4DesignViewModel, board4DesignViewModel.getGridViewModel(), gridWidth, gridHeight);
-
-        //gridView.minHeightProperty().bind(gridHeight);
-       // gridView.minWidthProperty().bind(gridWidth);
         grid4DesignView.setAlignment(Pos.CENTER);
-        grid4DesignView.setStyle("-fx-border-color: red; -fx-border-width: 5;");
         setCenter(grid4DesignView);
     }
 
@@ -242,7 +237,7 @@ public class Board4DesignView extends BoardView {
             }
         }
         toolBox.setAlignment(Pos.CENTER);
-       // toolBox.setPadding(new Insets(20));
+        toolBox.setPadding(new Insets(20));
         toolBox.setSpacing(20);
         setLeft(toolBox);
     }
@@ -277,7 +272,7 @@ public class Board4DesignView extends BoardView {
         int width = board4DesignViewModel.gridWidth();
         int height = board4DesignViewModel.gridHeight();
 
-        Board4Play board4Play = new Board4Play(width, height, board4DesignViewModel.getBoard().getGrid());
+        Board4Play board4Play = new Board4Play(width, height, board4DesignViewModel.getBoard().getGrid(), this.board4DesignViewModel.getBoard().getPlayer());
         Board4PlayViewModel vm= new Board4PlayViewModel(board4Play);
         new Board4PlayView(secondaryStage, primaryStage, vm);
     }

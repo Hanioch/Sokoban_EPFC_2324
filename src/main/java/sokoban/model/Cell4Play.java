@@ -3,31 +3,34 @@ package sokoban.model;
 import javafx.collections.ObservableList;
 
 public class Cell4Play extends Cell{
-    private int  boxnumber ;
+    private int boxNumber;
+    private Player4Play player;
+    private int x;
+    private int y;
     public Cell4Play() {
         super();
         stack.add(new Ground4Play());
     }
-    public Cell4Play(ObservableList<Element> stack, int boxnumber) {
+    public Cell4Play(ObservableList<Element> stack, Player4Play player, int x, int y, int boxNumber) {
         super();
-        this.boxnumber = boxnumber;
-        stack.add(new Ground4Play());
+        this.boxNumber = boxNumber;
+        this.player = player;
+        this.x = x;
+        this.y = y;
+
         recreateStack(stack);
     }
     private void recreateStack(ObservableList<Element> stack) {
-        int i = 0;
         for(Element elem : stack) {
             String type = elem.getClass().getSimpleName();
-            if(type.equals("Ground4Design")) {
-                this.stack.add(new Ground4Play());
-            } else if (type.equals("Wall4Design")) {
-                this.stack.add(new Wall4Play());
-            } else if (type.equals("Player4Design")) {
-                this.stack.add(new Player4Play());
-            } else if (type.equals("Box4Design")) {
-                this.stack.add(new Box4Play(boxnumber));
-            } else if(type.equals("Target4Design")) {
-                this.stack.add(new Target4Play());
+            switch (type) {
+                case "Ground4Design" -> this.stack.add(new Ground4Play());
+                case "Wall4Design" -> this.stack.add(new Wall4Play());
+                case "Player4Design" -> {this.player.setX(x);
+                                            this.player.setY(y);
+                                            this.stack.add(this.player);}
+                case "Box4Design" -> this.stack.add(new Box4Play(boxNumber));
+                case "Target4Design" -> this.stack.add(new Target4Play());
             }
         }
     }
@@ -62,18 +65,4 @@ public class Cell4Play extends Cell{
         return new Box4Play(0);
 
     }
-    public void removeElement(Element element) {
-        stack.remove(element);
-    }
-
-    public void removePlayer(){
-        for (Element element : stackProperty()) {
-            if (element instanceof Player4Play) {
-                removeElement(element);
-                ((Player4Play) element).removePlayer();
-                break;
-            }
-        }
-    }
-
 }
