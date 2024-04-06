@@ -1,13 +1,12 @@
 package sokoban.model;
 
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyListProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 
 public class Board4Play extends Board{
+    private IntegerProperty moves = new SimpleIntegerProperty(0);
+    private BooleanProperty gameWon = new SimpleBooleanProperty(false);
     private Grid4Play grid;
     private Player4Play player = new Player4Play();
 
@@ -41,6 +40,7 @@ public class Board4Play extends Board{
         boolean canGo = false;
         canGo = grid.canGo(player.getX(), player.getY(), direction);
         if(canGo) {
+            incrementMoves();
             ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), direction);
             if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
                 Box4Play box = new Box4Play();
@@ -56,6 +56,8 @@ public class Board4Play extends Board{
             grid.getCell(player.getX(), player.getY()-1).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
         }
+        grid.recalculateBoxesAndTargets();
+        checkWinCondition();
     }
 
     public void goUp() {
@@ -63,6 +65,7 @@ public class Board4Play extends Board{
         boolean canGo = false;
         canGo = grid.canGo(player.getX(), player.getY(), direction);
         if(canGo) {
+            incrementMoves();
             ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), direction);
             if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
                 Box4Play box = new Box4Play();
@@ -78,12 +81,15 @@ public class Board4Play extends Board{
             grid.getCell(player.getX(), player.getY()+1).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
         }
+        grid.recalculateBoxesAndTargets();
+        checkWinCondition();
     }
     public void goRight() {
         Movable.Direction direction = Movable.Direction.RIGHT;
         boolean canGo = false;
         canGo = grid.canGo(player.getX(), player.getY(), direction);
         if(canGo) {
+            incrementMoves();
             ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), direction);
             if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
                 Box4Play box = new Box4Play();
@@ -99,12 +105,15 @@ public class Board4Play extends Board{
             grid.getCell(player.getX()-1, player.getY()).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
         }
+        grid.recalculateBoxesAndTargets();
+        checkWinCondition();
     }
     public void goLeft() {
         Movable.Direction direction = Movable.Direction.LEFT;
         boolean canGo = false;
         canGo = grid.canGo(player.getX(), player.getY(), direction);
         if(canGo) {
+            incrementMoves();
             ObservableList<Element> nextStack = grid.getNextStack(player.getX(), player.getY(), direction);
             if(nextStack.stream().anyMatch(item -> item instanceof Box)) {
                 Box4Play box = new Box4Play();
@@ -120,10 +129,35 @@ public class Board4Play extends Board{
             grid.getCell(player.getX()+1, player.getY()).getStack().remove(player);
             grid.getCell(player.getX(), player.getY()).getStack().add(player);
         }
+        grid.recalculateBoxesAndTargets();
+        checkWinCondition();
     }
     private void go(){
 
     }
+    public void incrementMoves() {
+        moves.set(moves.get() + 1);
+    }
+
+    public IntegerProperty movesProperty() {
+        return moves;
+    }
+    public IntegerProperty boxOnTarget(){
+        return grid.boxesOnTargetsProperty();
+    }
+    public IntegerProperty totalTarget(){
+        return grid.totalTargetProperty();
+    }
+    public BooleanProperty gameWonProperty() {
+        return gameWon;
+    }
+
+    private void checkWinCondition() {
+        if (boxOnTarget().get() == totalTarget().get()) {
+            gameWon.set(true);
+        }
+    }
+
     public Player4Play getPlayer(){
         return player;
     }

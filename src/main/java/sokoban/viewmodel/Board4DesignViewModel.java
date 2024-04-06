@@ -4,6 +4,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import sokoban.model.Board4Design;
 import sokoban.model.Element;
 import sokoban.model.Grid4Design;
@@ -71,5 +72,18 @@ public class Board4DesignViewModel extends BoardViewModel{
     }
     public int gridHeight(){
         return board.getGrid().getHeight();
+    }
+
+    public void clearGrid() {
+        this.board.clearGrid();
+    }
+    public void createRandomGrid() {
+        clearGrid();
+        this.board.createRandomGrid();
+    }
+
+    public BooleanBinding isEmpty() {
+        this.getBoard().getGrid().invalidateBinding();
+        return this.board.gridIsEmpty();
     }
 }

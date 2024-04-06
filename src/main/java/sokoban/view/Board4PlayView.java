@@ -26,10 +26,10 @@ public class Board4PlayView extends BoardView {
     private  Stage primaryStage;
     private Button finishButton;
 
-    private Label scoreLabel;
-    private Label movesLabel;
-    private Label goalsLabel;
-
+    private Label scoreLabel = new Label("Score");
+    private Label movesLabel = new Label();
+    private Label goalsLabel = new Label();
+    private Label winMessageLabel = new Label();
     private HBox bottomContainer = new HBox();
     private VBox topContainer = new VBox();
     public Board4PlayView(Stage secondaryStage,Stage primaryStage, Board4PlayViewModel board4PlayViewModel) {
@@ -50,20 +50,18 @@ public class Board4PlayView extends BoardView {
         HBox bottomContainer = new HBox(finishButton);
         bottomContainer.setAlignment(Pos.CENTER);
         bottomContainer.setPadding(new Insets(10));
-        //bottomContainer.getChildren().addAll(finishButton);
         setBottom(bottomContainer);
 
         topContainer.setAlignment(Pos.CENTER_LEFT);
         topContainer.setSpacing(10);
         topContainer.setPadding(new Insets(10,0,0,300));
 
-        scoreLabel = new Label("Score");
         scoreLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-        movesLabel = new Label("Number of moves played: " );
-        goalsLabel = new Label("Number of goals reached: " );
-
-        topContainer.getChildren().addAll(scoreLabel, movesLabel, goalsLabel);
-
+        movesLabel.textProperty().bind(board4PlayViewModel.moves().asString("Number of moves played: %d"));
+        goalsLabel.textProperty().bind(board4PlayViewModel.boxOnTarget().asString("Number of goals reached: %d"+" of "+ board4PlayViewModel.totalTarget().get()));
+        topContainer.getChildren().addAll(scoreLabel, movesLabel, goalsLabel,winMessageLabel);
+        winMessageLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        winMessageLabel.setPrefSize(800,30);
         setTop(topContainer);
     }
 
@@ -112,48 +110,58 @@ public class Board4PlayView extends BoardView {
 
 
         grid4PlayView.setAlignment(Pos.CENTER);
-        grid4PlayView.setStyle("-fx-border-color: red; -fx-border-width: 5;");
         setCenter(grid4PlayView);
     }
 
     private void configureKeyListeners() {
         this.setOnKeyPressed(event -> {
-            KeyCode keyCode = event.getCode();
-            // Rayan: fonctionne correctement avec zqsd mais je dois maintenir SHIFT pour que les flèches
-            // fonctionnent ??? une idée ?
-            switch (keyCode) {
-                case Q, LEFT:
-                    handleLeftArrowKeyPressed();
-                    break;
-                case D, RIGHT:
-                    handleRightArrowKeyPressed();
-                    break;
-                case Z, UP:
-                    handleUpArrowKeyPressed();
-                    break;
-                case S, DOWN:
-                    handleDownArrowKeyPressed();
-                    break;
-                // ctrl+z et ctrl+y à rajouter pour la troisième itération
-                default:
-                    break;
+            if (!board4PlayViewModel.gameWon().get()) {
+                KeyCode keyCode = event.getCode();
+                // Rayan: fonctionne correctement avec zqsd mais je dois maintenir SHIFT pour que les flèches
+                // fonctionnent ??? une idée ?
+                switch (keyCode) {
+                    case Q, LEFT:
+                        handleLeftArrowKeyPressed();
+                        break;
+                    case D, RIGHT:
+                        handleRightArrowKeyPressed();
+                        break;
+                    case Z, UP:
+                        handleUpArrowKeyPressed();
+                        break;
+                    case S, DOWN:
+                        handleDownArrowKeyPressed();
+                        break;
+                    // ctrl+z et ctrl+y à rajouter pour la troisième itération
+                    default:
+                        break;
+                }
             }
         });
     }
 
     private void handleDownArrowKeyPressed() {
         board4PlayViewModel.goDown();
+        checkGameStatus();
     }
 
     private void handleUpArrowKeyPressed() {
         board4PlayViewModel.goUp();
+        checkGameStatus();
     }
 
     private void handleRightArrowKeyPressed() {
         board4PlayViewModel.goRight();
+        checkGameStatus();
     }
 
     private void handleLeftArrowKeyPressed() {
         board4PlayViewModel.goLeft();
+        checkGameStatus();
+    }
+    private void checkGameStatus() {
+        if (board4PlayViewModel.gameWon().get()) {
+            winMessageLabel.setText("You won in " + board4PlayViewModel.moves().get() + " moves, congratulations!");
+        }
     }
 }
