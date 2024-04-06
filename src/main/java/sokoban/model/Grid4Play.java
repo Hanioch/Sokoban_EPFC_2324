@@ -1,6 +1,10 @@
 package sokoban.model;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import sokoban.model.Movable.Direction;
 
@@ -9,17 +13,24 @@ import java.util.ArrayList;
 
 public class Grid4Play extends Grid {
     private Cell4Play[][] matrix;
-
     private Grid4Design oldGrid;
     private int width;
     private int height;
     private Player4Play player;
     private int boxNumber = 0;
+    private IntegerProperty boxesOnTargetsProperty = new SimpleIntegerProperty(0);
+    private IntegerProperty totalTargetProperty = new SimpleIntegerProperty(0);
 
     ReadOnlyListProperty<Element> valueProperty(int line, int col) {
         return matrix[line][col].stackProperty();
     }
 
+    public IntegerProperty totalTargetProperty() {
+        return totalTargetProperty;
+    }
+    public IntegerProperty boxesOnTargetsProperty() {
+        return boxesOnTargetsProperty;
+    }
     public Grid4Play(int width, int height, Grid4Design oldGrid, Player4Play player) {
         super(width, height);
         this.matrix = new Cell4Play[width][height];
@@ -30,6 +41,7 @@ public class Grid4Play extends Grid {
         this.player = player;
 
         recreateMatrix();
+        recalculateBoxesAndTargets();
     }
     public void recreateMatrix() {
         Cell4Design[][] oldMatrix = oldGrid.getMatrix();
@@ -42,10 +54,26 @@ public class Grid4Play extends Grid {
                     }
                 }
                 this.matrix[i][j] = new Cell4Play(oldMatrix[i][j].getStack(), this.player, i, j, boxNumber);
+            }
+        }
+    }
+    public void recalculateBoxesAndTargets() {
+        int count = 0;
+        int target = 0;
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                ObservableList<Element> stack = matrix[i][j].getValue();
+                if (stack.stream().anyMatch(item -> item instanceof Target)){
+                    target++;
+                    if( stack.stream().anyMatch(item -> item instanceof Box)) {
+                        count++;
+                    }
                 }
             }
         }
-
+        boxesOnTargetsProperty.set(count);
+        totalTargetProperty.set(target);
+    }
     public Cell4Play getCell(int x, int y) {
         if (x<0 || x>=getWidth() || y<0 || y>=getHeight()) return null;
 
@@ -56,12 +84,10 @@ public class Grid4Play extends Grid {
 
     public ObservableList<Element> getStack(int line, int col) {
         ObservableList<Element> stack  = matrix[line][col].getValue();
-        return stack ;
+        return stack;
     }
 
     public boolean movePlayer(Direction direction){
-
-
         ArrayList<Integer> position = player.move(direction);
         int x = position.get(0);
         int y = position.get(1);
@@ -73,11 +99,13 @@ public class Grid4Play extends Grid {
 
         if (cell.containsBox()){
             Box4Play box = (Box4Play) cell.getBox();
+            Element box2 = cell.getBox();
+            System.out.println("element 2 : " + box2 );
             box.setPosition(x,y);
             ArrayList<Integer> positionBox = box.move(direction);
             int currentBoxNumber = box.getNumber();
             boolean nextCellCanMove = moveBox(positionBox.get(0), positionBox.get(1),currentBoxNumber);
-
+            if (nextCellCanMove) cell.removeElement(box2);
             cellContainBoxAndCannotMove = !nextCellCanMove;
         }
         boolean cannotMove= cell.containsWall() || cellContainBoxAndCannotMove ;
@@ -86,9 +114,6 @@ public class Grid4Play extends Grid {
           return false;
         }
 
-        int oldX = player.getX();
-        int oldY = player.getY();
-        Cell4Play cellPlayer = getCell(oldX,oldY);
         matrix[x][y].addElement(new Player4Play(x,y));
         player.setX(x);
         player.setY(y);
@@ -102,6 +127,9 @@ public class Grid4Play extends Grid {
         if (cell == null || cell.containsBox() || cell.containsWall() )return false;
 
         matrix[x][y].addElement(new Box4Play(boxNumber));
+
+        recalculateBoxesAndTargets();
+
         return true;
 
     }

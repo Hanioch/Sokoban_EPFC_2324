@@ -1,8 +1,14 @@
 package sokoban.viewmodel;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import sokoban.model.Board4Design;
 import sokoban.model.Board4Play;
 import sokoban.model.Player4Play;
 import sokoban.model.Movable.Direction;
+import sokoban.model.Target4Play;
 
 public class Board4PlayViewModel extends BoardViewModel {
     private Grid4PlayViewModel gridViewModel;
@@ -27,5 +33,17 @@ public class Board4PlayViewModel extends BoardViewModel {
     }
     public Player4Play getPlayer() {
         return this.board.getPlayer();
+    }
+    public IntegerProperty moves() {
+        return board.movesProperty();
+    }
+    public IntegerProperty boxOnTarget(){
+        return board.boxOnTarget();
+    }
+    public IntegerProperty totalTarget(){
+        return board.totalTarget();
+    }
+    public BooleanProperty gameWon() {
+        return board.gameWonProperty();
     }
 }

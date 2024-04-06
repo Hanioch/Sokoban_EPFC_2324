@@ -26,8 +26,11 @@ public class Cell4PlayViewModel extends CellViewModel{
         Element player =  board4Play.getGrid().getPlayerElement();
         if (player!= null){
            boolean moveSuccessfully =  board4Play.getGrid().movePlayer(direction);
-           if (moveSuccessfully)
+           if (moveSuccessfully){
+               board4Play.incrementMoves();
                stack.remove((player));
+               board4Play.checkWinCondition();
+           }
         }
     }
 

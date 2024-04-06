@@ -65,4 +65,7 @@ public class Cell4Play extends Cell{
         return new Box4Play(0);
 
     }
+    public void removeElement(Element element) {
+        stack.remove(element);
+    }
 }

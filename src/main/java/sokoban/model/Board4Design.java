@@ -1,14 +1,22 @@
 package sokoban.model;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
+
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Board4Design extends Board {
     private Grid4Design grid;
     private int maxFilledCells;
     private Player4Design player = new Player4Design();
 
+    private Random randomGen = new Random();
     private BooleanBinding isFull;
     private BooleanProperty isModifiedProperty = new SimpleBooleanProperty(false);
 
@@ -92,6 +100,65 @@ public class Board4Design extends Board {
     }
     public Grid4Design getGrid(){
         return this.grid;
+    }
+
+    public void clearGrid() {
+        for (int i = 0; i < grid.getWidth(); i++) {
+            for (int j = 0; j < grid.getHeight(); j++) {
+                getGrid().getStack(i,j).clear();
+                getGrid().getStack(i,j).add(new Ground4Design());
+                grid.filledCellsCount.invalidate();
+                grid.invalidateBinding();
+            }
+        }
+    }
+
+    // Rayan : le RandomGrid a ses limites et construit un niveau très simple de test
+    public void createRandomGrid() {
+        int playerHeight = randomGen.nextInt(2, grid.getWidth()-1);
+        Set<Integer> threeBoxWidths = createThreeWidths("box");
+        Set<Integer> threeTargetWidths = createThreeWidths("target");
+
+        for (int i = 0; i < grid.getWidth(); i++) {
+            for (int j = 0; j < grid.getHeight(); j++) {
+                if(i == 0 || j == 0 || i == grid.getWidth()-1 || j == grid.getHeight()-1) {
+                    getGrid().getStack(i,j).add(new Wall4Design());
+                } else if (j == 1 && i == playerHeight) {
+                    getGrid().placePlayer(i,j);
+                } else if (j == 2 && threeBoxWidths.contains(i)){
+                    getGrid().getStack(i,j).add(new Box4Design());
+                } else if (j == grid.getHeight()-2 && threeTargetWidths.contains(i)) {
+                    getGrid().getStack(i,j).add(new Target4Design());
+                }
+            }
+        }
+        grid.filledCellsCount.invalidate();
+        grid.invalidateBinding();
+
+    }
+
+    private Set<Integer> createThreeWidths(String elem) {
+        int origin = elem.equals("box") ? 2 : 1;
+        int end = elem.equals("box") ? grid.getWidth()-2 : grid.getWidth()-1;
+        Set<Integer> set = new TreeSet<>();
+        while (set.size() < 3) {
+            set.add(randomGen.nextInt(origin, end));
+        }
+        return set;
+    }
+
+    public BooleanBinding gridIsEmpty() {
+
+        return Bindings.createBooleanBinding(() -> {
+            for (int i = 0; i < getGrid().getGridWidth(); i++) {
+                for (int j = 0; j < getGrid().getGridHeight(); j++) {
+                    if (!(grid.isEmpty(i,j))) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        });
     }
 }
 
