@@ -93,19 +93,17 @@ public class Grid4Play extends Grid {
         int y = position.get(1);
 
         Cell4Play cell = getCell(x,y);
+
         if (cell == null) return false;
 
         boolean cellContainBoxAndCannotMove =false;
 
         if (cell.containsBox()){
             Box4Play box = (Box4Play) cell.getBox();
-            Element box2 = cell.getBox();
-            System.out.println("element 2 : " + box2 );
             box.setPosition(x,y);
             ArrayList<Integer> positionBox = box.move(direction);
             int currentBoxNumber = box.getNumber();
             boolean nextCellCanMove = moveBox(positionBox.get(0), positionBox.get(1),currentBoxNumber);
-            if (nextCellCanMove) cell.removeElement(box2);
             cellContainBoxAndCannotMove = !nextCellCanMove;
         }
         boolean cannotMove= cell.containsWall() || cellContainBoxAndCannotMove ;
@@ -117,6 +115,7 @@ public class Grid4Play extends Grid {
         matrix[x][y].addElement(new Player4Play(x,y));
         player.setX(x);
         player.setY(y);
+        recalculateBoxesAndTargets();
         return true;
 
     }
@@ -128,7 +127,6 @@ public class Grid4Play extends Grid {
 
         matrix[x][y].addElement(new Box4Play(boxNumber));
 
-        recalculateBoxesAndTargets();
 
         return true;
 
