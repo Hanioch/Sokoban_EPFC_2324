@@ -22,7 +22,7 @@ public class Board4PlayView extends BoardView {
     private Board4PlayViewModel board4PlayViewModel;
     private  Stage secondaryStage;
     private  Stage primaryStage;
-    private Button finishButton;
+    private Button finishButton = new Button("Finish");
 
     private Label scoreLabel = new Label("Score");
     private Label movesLabel = new Label();
@@ -40,13 +40,12 @@ public class Board4PlayView extends BoardView {
         this.requestFocus();
     }
     private void init() {
-        finishButton = new Button("Finish");
         finishButton.setPrefSize(80,30);
         finishButton.setOnAction(event -> onFinishClicked());
 
-        HBox bottomContainer = new HBox(finishButton);
         bottomContainer.setAlignment(Pos.CENTER);
         bottomContainer.setPadding(new Insets(10));
+        bottomContainer.getChildren().addAll(finishButton);
         setBottom(bottomContainer);
 
         topContainer.setAlignment(Pos.CENTER_LEFT);
