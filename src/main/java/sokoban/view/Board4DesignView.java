@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import sokoban.model.*;
 import sokoban.viewmodel.Board4DesignViewModel;
 import javafx.beans.binding.Bindings;
@@ -23,11 +24,12 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import sokoban.viewmodel.Board4PlayViewModel;
 
+import java.io.File;
 import java.util.Optional;
 
 
 public class Board4DesignView extends BoardView {
-    private Board4DesignViewModel board4DesignViewModel;
+    private static Board4DesignViewModel board4DesignViewModel;
     private static  int SCENE_MIN_WIDTH = 1000;
     private static  int SCENE_MIN_HEIGHT = 800;
     private static  int SCENE_MAX_WIDTH = 1400;
@@ -126,7 +128,7 @@ public class Board4DesignView extends BoardView {
     }
     private void newGrid() {
         if (confirmSaveChanges()) {
-            NewGameDialog dialog = new NewGameDialog();
+            NewGameView dialog = new NewGameView();
             int[] dimensions = dialog.showDimension();
             if (dimensions.length == 2) {
                 int width = dimensions[0];
@@ -139,25 +141,50 @@ public class Board4DesignView extends BoardView {
 
     private void openGrid() {
         if (confirmSaveChanges()) {
-            boolean success = OpenDialog.openBoardFromFile(board4DesignViewModel);
+            boolean success = openBoardFromFile();
             if (success) {
                 refreshView();
             }
         }
     }
+    public boolean openBoardFromFile() {
+        Stage stage = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Fichiers XSB (*.xsb)", "*.xsb");
+        fileChooser.getExtensionFilters().add(filter);
 
+        File openFile = fileChooser.showOpenDialog(stage);
+        if (openFile != null) {
+            return board4DesignViewModel.loadBoardFromFile(openFile);
+        }
+        return false;
+    }
     private boolean saveGrid() {
-        boolean saveSuccessful = SaveAsDialog.showSaveDialog(board4DesignViewModel);
-        if (saveSuccessful) {
+        boolean ok = showSaveDialog();
+        if (ok) {
             board4DesignViewModel.isModifiedProperty().set(false);
             showAlert("Save Successful", "The game was saved successfully.", Alert.AlertType.INFORMATION);
             updateWindowTitle();
         } else {
             showAlert("Save Error", "Saving the game failed.", Alert.AlertType.ERROR);
         }
-        return saveSuccessful;
+        return ok;
     }
+    public boolean showSaveDialog() {
+        Stage stage = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Fichiers XSB (*.xsb)", "*.xsb");
+        fileChooser.getExtensionFilters().add(filter);
 
+        String userHomePath = System.getProperty("user.home");
+        fileChooser.setInitialDirectory(new File(userHomePath));
+
+        File saveFile = fileChooser.showSaveDialog(stage);
+        if (saveFile != null) {
+            return board4DesignViewModel.saveBoardToFile(saveFile);
+        }
+        return false;
+    }
     private void refreshView() {
         this.setCenter(null);
         toolBox.getChildren().clear();
