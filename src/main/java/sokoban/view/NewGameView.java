@@ -11,7 +11,7 @@ import javafx.beans.property.StringProperty;
 
 import java.util.Optional;
 
-public class NewGameDialog extends Dialog<int[]> {
+public class NewGameView extends Dialog<int[]> {
 
     private  TextField widthField = new TextField("15");
     private  TextField heightField = new TextField("10");
@@ -20,7 +20,7 @@ public class NewGameDialog extends Dialog<int[]> {
     private  StringProperty widthTextProperty = new SimpleStringProperty();
     private  StringProperty heightTextProperty = new SimpleStringProperty();
 
-    public NewGameDialog() {
+    public NewGameView() {
         setTitle("Sokoban");
         setHeaderText("Give new game dimensions");
 
