@@ -111,14 +111,32 @@ public class Board4PlayView extends BoardView {
 
     private void configureKeyListeners() {
         this.setOnKeyPressed(event -> {
-            KeyCode keyCode = event.getCode();
-            switch (keyCode) {
-                case Z, UP -> board4PlayViewModel.movePlayer(Direction.UP);
-                case Q, LEFT -> board4PlayViewModel.movePlayer(Direction.LEFT);
-                case D, RIGHT -> board4PlayViewModel.movePlayer(Direction.RIGHT);
-                case S, DOWN -> board4PlayViewModel.movePlayer(Direction.DOWN);
+            if (!board4PlayViewModel.gameWon().get()) {
+                KeyCode keyCode = event.getCode();
+                switch (keyCode) {
+                    case Z, UP -> {
+                        board4PlayViewModel.movePlayer(Direction.UP);
+                        checkGameStatus();
+                    }
+                    case Q, LEFT -> {
+                        board4PlayViewModel.movePlayer(Direction.LEFT);
+                        checkGameStatus();
+                    }
+                    case D, RIGHT -> {
+                        board4PlayViewModel.movePlayer(Direction.RIGHT);
+                        checkGameStatus();
+                    }
+                    case S, DOWN -> {
+                        board4PlayViewModel.movePlayer(Direction.DOWN);
+                        checkGameStatus();
+                    }
+                }
             }
         });
     }
-
+    private void checkGameStatus() {
+        if (board4PlayViewModel.gameWon().get()) {
+            winMessageLabel.setText("You won in " + board4PlayViewModel.moves().get() + " moves, congratulations!");
+        }
+    }
 }
