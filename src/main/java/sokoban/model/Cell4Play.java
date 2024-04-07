@@ -65,6 +65,21 @@ public class Cell4Play extends Cell{
         return new Box4Play(0);
 
     }
+
+    public Element getMushroom(){
+        if (containsMushroom()){
+            for (Element elem : stack) {
+                if (elem instanceof Mushroom)
+                    return elem;
+            }
+        }
+        return null;
+    }
+
+    public boolean containsMushroom(){
+        return stack.stream().anyMatch(item -> item instanceof Mushroom);
+    }
+
     public void removeElement(Element element) {
         stack.remove(element);
     }

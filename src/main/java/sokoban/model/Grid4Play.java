@@ -1,15 +1,16 @@
 package sokoban.model;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import sokoban.model.Movable.Direction;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 public class Grid4Play extends Grid {
     private Cell4Play[][] matrix;
@@ -17,9 +18,12 @@ public class Grid4Play extends Grid {
     private int width;
     private int height;
     private Player4Play player;
+    private Mushroom mushroom;
     private int boxNumber = 0;
     private IntegerProperty boxesOnTargetsProperty = new SimpleIntegerProperty(0);
     private IntegerProperty totalTargetProperty = new SimpleIntegerProperty(0);
+    Random random = new Random();
+
 
     ReadOnlyListProperty<Element> valueProperty(int line, int col) {
         return matrix[line][col].stackProperty();
@@ -39,9 +43,11 @@ public class Grid4Play extends Grid {
         this.width = width;
         this.height = height;
         this.player = player;
+        this.mushroom = new Mushroom(0,0);
 
         recreateMatrix();
         recalculateBoxesAndTargets();
+        generateMushroom();
     }
     public void recreateMatrix() {
         Cell4Design[][] oldMatrix = oldGrid.getMatrix();
@@ -98,6 +104,9 @@ public class Grid4Play extends Grid {
 
         boolean cellContainBoxAndCannotMove =false;
 
+        if (cell.containsMushroom())
+            activeMushroom();
+
         if (cell.containsBox()){
             Box4Play box = (Box4Play) cell.getBox();
             box.setPosition(x,y);
@@ -122,15 +131,12 @@ public class Grid4Play extends Grid {
 
     public boolean moveBox(int x, int y, int boxNumber){
         Cell4Play cell = getCell(x,y);
-
-        if (cell == null || cell.containsBox() || cell.containsWall() )return false;
-
+        if (cell == null || cell.containsBox() || cell.containsWall() || cell.containsMushroom() )return false;
         matrix[x][y].addElement(new Box4Play(boxNumber));
 
-
         return true;
-
     }
+
 
     public Element getPlayerElement() {
         Cell4Play cellPlayer = getCell(player.getX(),player.getY());
@@ -141,4 +147,88 @@ public class Grid4Play extends Grid {
 
 
 
+    public void activeMushroom(){
+        ArrayList<ArrayList<Integer>> boxPosition = new ArrayList<>();
+        for (int i = 0; i < width; i++){
+            for (int j = 0; j < height; j++){
+                Cell4Play cell = getCell(i,j);
+                for (Element elem : cell.getStack()) {
+                    if (elem instanceof Box4Play) {
+                        ArrayList<Integer> position = new ArrayList<>();
+                        position.add(i);
+                        position.add(j);
+                        boxPosition.add(position);
+                    }
+                }
+            }
+        }
+
+        for (ArrayList<Integer> position : boxPosition){
+            int x = position.get(0);
+            int y = position.get(1);
+            Cell4Play cell = getCell(x,y);
+            Element box = cell.getBox();
+            cell.removeElement(box);
+            addBoxFreeCase((Box4Play) box);
+        }
+        generateMushroom();
+
+    }
+
+    public void addBoxFreeCase(Box4Play elem){
+        ArrayList<Integer> position = searchPositionfree(true);
+        int x = position.get(0);
+        int y = position.get(1);
+        Cell4Play cell = getCell(x, y);
+
+        int boxNum = elem.getNumber();
+        cell.getStack().add(new Box4Play(boxNum));
+    }
+
+
+
+    public void generateMushroom() {
+        ArrayList<Integer> position = searchPositionfree(false);
+        Cell4Play oldCell = getCell(mushroom.getX(), mushroom.getY());
+        if (oldCell.containsMushroom()){
+            Element elem = oldCell.getMushroom();
+            oldCell.removeElement(elem);
+        }
+        int x = position.get(0);
+        int y = position.get(1);
+        Cell4Play cell = getCell(x, y);
+
+        mushroom.setX(x);
+        mushroom.setY(y);
+        cell.getStack().add(mushroom);
+    }
+
+    public ArrayList<Integer> searchPositionfree(boolean noBorder){
+        Set<String> usedPositions = new HashSet<>();
+        //ArrayList<ArrayList> listPosition = new ArrayList<>();
+
+
+        boolean isFounded = false;
+        while (!isFounded) {
+            int x = noBorder? random.nextInt(width - 2) + 1 : random.nextInt(width);
+            int y = noBorder? random.nextInt(height - 2) + 1: random.nextInt(height);
+
+            String positionKey = x + "," + y;
+
+            if (!usedPositions.contains(positionKey)) {
+                Cell4Play cell = getCell(x, y);
+                boolean haveOnly1Elem = cell.getStack().size() == 1;
+                boolean isGround = cell.getStack().get(0) instanceof Ground4Play;
+                if (haveOnly1Elem && isGround) {
+                    isFounded = true;
+                    ArrayList<Integer> freePosition = new ArrayList<>();
+                    freePosition.add(x);
+                    freePosition.add(y);
+                    return freePosition;
+                }
+                usedPositions.add(positionKey);
+            }
+        }
+        return null;
+    }
 }
