@@ -38,7 +38,7 @@ public class Cell4Play extends Cell{
     public void addElement(Element element){
             boolean containsTarget =  stack.stream().anyMatch(item -> item instanceof Target4Play);
             stack.clear();
-            stack.add(new Ground4Design());
+            stack.add(new Ground4Play());
             stack.add(element);
 
             if (containsTarget)

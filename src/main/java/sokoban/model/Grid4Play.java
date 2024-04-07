@@ -205,8 +205,7 @@ public class Grid4Play extends Grid {
 
     public ArrayList<Integer> searchPositionfree(boolean noBorder){
         Set<String> usedPositions = new HashSet<>();
-        //ArrayList<ArrayList> listPosition = new ArrayList<>();
-
+        usedPositions.clear();
 
         boolean isFounded = false;
         while (!isFounded) {
@@ -214,7 +213,6 @@ public class Grid4Play extends Grid {
             int y = noBorder? random.nextInt(height - 2) + 1: random.nextInt(height);
 
             String positionKey = x + "," + y;
-
             if (!usedPositions.contains(positionKey)) {
                 Cell4Play cell = getCell(x, y);
                 boolean haveOnly1Elem = cell.getStack().size() == 1;
@@ -225,8 +223,9 @@ public class Grid4Play extends Grid {
                     freePosition.add(x);
                     freePosition.add(y);
                     return freePosition;
+                }else {
+                    usedPositions.add(positionKey);
                 }
-                usedPositions.add(positionKey);
             }
         }
         return null;
