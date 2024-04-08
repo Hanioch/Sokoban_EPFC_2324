@@ -1,6 +1,7 @@
 package sokoban.model;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Box4Play extends Box implements Movable {
     private int number;

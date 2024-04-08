@@ -249,10 +249,11 @@ public class Grid4Play extends Grid {
 
 
     private class movePlayerCommand implements Command {
+        private Box4Play movedBox = null;
         private Direction direction;
         int[] newPosition = new int[2];
         int[] oldPosition = new int[2];
-        TreeMap <int[], Boolean> positionList = new TreeMap<>();
+
 
 
 
@@ -272,7 +273,7 @@ public class Grid4Play extends Grid {
 
             if (cell == null) return false;
 
-            boolean cellContainBoxAndCannotMove =false;
+            boolean cellContainBoxAndCannotMove = false;
 
             if (cell.containsMushroom()){
                 System.out.println("tu rentre la ouuuu");
@@ -284,8 +285,13 @@ public class Grid4Play extends Grid {
                 Box4Play box = (Box4Play) cell.getBox();
                 box.setPosition(newX, newY);
                 boolean nextCellCanMove = moveBox(box,direction);
+                if (nextCellCanMove) {
+                    movedBox = box;
+                }
+
                 cellContainBoxAndCannotMove = !nextCellCanMove;
             }
+
             boolean cannotMove = cell.containsWall() || cellContainBoxAndCannotMove;
 
             if (cannotMove) {
@@ -298,6 +304,7 @@ public class Grid4Play extends Grid {
             recalculateBoxesAndTargets();
             Cell4Play oldCell = getCell(oldPosition[0], oldPosition[1]);
             oldCell.removeElement(player);
+
             return true;
         }
 
@@ -307,9 +314,21 @@ public class Grid4Play extends Grid {
             matrix[oldPosition[0]][oldPosition[1]].addElement(player);
             player.setX(oldPosition[0]);
             player.setY(oldPosition[1]);
+            if (movedBox != null) {
+                Cell4Play cellToClear = getCellToClearBoxFrom(oldCell, direction);
+                cellToClear.removeElement(movedBox);
+                oldCell.getStack().add(movedBox);
+                movedBox.setPosition(newPosition[0], newPosition[1]);
+            }
         }
 
-        public void redo(){
+        private Cell4Play getCellToClearBoxFrom(Cell4Play oldCell, Direction direction) {
+            return switch(direction) {
+                case LEFT -> getCell(newPosition[0]-1, newPosition[1]);
+                case RIGHT -> getCell(newPosition[0]+1, newPosition[1]);
+                case UP -> getCell(newPosition[0], newPosition[1]-1);
+                case DOWN -> getCell(newPosition[0], newPosition[1]+1);
+            };
         }
     }
 

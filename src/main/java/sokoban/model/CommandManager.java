@@ -6,34 +6,38 @@ public class CommandManager {
 
     private Stack<Command> undos = new Stack<Command>();
     private Stack<Command> redos = new Stack<Command>();
-    private Command lastCommand;
-    private Command lastCommandUndone;
     public CommandManager() {}
     public boolean executeCommand(Command c) {
         c.execute();
-        lastCommand = c;
-        lastCommandUndone = null;
+        undos.push(c);
+        redos.clear();
         return true;
     }
     public boolean isUndoAvailable() {
-        return lastCommand != null;
+        return !undos.empty();
     }
     public boolean isRedoAvailable() {
-        return lastCommandUndone != null;
+        return !redos.empty();
     }
     public void undo() {
         if (isUndoAvailable()) {
-            lastCommand.undo();
-            lastCommandUndone = lastCommand;
-            lastCommand = null;
+            Command command = undos.pop();
+            command.undo();
+            redos.push(command);
         }
     }
     public void redo(){
         if(isRedoAvailable()) {
-            lastCommandUndone.execute();
-            lastCommand = lastCommandUndone;
-            lastCommandUndone = null;
+            Command command = redos.pop();
+            command.execute();
+            undos.push(command);
         }
+    }
+    public void clearUndos() {
+        undos.clear();
+    }
+    public void clearRedos() {
+        redos.clear();
     }
     public void showMushroom(){
 
