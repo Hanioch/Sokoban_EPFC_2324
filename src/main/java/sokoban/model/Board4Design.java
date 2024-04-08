@@ -19,6 +19,7 @@ public class Board4Design extends Board {
     private Random randomGen = new Random();
     private BooleanBinding isFull;
     private BooleanProperty isModifiedProperty = new SimpleBooleanProperty(false);
+    private final BooleanBinding gridIsEmpty;
 
     public BooleanProperty isModifiedProperty() {
         return isModifiedProperty;
@@ -31,6 +32,7 @@ public class Board4Design extends Board {
         grid = new Grid4Design(15,10, this.player);
         maxFilledCells = grid.getArea()/2;
         isFull = grid.filledCellsCountProperty().isEqualTo(maxFilledCells);
+        gridIsEmpty = gridIsEmpty();
     }
 
     public ReadOnlyListProperty<Element> valueProperty(int line, int col) {
@@ -145,6 +147,14 @@ public class Board4Design extends Board {
             set.add(randomGen.nextInt(origin, end));
         }
         return set;
+    }
+
+    public void invalidateGridIsEmpty(){
+        gridIsEmpty.invalidate();
+    }
+
+    public BooleanBinding getGridIsEmpty() {
+        return gridIsEmpty;
     }
 
     public BooleanBinding gridIsEmpty() {

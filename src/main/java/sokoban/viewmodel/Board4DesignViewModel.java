@@ -41,7 +41,7 @@ public class Board4DesignViewModel extends BoardViewModel{
     public void updateGrid(Grid4Design newGrid4Design) {
         this.board.setGrid(newGrid4Design);
         this.isModifiedProperty().set(false);
-    }
+        board.invalidateGridIsEmpty();}
 
     public BooleanProperty isModifiedProperty() {
         return board.isModifiedProperty();
@@ -84,15 +84,19 @@ public class Board4DesignViewModel extends BoardViewModel{
 
     public void clearGrid() {
         this.board.clearGrid();
+        board.invalidateGridIsEmpty();
+
     }
     public void createRandomGrid() {
         clearGrid();
         this.board.createRandomGrid();
+        board.invalidateGridIsEmpty();
     }
 
+
+
     public BooleanBinding isEmpty() {
-        this.getBoard().getGrid().invalidateBinding();
-        return this.board.gridIsEmpty();
+        return this.board.getGridIsEmpty();
     }
     public boolean saveBoardToFile(File saveFile) {
         try (FileWriter writer = new FileWriter(saveFile)) {
@@ -179,35 +183,27 @@ public class Board4DesignViewModel extends BoardViewModel{
     private static List<Element> convertXsbCharToElements(char cellChar, int x, int y) {
         List<Element> elements = new ArrayList<>();
 
+        elements.add(new Ground4Design());
         switch (cellChar) {
-            case ' ':
-                elements.add(new Ground4Design());
-                break;
             case '#':
-                elements.add(new Ground4Design());
                 elements.add(new Wall4Design());
                 break;
             case '.':
-                elements.add(new Ground4Design());
                 elements.add(new Target4Design());
                 break;
             case '$':
-                elements.add(new Ground4Design());
                 elements.add(new Box4Design());
                 break;
             case '@':
                 Player4Design player4Design = new Player4Design(x, y);
-                elements.add(new Ground4Design());
                 elements.add(player4Design);
                 break;
             case '*':
-                elements.add(new Ground4Design());
                 elements.add(new Box4Design());
                 elements.add(new Target4Design());
                 break;
             case '+':
                 Player4Design player4DesignTarget = new Player4Design(x, y);
-                elements.add(new Ground4Design());
                 elements.add(player4DesignTarget);
                 elements.add(new Target4Design());
                 break;

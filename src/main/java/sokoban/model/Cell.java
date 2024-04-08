@@ -26,7 +26,6 @@ public abstract class Cell {
     }
 
     public boolean isEmpty() {
-        boolean containsGround = stack.stream().anyMatch(item -> item instanceof Ground);
-        return stack.size() == 1 && containsGround;
+        return stack.size() == 1;
     }
 }
