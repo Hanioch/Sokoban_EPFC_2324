@@ -216,10 +216,6 @@ public class Grid4Play extends Grid {
         this.countBeforeToBeNormal += countBeforeToBeNormal;
     }
 
-    /*public boolean movePlayer(Direction direction){
-
-    }*/
-
     public boolean moveBox(Box4Play box, Direction direction){
         int[] positionBox = box.move(direction);
         int x = positionBox[0];
@@ -239,11 +235,11 @@ public class Grid4Play extends Grid {
         return commandManager.executeCommand(new movePlayerCommand(direction));
     }
 
-    public void undo(){
-        commandManager.undo();
+    public boolean undo(){
+        return commandManager.undo();
     }
-    public void redo(){
-        commandManager.redo();
+    public boolean redo(){
+        return commandManager.redo();
     }
 
 
@@ -320,6 +316,7 @@ public class Grid4Play extends Grid {
                 oldCell.getStack().add(movedBox);
                 movedBox.setPosition(newPosition[0], newPosition[1]);
             }
+
         }
 
         private Cell4Play getCellToClearBoxFrom(Cell4Play oldCell, Direction direction) {
@@ -331,14 +328,4 @@ public class Grid4Play extends Grid {
             };
         }
     }
-
-    /*private class moveBoxCommand implements Command {
-        public boolean execute() {
-            return true;
-        }
-        public void undo() {
-        }
-        public void redo(){
-        }
-    }*/
 }

@@ -33,10 +33,16 @@ public class Board4PlayViewModel extends BoardViewModel {
         cell.movePlayer(direction);
     }
     public void undo() {
-        board.getGrid().undo();
+        boolean successful = board.getGrid().undo();
+        if (successful) {
+            board.addFiveMoves();
+        }
     }
     public void redo(){
-        board.getGrid().redo();
+        boolean successful = board.getGrid().redo();
+        if (successful) {
+            board.incrementMoves();
+        }
     }
     public BooleanBinding isStone(){
         return board.getGrid().getIsStone();

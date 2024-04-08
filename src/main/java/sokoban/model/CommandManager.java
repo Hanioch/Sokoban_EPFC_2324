@@ -19,19 +19,23 @@ public class CommandManager {
     public boolean isRedoAvailable() {
         return !redos.empty();
     }
-    public void undo() {
+    public boolean undo() {
         if (isUndoAvailable()) {
             Command command = undos.pop();
             command.undo();
             redos.push(command);
+            return true;
         }
+        return false;
     }
-    public void redo(){
+    public boolean redo(){
         if(isRedoAvailable()) {
             Command command = redos.pop();
             command.execute();
             undos.push(command);
+            return true;
         }
+        return false;
     }
     public void clearUndos() {
         undos.clear();
