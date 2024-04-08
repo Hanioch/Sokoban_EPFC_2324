@@ -179,35 +179,27 @@ public class Board4DesignViewModel extends BoardViewModel{
     private static List<Element> convertXsbCharToElements(char cellChar, int x, int y) {
         List<Element> elements = new ArrayList<>();
 
+        elements.add(new Ground4Design());
         switch (cellChar) {
-            case ' ':
-                elements.add(new Ground4Design());
-                break;
             case '#':
-                elements.add(new Ground4Design());
                 elements.add(new Wall4Design());
                 break;
             case '.':
-                elements.add(new Ground4Design());
                 elements.add(new Target4Design());
                 break;
             case '$':
-                elements.add(new Ground4Design());
                 elements.add(new Box4Design());
                 break;
             case '@':
                 Player4Design player4Design = new Player4Design(x, y);
-                elements.add(new Ground4Design());
                 elements.add(player4Design);
                 break;
             case '*':
-                elements.add(new Ground4Design());
                 elements.add(new Box4Design());
                 elements.add(new Target4Design());
                 break;
             case '+':
                 Player4Design player4DesignTarget = new Player4Design(x, y);
-                elements.add(new Ground4Design());
                 elements.add(player4DesignTarget);
                 elements.add(new Target4Design());
                 break;
