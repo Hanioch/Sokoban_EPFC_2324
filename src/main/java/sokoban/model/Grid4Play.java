@@ -299,10 +299,18 @@ public class Grid4Play extends Grid {
         }
 
         public void undo() {
-            System.out.println(oldX + oldY);
+            System.out.println(oldX);
+            System.out.println(oldY);
+            System.out.println(newX);
+            System.out.println(newY);
+            player.setX(oldX);
+            player.setY(oldY);
             Cell4Play oldCell = getCell(newX,newY);
             oldCell.removeElement(player);
-            System.out.println(oldX + oldY);
+            System.out.println(oldX);
+            System.out.println(oldY);
+            System.out.println(newX);
+            System.out.println(newY);
         }
         public void redo(){
         }
