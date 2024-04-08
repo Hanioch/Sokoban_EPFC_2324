@@ -118,6 +118,8 @@ public class Board4PlayView extends BoardView {
                 KeyCode keyCode = event.getCode();
                 if(event.isControlDown() && keyCode == KeyCode.Z) {
                     board4PlayViewModel.undo();
+                } else if (event.isControlDown() && keyCode == KeyCode.Y){
+                    board4PlayViewModel.redo();
                 } else {
                     switch (keyCode) {
                         case Z, UP:

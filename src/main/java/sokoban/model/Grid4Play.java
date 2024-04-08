@@ -7,10 +7,7 @@ import javafx.collections.ObservableList;
 import sokoban.model.Movable.Direction;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class Grid4Play extends Grid {
     private CommandManager commandManager;
@@ -49,7 +46,7 @@ public class Grid4Play extends Grid {
         this.player = player;
         this.mushroom = new Mushroom(0,0);
         this.isStone= Bindings.createBooleanBinding(()->false);
-        commandManager = new CommandManager();
+        this.commandManager = new CommandManager();
 
         recreateMatrix();
         recalculateBoxesAndTargets();
@@ -229,7 +226,6 @@ public class Grid4Play extends Grid {
         int y = positionBox[1];
 
 
-
         Cell4Play cell = getCell(x,y);
         if (cell == null || cell.containsBox() || cell.containsWall() || cell.containsMushroom()) return false;
         matrix[x][y].addElement(box);
@@ -239,30 +235,37 @@ public class Grid4Play extends Grid {
         return true;
     }
 
-    public boolean initiateMovePlayerCommand(Direction direction) {
+    public boolean movePlayer(Direction direction) {
         return commandManager.executeCommand(new movePlayerCommand(direction));
     }
+
     public void undo(){
         commandManager.undo();
     }
+    public void redo(){
+        commandManager.redo();
+    }
+
+
 
     private class movePlayerCommand implements Command {
         private Direction direction;
-        int oldX;
-        int oldY;
-        int newX;
-        int newY;
+        int[] newPosition = new int[2];
+        int[] oldPosition = new int[2];
+        TreeMap <int[], Boolean> positionList = new TreeMap<>();
+
+
 
         private movePlayerCommand(Direction direction) {
             this.direction = direction;
         }
 
         public boolean execute() {
-            int[] position = player.move(direction);
-            oldX = player.getX();
-            oldY = player.getY();
-            newX = position[0];
-            newY = position[1];
+            this.oldPosition[0] = player.getX();
+            this.oldPosition[1] = player.getY();
+            this.newPosition = player.move(direction);
+            int newX = newPosition[0];
+            int newY = newPosition[1];
 
 
             Cell4Play cell = getCell(newX, newY);
@@ -283,7 +286,7 @@ public class Grid4Play extends Grid {
                 boolean nextCellCanMove = moveBox(box,direction);
                 cellContainBoxAndCannotMove = !nextCellCanMove;
             }
-            boolean cannotMove= cell.containsWall() || cellContainBoxAndCannotMove ;
+            boolean cannotMove = cell.containsWall() || cellContainBoxAndCannotMove;
 
             if (cannotMove) {
                 return false;
@@ -293,30 +296,24 @@ public class Grid4Play extends Grid {
             player.setX(newX);
             player.setY(newY);
             recalculateBoxesAndTargets();
-            Cell4Play oldCell = getCell(oldX,oldY);
+            Cell4Play oldCell = getCell(oldPosition[0], oldPosition[1]);
             oldCell.removeElement(player);
             return true;
         }
 
         public void undo() {
-            System.out.println(oldX);
-            System.out.println(oldY);
-            System.out.println(newX);
-            System.out.println(newY);
-            player.setX(oldX);
-            player.setY(oldY);
-            Cell4Play oldCell = getCell(newX,newY);
+            Cell4Play oldCell = getCell(newPosition[0],newPosition[1]);
             oldCell.removeElement(player);
-            System.out.println(oldX);
-            System.out.println(oldY);
-            System.out.println(newX);
-            System.out.println(newY);
+            matrix[oldPosition[0]][oldPosition[1]].addElement(player);
+            player.setX(oldPosition[0]);
+            player.setY(oldPosition[1]);
         }
+
         public void redo(){
         }
     }
 
-    private class moveBoxCommand implements Command {
+    /*private class moveBoxCommand implements Command {
         public boolean execute() {
             return true;
         }
@@ -324,5 +321,5 @@ public class Grid4Play extends Grid {
         }
         public void redo(){
         }
-    }
+    }*/
 }

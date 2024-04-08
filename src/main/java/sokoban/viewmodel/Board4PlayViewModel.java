@@ -35,6 +35,9 @@ public class Board4PlayViewModel extends BoardViewModel {
     public void undo() {
         board.getGrid().undo();
     }
+    public void redo(){
+        board.getGrid().redo();
+    }
     public BooleanBinding isStone(){
         return board.getGrid().getIsStone();
     }
