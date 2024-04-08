@@ -111,9 +111,9 @@ public class Grid4Play extends Grid {
 
         boolean cellContainBoxAndCannotMove =false;
 
-        if (cell.containsMushroom() && !isStone.get()){
+        if (cell.containsMushroom()){
             System.out.println("tu rentre la ouuuu");
-            //activeMushroom();
+            activeMushroom();
             setIsStone();
         }
 
