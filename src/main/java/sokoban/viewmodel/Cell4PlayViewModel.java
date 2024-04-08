@@ -1,9 +1,7 @@
 package sokoban.viewmodel;
 
 import javafx.beans.property.ReadOnlyListProperty;
-import sokoban.model.Board4Play;
-import sokoban.model.Element;
-import sokoban.model.Player4Play;
+import sokoban.model.*;
 import sokoban.model.Movable.Direction;
 
 public class Cell4PlayViewModel extends CellViewModel{
@@ -23,16 +21,18 @@ public class Cell4PlayViewModel extends CellViewModel{
     }
 
     public void movePlayer(Direction direction){
-        Element player =  board4Play.getGrid().getPlayerElement();
+        Grid4Play grid = board4Play.getGrid();
+        Player4Play player =  grid.getPlayer();
         if (player!= null){
-           boolean moveSuccessfully =  board4Play.getGrid().movePlayer(direction);
+           boolean moveSuccessfully = grid.movePlayer(direction);
            if (moveSuccessfully){
                board4Play.incrementMoves();
-               stack.remove((player));
                board4Play.checkWinCondition();
            }
         }
     }
+
+
 
     public Player4Play getPlayer() {
         return board4Play.getPlayer();
