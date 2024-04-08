@@ -41,7 +41,7 @@ public class Board4DesignViewModel extends BoardViewModel{
     public void updateGrid(Grid4Design newGrid4Design) {
         this.board.setGrid(newGrid4Design);
         this.isModifiedProperty().set(false);
-    }
+        board.invalidateGridIsEmpty();}
 
     public BooleanProperty isModifiedProperty() {
         return board.isModifiedProperty();
@@ -84,15 +84,19 @@ public class Board4DesignViewModel extends BoardViewModel{
 
     public void clearGrid() {
         this.board.clearGrid();
+        board.invalidateGridIsEmpty();
+
     }
     public void createRandomGrid() {
         clearGrid();
         this.board.createRandomGrid();
+        board.invalidateGridIsEmpty();
     }
 
+
+
     public BooleanBinding isEmpty() {
-        this.getBoard().getGrid().invalidateBinding();
-        return this.board.gridIsEmpty();
+        return this.board.getGridIsEmpty();
     }
     public boolean saveBoardToFile(File saveFile) {
         try (FileWriter writer = new FileWriter(saveFile)) {

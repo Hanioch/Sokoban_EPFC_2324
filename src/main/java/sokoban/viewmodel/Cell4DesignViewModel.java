@@ -33,6 +33,7 @@ public class Cell4DesignViewModel extends CellViewModel {
             stack.remove((selectedElement));
         }
         board4Design.play(line, col, selectedElement);
+        board4Design.invalidateGridIsEmpty();
     }
 
     public boolean isEmpty(){
@@ -73,6 +74,7 @@ public class Cell4DesignViewModel extends CellViewModel {
                 Grid4Design grid4Design = board4Design.getGrid();
                 grid4Design.filledCellsCount.invalidate();
                 grid4Design.invalidateBinding();
+                board4Design.invalidateGridIsEmpty();
 
             }
         }
