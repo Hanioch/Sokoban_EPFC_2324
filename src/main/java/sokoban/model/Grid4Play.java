@@ -1,8 +1,8 @@
 package sokoban.model;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyListProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import sokoban.model.Movable.Direction;
 
@@ -23,6 +23,8 @@ public class Grid4Play extends Grid {
     private IntegerProperty boxesOnTargetsProperty = new SimpleIntegerProperty(0);
     private IntegerProperty totalTargetProperty = new SimpleIntegerProperty(0);
     Random random = new Random();
+    private BooleanBinding isStone;
+    private int countBeforeToBeNormal = 0;
 
 
     ReadOnlyListProperty<Element> valueProperty(int line, int col) {
@@ -35,6 +37,7 @@ public class Grid4Play extends Grid {
     public IntegerProperty boxesOnTargetsProperty() {
         return boxesOnTargetsProperty;
     }
+
     public Grid4Play(int width, int height, Grid4Design oldGrid, Player4Play player) {
         super(width, height);
         this.matrix = new Cell4Play[width][height];
@@ -44,6 +47,7 @@ public class Grid4Play extends Grid {
         this.height = height;
         this.player = player;
         this.mushroom = new Mushroom(0,0);
+        this.isStone= Bindings.createBooleanBinding(()->false);
 
         recreateMatrix();
         recalculateBoxesAndTargets();
@@ -94,9 +98,12 @@ public class Grid4Play extends Grid {
     }
 
     public boolean movePlayer(Direction direction){
-        ArrayList<Integer> position = player.move(direction);
-        int x = position.get(0);
-        int y = position.get(1);
+        int oldX = player.getX();
+        int oldY = player.getY();
+        int[] position = player.move(direction);
+        int x = position[0];
+        int y = position[1];
+
 
         Cell4Play cell = getCell(x,y);
 
@@ -104,15 +111,16 @@ public class Grid4Play extends Grid {
 
         boolean cellContainBoxAndCannotMove =false;
 
-        if (cell.containsMushroom())
-            activeMushroom();
+        if (cell.containsMushroom() && !isStone.get()){
+            System.out.println("tu rentre la ouuuu");
+            //activeMushroom();
+            setIsStone();
+        }
 
         if (cell.containsBox()){
             Box4Play box = (Box4Play) cell.getBox();
             box.setPosition(x,y);
-            ArrayList<Integer> positionBox = box.move(direction);
-            int currentBoxNumber = box.getNumber();
-            boolean nextCellCanMove = moveBox(positionBox.get(0), positionBox.get(1),currentBoxNumber);
+            boolean nextCellCanMove = moveBox(box,direction);
             cellContainBoxAndCannotMove = !nextCellCanMove;
         }
         boolean cannotMove= cell.containsWall() || cellContainBoxAndCannotMove ;
@@ -121,53 +129,70 @@ public class Grid4Play extends Grid {
           return false;
         }
 
-        matrix[x][y].addElement(new Player4Play(x,y));
+        matrix[x][y].addElement(player);
         player.setX(x);
         player.setY(y);
         recalculateBoxesAndTargets();
+        Cell4Play oldCell = getCell(oldX,oldY);
+        oldCell.removeElement(player);
         return true;
 
     }
 
-    public boolean moveBox(int x, int y, int boxNumber){
+    public boolean moveBox(Box4Play box, Direction direction){
+        int[] positionBox = box.move(direction);
+        int x = positionBox[0];
+        int y = positionBox[1];
+
+
+
         Cell4Play cell = getCell(x,y);
-        if (cell == null || cell.containsBox() || cell.containsWall() || cell.containsMushroom() )return false;
-        matrix[x][y].addElement(new Box4Play(boxNumber));
+        if (cell == null || cell.containsBox() || cell.containsWall() || cell.containsMushroom()) return false;
+        matrix[x][y].addElement(box);
+
+        box.setOnTarget(cell.containsTarget());
+
+        /*
+        * if (cell == null || cell.containsBox() || cell.containsWall()  )return false;
+
+        if (cell.containsMushroom()) activeMushroom();
+        else matrix[x][y].addElement(new Box4Play(boxNumber));*/
 
         return true;
     }
 
 
-    public Element getPlayerElement() {
-        Cell4Play cellPlayer = getCell(player.getX(),player.getY());
+    public Player4Play getPlayer() {
+        return player;
+        /**Cell4Play cellPlayer = getCell(player.getX(),player.getY());
         for (Element elem : cellPlayer.stack  )
             if (elem instanceof Player4Play) return elem;
-        return null;
+        return null;*/
     }
 
 
 
     public void activeMushroom(){
-        ArrayList<ArrayList<Integer>> boxPosition = new ArrayList<>();
+        ArrayList<int[]> boxPosition = new ArrayList<>();
         for (int i = 0; i < width; i++){
             for (int j = 0; j < height; j++){
                 Cell4Play cell = getCell(i,j);
                 for (Element elem : cell.getStack()) {
                     if (elem instanceof Box4Play) {
-                        ArrayList<Integer> position = new ArrayList<>();
-                        position.add(i);
-                        position.add(j);
+                        int[] position = new int[2];
+                        position[0] = i;
+                        position[1] = j;
                         boxPosition.add(position);
                     }
                 }
             }
         }
 
-        for (ArrayList<Integer> position : boxPosition){
-            int x = position.get(0);
-            int y = position.get(1);
+        for (int[] position : boxPosition){
+            int x = position[0];
+            int y = position[1];
             Cell4Play cell = getCell(x,y);
-            Element box = cell.getBox();
+            Box4Play box = cell.getBox();
             cell.removeElement(box);
             addBoxFreeCase((Box4Play) box);
         }
@@ -176,26 +201,28 @@ public class Grid4Play extends Grid {
     }
 
     public void addBoxFreeCase(Box4Play elem){
-        ArrayList<Integer> position = searchPositionfree(true);
-        int x = position.get(0);
-        int y = position.get(1);
+        int[] position = searchPositionfree(true);
+        int x = position[0];
+        int y = position[1];
         Cell4Play cell = getCell(x, y);
 
-        int boxNum = elem.getNumber();
-        cell.getStack().add(new Box4Play(boxNum));
+        elem.setPosition(x,y);
+        cell.getStack().add(elem);
     }
 
 
 
     public void generateMushroom() {
-        ArrayList<Integer> position = searchPositionfree(false);
         Cell4Play oldCell = getCell(mushroom.getX(), mushroom.getY());
         if (oldCell.containsMushroom()){
-            Element elem = oldCell.getMushroom();
+            Mushroom elem = oldCell.getMushroom();
             oldCell.removeElement(elem);
         }
-        int x = position.get(0);
-        int y = position.get(1);
+
+        int[] position = searchPositionfree(true);
+        int x = position[0];
+        int y = position[1];
+
         Cell4Play cell = getCell(x, y);
 
         mushroom.setX(x);
@@ -203,7 +230,7 @@ public class Grid4Play extends Grid {
         cell.getStack().add(mushroom);
     }
 
-    public ArrayList<Integer> searchPositionfree(boolean noBorder){
+    public int[] searchPositionfree(boolean noBorder){
         Set<String> usedPositions = new HashSet<>();
         usedPositions.clear();
 
@@ -217,17 +244,40 @@ public class Grid4Play extends Grid {
                 Cell4Play cell = getCell(x, y);
                 boolean haveOnly1Elem = cell.getStack().size() == 1;
                 boolean isGround = cell.getStack().get(0) instanceof Ground4Play;
-                if (haveOnly1Elem && isGround) {
+                /**
+                 * haveOnly1Elem && isGround
+                 */
+                if (cell.isEmpty()) {
                     isFounded = true;
-                    ArrayList<Integer> freePosition = new ArrayList<>();
-                    freePosition.add(x);
-                    freePosition.add(y);
+                    int[] freePosition = new int[2];
+
+                    freePosition[0] = x;
+                    freePosition[1] = y;
                     return freePosition;
-                }else {
-                    usedPositions.add(positionKey);
                 }
+                if (usedPositions.size()>50)
+                    return null;
+                usedPositions.add(positionKey);
+
             }
         }
         return null;
+    }
+
+    public BooleanBinding getIsStone() {
+        return isStone;
+    }
+
+    public void setIsStone(){
+        isStone=isStone.not();
+        countBeforeToBeNormal=-1;
+    }
+
+    public int getCountBeforeToBeNormal() {
+        return countBeforeToBeNormal;
+    }
+
+    public void setCountBeforeToBeNormal(int countBeforeToBeNormal) {
+        this.countBeforeToBeNormal += countBeforeToBeNormal;
     }
 }

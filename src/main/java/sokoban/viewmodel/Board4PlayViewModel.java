@@ -1,5 +1,6 @@
 package sokoban.viewmodel;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -30,6 +31,9 @@ public class Board4PlayViewModel extends BoardViewModel {
         Player4Play player = getPlayer();
         Cell4PlayViewModel cell = gridViewModel.getCellViewModel(player.getX(), player.getY());
         cell.movePlayer(direction);
+    }
+    public BooleanBinding isStone(){
+        return board.getGrid().getIsStone();
     }
     public Player4Play getPlayer() {
         return this.board.getPlayer();

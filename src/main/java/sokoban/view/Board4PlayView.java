@@ -28,6 +28,7 @@ public class Board4PlayView extends BoardView {
     private Label movesLabel = new Label();
     private Label goalsLabel = new Label();
     private Label winMessageLabel = new Label();
+    private Label messageWalkOnMushroom = new Label("you walk on a mushroom ");
     private HBox bottomContainer = new HBox();
     private VBox topContainer = new VBox();
     public Board4PlayView(Stage secondaryStage,Stage primaryStage, Board4PlayViewModel board4PlayViewModel) {
@@ -38,6 +39,7 @@ public class Board4PlayView extends BoardView {
         init();
         start(secondaryStage);
         this.requestFocus();
+        System.out.println("check lalalala "+ board4PlayViewModel.isStone());
     }
     private void init() {
         finishButton.setPrefSize(80,30);
@@ -55,7 +57,9 @@ public class Board4PlayView extends BoardView {
         scoreLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
         movesLabel.textProperty().bind(board4PlayViewModel.moves().asString("Number of moves played: %d"));
         goalsLabel.textProperty().bind(board4PlayViewModel.boxOnTarget().asString("Number of goals reached: %d"+" of "+ board4PlayViewModel.totalTarget().get()));
-        topContainer.getChildren().addAll(scoreLabel, movesLabel, goalsLabel,winMessageLabel);
+        messageWalkOnMushroom.visibleProperty().bind(board4PlayViewModel.isStone());
+        messageWalkOnMushroom.managedProperty().bind(board4PlayViewModel.isStone());
+        topContainer.getChildren().addAll(scoreLabel, movesLabel, goalsLabel,winMessageLabel,messageWalkOnMushroom);
         winMessageLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
         winMessageLabel.setPrefSize(800,30);
         setTop(topContainer);
