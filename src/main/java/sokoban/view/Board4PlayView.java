@@ -116,25 +116,28 @@ public class Board4PlayView extends BoardView {
         this.setOnKeyPressed(event -> {
             if (!board4PlayViewModel.gameWon().get()) {
                 KeyCode keyCode = event.getCode();
-                switch (keyCode) {
-                    case Z, UP:
-                        board4PlayViewModel.movePlayer(Direction.UP);
-                        break;
-                    case Q, LEFT:
-                        board4PlayViewModel.movePlayer(Direction.LEFT);
-                        break;
-                    case D, RIGHT:
-                        board4PlayViewModel.movePlayer(Direction.RIGHT);
-                        break;
-                    case S, DOWN:
-                        board4PlayViewModel.movePlayer(Direction.DOWN);
-                        break;
-                    default:
-                        return; 
+                if(event.isControlDown() && keyCode == KeyCode.Z) {
+                    board4PlayViewModel.undo();
+                } else {
+                    switch (keyCode) {
+                        case Z, UP:
+                            board4PlayViewModel.movePlayer(Direction.UP);
+                            break;
+                        case Q, LEFT:
+                            board4PlayViewModel.movePlayer(Direction.LEFT);
+                            break;
+                        case D, RIGHT:
+                            board4PlayViewModel.movePlayer(Direction.RIGHT);
+                            break;
+                        case S, DOWN:
+                            board4PlayViewModel.movePlayer(Direction.DOWN);
+                            break;
+                        default:
+                            return;
+                    }
                 }
                 checkGameStatus();
                 event.consume();
-
             }
         });
     }

@@ -1,7 +1,7 @@
 package sokoban.model;
 
 public interface Command {
-    void execute();
+    boolean execute();
     void undo();
     void redo();
 }

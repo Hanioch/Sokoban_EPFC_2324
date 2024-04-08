@@ -32,6 +32,9 @@ public class Board4PlayViewModel extends BoardViewModel {
         Cell4PlayViewModel cell = gridViewModel.getCellViewModel(player.getX(), player.getY());
         cell.movePlayer(direction);
     }
+    public void undo() {
+        board.getGrid().undo();
+    }
     public BooleanBinding isStone(){
         return board.getGrid().getIsStone();
     }
