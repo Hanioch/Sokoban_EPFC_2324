@@ -112,7 +112,7 @@ public class Grid4Play extends Grid {
           return false;
         }
 
-        matrix[x][y].addElement(new Player4Play(x,y));
+        matrix[x][y].addElement(player);
         player.setX(x);
         player.setY(y);
         recalculateBoxesAndTargets();
