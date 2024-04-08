@@ -12,6 +12,7 @@ import sokoban.model.Movable.Direction;
 import java.util.ArrayList;
 
 public class Grid4Play extends Grid {
+    private CommandManager commandManager;
     private Cell4Play[][] matrix;
     private Grid4Design oldGrid;
     private int width;
@@ -139,6 +140,21 @@ public class Grid4Play extends Grid {
         return null;
     }
 
+    private class movePlayerCommand implements Command {
+        public void execute() {
+        }
+        public void undo() {
+        }
+        public void redo(){
+        }
+    }
 
-
+    private class moveBoxCommand implements Command {
+        public void execute() {
+        }
+        public void undo() {
+        }
+        public void redo(){
+        }
+    }
 }
