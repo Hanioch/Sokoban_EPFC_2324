@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Box4Play extends Box implements Movable {
     private int number;
     private int x, y;
+    private boolean isOnTarget = false;
 
     public Box4Play(int number) {
         super();
@@ -20,29 +21,37 @@ public class Box4Play extends Box implements Movable {
         this.y = y;
     }
 
-    public ArrayList<Integer> move(Direction direction) {
-        ArrayList<Integer> list = new ArrayList<>();
+    public boolean isOnTarget() {
+        return isOnTarget;
+    }
+
+    public void setOnTarget(boolean onTarget) {
+        isOnTarget = onTarget;
+    }
+
+    public int[] move(Direction direction) {
+        int[] list = new int[2];
 
         switch (direction){
             case UP ->  {
-                list.add(x);
-                list.add(y-1);
+                list[0] = x;
+                list[1] =y-1 ;
             }
             case LEFT -> {
-                list.add(x-1);
-                list.add(y);
+                list[0] = x-1;
+                list[1] =y ;
             }
             case RIGHT ->  {
-                list.add(x+1);
-                list.add(y);
+                list[0] = x+1;
+                list[1] =y ;
             }
             case DOWN ->  {
-                list.add(x);
-                list.add(y+1);
+                list[0] = x;
+                list[1] =y+1 ;
             }
             default -> {
-                list.add(x);
-                list.add(y);
+                list[0] = x;
+                list[1] =y ;
             }
         }
 

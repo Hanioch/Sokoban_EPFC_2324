@@ -85,6 +85,9 @@ public abstract class CellView extends StackPane {
             return new Image("wall.png");
         } else if (element instanceof Ground) {
             return new Image("ground.png");
+        } else if (element instanceof Mushroom) {
+            return new Image("mushroom.png");
+
         }
         return null;
     }

@@ -36,9 +36,9 @@ public class Cell4Play extends Cell{
     }
 
     public void addElement(Element element){
-            boolean containsTarget =  stack.stream().anyMatch(item -> item instanceof Target4Play);
+            boolean containsTarget = containsTarget();
             stack.clear();
-            stack.add(new Ground4Design());
+            stack.add(new Ground4Play());
             stack.add(element);
 
             if (containsTarget)
@@ -51,20 +51,36 @@ public class Cell4Play extends Cell{
     public boolean containsOnlyTarget(){
        return stack.size() == 2 && stack.get(1) instanceof Target4Play;
     }
+    public boolean containsTarget () {return stack.stream().anyMatch(item -> item instanceof Target4Play);}
 
     public boolean containsBox(){
         return stack.stream().anyMatch(item -> item instanceof Box4Play);
     }
-    public Element getBox(){
+    public Box4Play getBox(){
         if (containsBox()){
             for (Element elem : stack) {
                 if (elem instanceof Box4Play)
-                    return elem;
+                    return (Box4Play) elem;
             }
         }
         return new Box4Play(0);
 
     }
+
+    public Mushroom getMushroom(){
+        if (containsMushroom()){
+            for (Element elem : stack) {
+                if (elem instanceof Mushroom)
+                    return (Mushroom) elem;
+            }
+        }
+        return null;
+    }
+
+    public boolean containsMushroom(){
+        return stack.stream().anyMatch(item -> item instanceof Mushroom);
+    }
+
     public void removeElement(Element element) {
         stack.remove(element);
     }

@@ -1,5 +1,6 @@
 package sokoban.model;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
@@ -9,9 +10,10 @@ public class Board4Play extends Board{
     private BooleanProperty gameWon = new SimpleBooleanProperty(false);
     private Grid4Play grid;
     private Player4Play player = new Player4Play();
-
     private BooleanBinding isFull;
     private BooleanProperty isModifiedProperty = new SimpleBooleanProperty(false);
+
+
     public ReadOnlyListProperty<Element> valueProperty(int line, int col) {
         return grid.valueProperty(line, col);
     }
@@ -34,6 +36,15 @@ public class Board4Play extends Board{
     }
     public void incrementMoves() {
         moves.set(moves.get() + 1);
+        if (grid.getIsStone().get()){
+            if (grid.getCountBeforeToBeNormal() < 5){
+                grid.setCountBeforeToBeNormal(1);
+            }
+            else
+                grid.setIsStone();
+        }
+        grid.getIsStone().invalidate();
+
     }
 
     public IntegerProperty movesProperty() {
@@ -58,4 +69,6 @@ public class Board4Play extends Board{
     public Player4Play getPlayer(){
         return player;
     }
+
+
 }
