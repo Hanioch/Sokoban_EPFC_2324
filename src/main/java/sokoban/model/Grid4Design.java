@@ -203,6 +203,7 @@ public class Grid4Design extends Grid {
         targetMissed.invalidate();
         sameNumberOfBoxAndTarget.invalidate();
         isAnError.invalidate();
+
     }
 
     public Cell4Design[][] getMatrix() {

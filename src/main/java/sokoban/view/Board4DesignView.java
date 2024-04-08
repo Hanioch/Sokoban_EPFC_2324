@@ -290,7 +290,7 @@ public class Board4DesignView extends BoardView {
         clearButton.setPrefSize(80,30);
         buttonsBox.getChildren().add(clearButton);
         clearButton.setOnAction(e -> onClearClicked());
-        //clearButton.disableProperty().bind(board4DesignViewModel.isEmpty());
+        clearButton.disableProperty().bind(board4DesignViewModel.isEmpty());
 
         setBottom(buttonsBox);
     }
@@ -323,7 +323,6 @@ public class Board4DesignView extends BoardView {
     private void onClearClicked() {
         board4DesignViewModel.clearGrid();
         board4DesignViewModel.isModifiedProperty().set(false);
-
     }
     private void onRandomClicked() {
         board4DesignViewModel.createRandomGrid();
