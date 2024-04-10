@@ -17,8 +17,8 @@ import sokoban.model.Movable.Direction;
 
 
 public class Board4PlayView extends BoardView {
-    private static  int SCENE_MIN_WIDTH = 800;
-    private static  int SCENE_MIN_HEIGHT = 600;
+    private static  int SCENE_MIN_WIDTH = 1000;
+    private static  int SCENE_MIN_HEIGHT = 800;
     private Board4PlayViewModel board4PlayViewModel;
     private  Stage secondaryStage;
     private  Stage primaryStage;
