@@ -316,7 +316,7 @@ public class Grid4Play extends Grid {
                 oldCell.getStack().add(movedBox);
                 movedBox.setPosition(newPosition[0], newPosition[1]);
             }
-
+            recalculateBoxesAndTargets();
         }
 
         private Cell4Play getCellToClearBoxFrom(Cell4Play oldCell, Direction direction) {
