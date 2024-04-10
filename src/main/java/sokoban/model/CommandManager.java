@@ -8,10 +8,12 @@ public class CommandManager {
     private Stack<Command> redos = new Stack<Command>();
     public CommandManager() {}
     public boolean executeCommand(Command c) {
-        c.execute();
-        undos.push(c);
-        redos.clear();
-        return true;
+        boolean succesful = c.execute();
+        if (succesful) {
+            undos.push(c);
+            redos.clear();
+        }
+        return succesful;
     }
     public boolean isUndoAvailable() {
         return !undos.empty();

@@ -30,8 +30,8 @@ import java.util.Optional;
 
 public class Board4DesignView extends BoardView {
     private static Board4DesignViewModel board4DesignViewModel;
-    private static  int SCENE_MIN_WIDTH = 1000;
-    private static  int SCENE_MIN_HEIGHT = 800;
+    private static  int SCENE_MIN_WIDTH = 800;
+    private static  int SCENE_MIN_HEIGHT = 600;
     private static  int SCENE_MAX_WIDTH = 1400;
     private static  int SCENE_MAX_HEIGHT = 1050;
     private  Label headerLabel = new Label("");
