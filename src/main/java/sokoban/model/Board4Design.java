@@ -123,7 +123,7 @@ public class Board4Design extends Board {
 
         for (int i = 0; i < grid.getWidth(); i++) {
             for (int j = 0; j < grid.getHeight(); j++) {
-                if(i == 0 || j == 0 || i == grid.getWidth()-1 || j == grid.getHeight()-1) {
+                if(i == 0 || j == 0 || i == grid.getWidth()-1) {
                     getGrid().getStack(i,j).add(new Wall4Design());
                 } else if (j == 1 && i == playerHeight) {
                     getGrid().placePlayer(i,j);
