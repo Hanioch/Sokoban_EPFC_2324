@@ -11,6 +11,7 @@ import java.util.*;
 
 public class Grid4Play extends Grid {
     private CommandManager commandManager;
+    private MushroomManager mushroomManager;
     private Cell4Play[][] matrix;
     private Grid4Design oldGrid;
     private int width;
@@ -47,6 +48,7 @@ public class Grid4Play extends Grid {
         this.mushroom = new Mushroom(0,0);
         this.isStone= Bindings.createBooleanBinding(()->false);
         this.commandManager = new CommandManager();
+        this.mushroomManager = new MushroomManager();
 
         recreateMatrix();
         recalculateBoxesAndTargets();
@@ -163,6 +165,8 @@ public class Grid4Play extends Grid {
         mushroom.setX(x);
         mushroom.setY(y);
         cell.getStack().add(mushroom);
+
+        mushroomManager.executeCommand(new MushroomCommand(this, mushroom));
     }
 
     public int[] searchPositionfree(boolean noBorder){
@@ -242,6 +246,21 @@ public class Grid4Play extends Grid {
         return commandManager.redo();
     }
 
+    public  BooleanBinding isMushroomVisible(){
+        return mushroomManager.isMushroomShowing();
+    }
+
+    public boolean  clicOnMushroom(){
+        return mushroomManager.clicOnMushroom();
+    }
+
+    public void showMushroom(){
+        mushroomManager.showMushroom();
+    }
+
+
+
+
 
 
     private class movePlayerCommand implements Command {
@@ -258,6 +277,8 @@ public class Grid4Play extends Grid {
         }
 
         public boolean execute() {
+            if (isMushroomVisible().get()) return false;
+
             this.oldPosition[0] = player.getX();
             this.oldPosition[1] = player.getY();
             this.newPosition = player.move(direction);
@@ -272,7 +293,6 @@ public class Grid4Play extends Grid {
             boolean cellContainBoxAndCannotMove = false;
 
             if (cell.containsMushroom()){
-                System.out.println("tu rentre la ouuuu");
                 activeMushroom();
                 setIsStone();
             }
@@ -305,6 +325,7 @@ public class Grid4Play extends Grid {
         }
 
         public void undo() {
+            if (isMushroomVisible().get()) return;
             Cell4Play oldCell = getCell(newPosition[0],newPosition[1]);
             oldCell.removeElement(player);
             matrix[oldPosition[0]][oldPosition[1]].addElement(player);
@@ -327,5 +348,7 @@ public class Grid4Play extends Grid {
                 case DOWN -> getCell(newPosition[0], newPosition[1]+1);
             };
         }
+
+
     }
 }

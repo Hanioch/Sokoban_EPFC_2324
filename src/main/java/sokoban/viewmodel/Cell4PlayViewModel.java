@@ -32,6 +32,9 @@ public class Cell4PlayViewModel extends CellViewModel{
         }
     }
 
+    public boolean isMushroomVisible(){
+        return board4PlayViewModel.isMushroomVisible().get();
+    }
 
 
     public Player4Play getPlayer() {

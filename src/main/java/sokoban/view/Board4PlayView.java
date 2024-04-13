@@ -1,6 +1,7 @@
 package sokoban.view;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,6 +24,7 @@ public class Board4PlayView extends BoardView {
     private  Stage secondaryStage;
     private  Stage primaryStage;
     private Button finishButton = new Button("Finish");
+    private Button showMushroomButton = new Button();
 
     private Label scoreLabel = new Label("Score");
     private Label movesLabel = new Label();
@@ -39,15 +41,23 @@ public class Board4PlayView extends BoardView {
         init();
         start(secondaryStage);
         this.requestFocus();
-        System.out.println("check lalalala "+ board4PlayViewModel.isStone());
     }
     private void init() {
         finishButton.setPrefSize(80,30);
         finishButton.setOnAction(event -> onFinishClicked());
 
+        BooleanBinding isMushroomVisible = board4PlayViewModel.isMushroomVisible();
+        showMushroomButton.textProperty().bind(Bindings.when(isMushroomVisible).then("Hide mushroom").otherwise("Show mushroom"));
+        showMushroomButton.setPrefSize(150,30);
+        //showMushroomButton.setText(( isMushroomvisible.get() ? "Hide" : "Show")+" mushroom" ).bind(isMushroomvisible);
+        showMushroomButton.setOnAction(event->board4PlayViewModel.showMushroom());
+        showMushroomButton.setFocusTraversable(false);
+
+
         bottomContainer.setAlignment(Pos.CENTER);
         bottomContainer.setPadding(new Insets(10));
-        bottomContainer.getChildren().addAll(finishButton);
+        bottomContainer.getChildren().addAll(finishButton, showMushroomButton);
+
         setBottom(bottomContainer);
 
         topContainer.setAlignment(Pos.CENTER_LEFT);
@@ -143,6 +153,8 @@ public class Board4PlayView extends BoardView {
             }
         });
     }
+
+
     private void checkGameStatus() {
         if (board4PlayViewModel.gameWon().get()) {
             winMessageLabel.setText("You won in " + board4PlayViewModel.moves().get() + " moves, congratulations!");
