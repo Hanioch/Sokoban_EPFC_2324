@@ -1,7 +1,9 @@
 package sokoban.view;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,6 +25,7 @@ public class Board4PlayView extends BoardView {
     private  Stage secondaryStage;
     private  Stage primaryStage;
     private Button finishButton = new Button("Finish");
+    private Button showMushroomButton = new Button("Show mushroom");
 
     private Label scoreLabel = new Label("Score");
     private Label movesLabel = new Label();
@@ -39,15 +42,26 @@ public class Board4PlayView extends BoardView {
         init();
         start(secondaryStage);
         this.requestFocus();
-        System.out.println("check lalalala "+ board4PlayViewModel.isStone());
     }
     private void init() {
         finishButton.setPrefSize(80,30);
         finishButton.setOnAction(event -> onFinishClicked());
 
+        BooleanProperty isMushroomVisible = board4PlayViewModel.isMushroomVisible();
+
+        isMushroomVisible.addListener((observable, oldValue, newValue)->{
+            if (newValue) showMushroomButton.setText("Hide Mushroom");
+            else showMushroomButton.setText("Show Mushroom");
+        });
+        showMushroomButton.setPrefSize(150,30);
+        showMushroomButton.setOnAction(event->board4PlayViewModel.showMushroom());
+        showMushroomButton.setFocusTraversable(false);
+
+
         bottomContainer.setAlignment(Pos.CENTER);
         bottomContainer.setPadding(new Insets(10));
-        bottomContainer.getChildren().addAll(finishButton);
+        bottomContainer.getChildren().addAll(finishButton, showMushroomButton);
+
         setBottom(bottomContainer);
 
         topContainer.setAlignment(Pos.CENTER_LEFT);
@@ -143,6 +157,8 @@ public class Board4PlayView extends BoardView {
             }
         });
     }
+
+
     private void checkGameStatus() {
         if (board4PlayViewModel.gameWon().get()) {
             winMessageLabel.setText("You won in " + board4PlayViewModel.moves().get() + " moves, congratulations!");

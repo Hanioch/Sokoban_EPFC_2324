@@ -32,6 +32,9 @@ public class Cell4PlayViewModel extends CellViewModel{
         }
     }
 
+    public void clicOnMushroom() {
+        board4PlayViewModel.clicOnMushroom(line, col);
+    }
 
 
     public Player4Play getPlayer() {

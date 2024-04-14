@@ -45,8 +45,10 @@ public class Board4Play extends Board{
         }
         grid.getIsStone().invalidate();
     }
-    public void addFiveMoves() {
-        moves.set(moves.get()+5);
+
+
+    public void incrementsMore(int mv){
+        moves.set(moves.get()+mv);
     }
 
     public IntegerProperty movesProperty() {

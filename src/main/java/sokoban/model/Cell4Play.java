@@ -10,6 +10,7 @@ public class Cell4Play extends Cell{
     public Cell4Play() {
         super();
         stack.add(new Ground4Play());
+
     }
     public Cell4Play(ObservableList<Element> stack, Player4Play player, int x, int y, int boxNumber) {
         super();

@@ -3,13 +3,9 @@ package sokoban.viewmodel;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import sokoban.model.Board4Design;
 import sokoban.model.Board4Play;
 import sokoban.model.Player4Play;
 import sokoban.model.Movable.Direction;
-import sokoban.model.Target4Play;
 
 public class Board4PlayViewModel extends BoardViewModel {
     private Grid4PlayViewModel gridViewModel;
@@ -35,7 +31,7 @@ public class Board4PlayViewModel extends BoardViewModel {
     public void undo() {
         boolean successful = board.getGrid().undo();
         if (successful) {
-            board.addFiveMoves();
+            board.incrementsMore(5);
         }
     }
     public void redo(){
@@ -44,6 +40,18 @@ public class Board4PlayViewModel extends BoardViewModel {
             board.incrementMoves();
         }
     }
+
+    public BooleanProperty isMushroomVisible(){
+        return board.getGrid().isMushroomVisible();
+    }
+    public void clicOnMushroom(int x , int y){
+        board.getGrid().clicOnMushroom(x,y);
+    }
+    public void showMushroom() {
+        board.getGrid().showMushroom();
+        if (isMushroomVisible().get()) board.incrementsMore(10);
+    }
+
     public BooleanBinding isStone(){
         return board.getGrid().getIsStone();
     }

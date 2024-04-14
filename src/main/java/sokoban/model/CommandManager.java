@@ -39,13 +39,12 @@ public class CommandManager {
         }
         return false;
     }
+
     public void clearUndos() {
         undos.clear();
     }
     public void clearRedos() {
         redos.clear();
     }
-    public void showMushroom(){
 
-    }
 }
