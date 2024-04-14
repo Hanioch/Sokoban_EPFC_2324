@@ -1,70 +1,167 @@
-@startuml Sokoban
-
-class Grid {
-  - width : int
-  - height : int
-  - cells : Cell[][]
-  + addElement()
-  + removeElement()
-  + validateLevel()
-}
-
-class Cell {
-  - position
-  - elements : ElementStack
-  + modifyContent()
-  + clear()
-}
+@startuml
 
 abstract class Element {
 }
 
-class Ground extends ComposableElement {
+abstract class ComposableElement {
 }
 
-class Wall extends Element {
+class Box4Design {
 }
 
-abstract class ComposableElement extends Element {
+class Box4Play {
+  - number: int
+  - x: int
+  - y: int
+  - isOnTarget: boolean
 }
 
-class Target extends ComposableElement {
+abstract class Cell {
 }
 
-class Player extends ComposableElement implements Movable {
+class Cell4Design {
 }
 
-class Box extends ComposableElement implements Movable {
+class Cell4Play {
+  - boxNumber: int
+  - player: Player4Play
+  - x: int
+  - y: int
 }
 
-class ElementStack {
-  + addElement()
-  + removeElement()
+abstract class Ground extends ComposableElement {
 }
 
-interface Movable {
+class Ground4Design {
 }
 
-class Sokoban {
-  - grid
-  - currentLevel
-  + createNewLevel()
-  + saveLevel()
-  + loadLevel()
-  + validateLevel()
+class Ground4Play {
 }
 
-class LevelFile {
-  - filePath : String
-  + save()
-  + load()
+abstract class Movable {
 }
 
-Grid --> "many" Cell : contains
-Cell --> ElementStack : uses
-Cell --> Element :contains
-ElementStack --> ComposableElement : contains
-Sokoban *-- Grid
-Sokoban *-- LevelFile
+class Mushroom {
+  - x: int
+  - y: int
+}
+
+interface Command {
+}
+
+class CommandManager {
+}
+
+class MushroomCommand {
+}
+
+class MushroomManager {
+}
+
+abstract class Player extends ComposableElement {
+  - x: int
+  - y: int
+}
+
+class Player4Design {
+}
+
+class Player4Play {
+}
+
+abstract class Target extends ComposableElement {
+}
+
+class Target4Design {
+}
+
+class Target4Play {
+}
+
+abstract class Wall extends Element {
+}
+
+class Wall4Design {
+}
+
+class Wall4Play {
+}
+
+class Board {
+}
+
+class Board4Design {
+  - grid: Grid4Design
+  - maxFilledCells: int
+  - player: Player4Design
+  - randomGen: Random
+  - isFull: BooleanBinding
+  - isModifiedProperty: BooleanProperty
+}
+
+class Board4Play {
+  - moves: IntegerProperty
+  - gameWon: BooleanProperty
+  - grid: Grid4Play
+  - player: Player4Play
+  - isModifiedProperty: BooleanProperty
+}
+
+class Grid {
+  - width: int
+  - height: int
+  - widthProperty: IntegerProperty
+  - heightProperty: IntegerProperty
+}
+
+class Grid4Design {
+  - matrix: Cell4Design[][]
+  - playerCell: Cell4Design
+  - player: Player4Design
+  - filledCellsCount: LongBinding
+  - characterMissed: BooleanBinding
+  - targetMissed: BooleanBinding
+  - boxMissed: BooleanBinding
+  - sameNumberOfBoxAndTarget: BooleanBinding
+  - isAnError: BooleanBinding
+}
+
+class Grid4Play {
+  - commandManager: CommandManager
+  - mushroomManager: MushroomManager
+  - matrix: Cell4Play[][]
+  - oldGrid: Grid4Design
+  - width: int
+  - height: int
+  - player: Player4Play
+  - mushroom: Mushroom
+  - boxNumber: int
+  - boxesOnTargetsProperty: IntegerProperty
+  - totalTargetProperty: IntegerProperty
+  - isStone: BooleanBinding
+  - countBeforeToBeNormal: int
+}
+
+Player <|-- Player4Design
+Player <|-- Player4Play
+Element <|-- ComposableElement
+Element <|-- Wall
+Element <|-- Box
+Element <|-- Ground
+Element <|-- Target
+Cell <|-- Cell4Design
+Cell <|-- Cell4Play
+Wall <|-- Wall4Design
+Wall <|-- Wall4Play
+Box <|-- Box4Design
+Box <|-- Box4Play
+Ground <|-- Ground4Design
+Ground <|-- Ground4Play
+Target <|-- Target4Design
+Target <|-- Target4Play
+Board <|-- Board4Design
+Board <|-- Board4Play
+Command <|.. CommandManager
+Command <|.. MushroomCommand
 
 @enduml
