@@ -6,17 +6,14 @@ abstract class Element {
 abstract class ComposableElement {
 }
 
-class Box4Design {
+interface Movable {
 }
 
-class Box4Play {
-  - number: int
-  - x: int
-  - y: int
-  - isOnTarget: boolean
+class ElementStack {
 }
 
-abstract class Cell {
+class Cell {
+  - elementStack: ElementStack
 }
 
 class Cell4Design {
@@ -27,6 +24,7 @@ class Cell4Play {
   - player: Player4Play
   - x: int
   - y: int
+  - elementStack: ElementStack
 }
 
 abstract class Ground extends ComposableElement {
@@ -38,24 +36,9 @@ class Ground4Design {
 class Ground4Play {
 }
 
-abstract class Movable {
-}
-
-class Mushroom {
+class Mushroom extends Element {
   - x: int
   - y: int
-}
-
-interface Command {
-}
-
-class CommandManager {
-}
-
-class MushroomCommand {
-}
-
-class MushroomManager {
 }
 
 abstract class Player extends ComposableElement {
@@ -88,10 +71,10 @@ class Wall4Play {
 }
 
 class Board {
+  - grid: Grid
 }
 
 class Board4Design {
-  - grid: Grid4Design
   - maxFilledCells: int
   - player: Player4Design
   - randomGen: Random
@@ -102,8 +85,6 @@ class Board4Design {
 class Board4Play {
   - moves: IntegerProperty
   - gameWon: BooleanProperty
-  - grid: Grid4Play
-  - player: Player4Play
   - isModifiedProperty: BooleanProperty
 }
 
@@ -112,10 +93,10 @@ class Grid {
   - height: int
   - widthProperty: IntegerProperty
   - heightProperty: IntegerProperty
+  - cells: Cell[][]
 }
 
-class Grid4Design {
-  - matrix: Cell4Design[][]
+abstract class Grid4Design extends Grid {
   - playerCell: Cell4Design
   - player: Player4Design
   - filledCellsCount: LongBinding
@@ -126,20 +107,32 @@ class Grid4Design {
   - isAnError: BooleanBinding
 }
 
-class Grid4Play {
+abstract class Grid4Play extends Grid {
   - commandManager: CommandManager
   - mushroomManager: MushroomManager
-  - matrix: Cell4Play[][]
   - oldGrid: Grid4Design
-  - width: int
-  - height: int
-  - player: Player4Play
-  - mushroom: Mushroom
-  - boxNumber: int
   - boxesOnTargetsProperty: IntegerProperty
   - totalTargetProperty: IntegerProperty
   - isStone: BooleanBinding
   - countBeforeToBeNormal: int
+}
+
+class MovePlayerCommand {
+}
+
+MovePlayerCommand --|> Command
+
+class Box extends ComposableElement {
+}
+
+class Box4Design {
+}
+
+class Box4Play {
+  - number: int
+  - x: int
+  - y: int
+  - isOnTarget: boolean
 }
 
 Player <|-- Player4Design
@@ -149,6 +142,7 @@ Element <|-- Wall
 Element <|-- Box
 Element <|-- Ground
 Element <|-- Target
+Element <|-- Mushroom
 Cell <|-- Cell4Design
 Cell <|-- Cell4Play
 Wall <|-- Wall4Design
@@ -161,7 +155,20 @@ Target <|-- Target4Design
 Target <|-- Target4Play
 Board <|-- Board4Design
 Board <|-- Board4Play
+Grid <|-- Grid4Design
+Grid <|-- Grid4Play
+
+Player4Play --|> Movable
+Box4Play --|> Movable
+
+class CommandManager {
+}
+
 Command <|.. CommandManager
-Command <|.. MushroomCommand
+
+Board "1" -- "1" Grid
+Grid "1" *-- "many" Cell
+Cell "1" *-- "1..*" Element
+Element "1" -- "1" ElementStack
 
 @enduml
