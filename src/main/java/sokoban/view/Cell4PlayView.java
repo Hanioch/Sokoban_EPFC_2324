@@ -2,6 +2,8 @@ package sokoban.view;
 
 import javafx.beans.binding.DoubleBinding;
 import javafx.collections.ObservableList;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import sokoban.model.Element;
 import sokoban.model.Mushroom;
 import sokoban.viewmodel.Cell4PlayViewModel;
@@ -20,5 +22,12 @@ public class Cell4PlayView extends CellView{
         minWidthProperty().bind(widthProperty);
         minHeightProperty().bind(widthProperty);
         cellViewModel.valueProperty().addListener((obs, old, newVal) -> setImage(cellViewModel.getStack()));
+
+        this.setOnMouseClicked(this::handleMouseEvent);
+    }
+
+    private void handleMouseEvent(MouseEvent e){
+        if (e.getButton() == MouseButton.PRIMARY)
+            cellViewModel.clicOnMushroom();
     }
 }

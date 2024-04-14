@@ -3,6 +3,7 @@ package sokoban.view;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -24,7 +25,7 @@ public class Board4PlayView extends BoardView {
     private  Stage secondaryStage;
     private  Stage primaryStage;
     private Button finishButton = new Button("Finish");
-    private Button showMushroomButton = new Button();
+    private Button showMushroomButton = new Button("Show mushroom");
 
     private Label scoreLabel = new Label("Score");
     private Label movesLabel = new Label();
@@ -46,10 +47,13 @@ public class Board4PlayView extends BoardView {
         finishButton.setPrefSize(80,30);
         finishButton.setOnAction(event -> onFinishClicked());
 
-        BooleanBinding isMushroomVisible = board4PlayViewModel.isMushroomVisible();
-        showMushroomButton.textProperty().bind(Bindings.when(isMushroomVisible).then("Hide mushroom").otherwise("Show mushroom"));
+        BooleanProperty isMushroomVisible = board4PlayViewModel.isMushroomVisible();
+
+        isMushroomVisible.addListener((observable, oldValue, newValue)->{
+            if (newValue) showMushroomButton.setText("Hide Mushroom");
+            else showMushroomButton.setText("Show Mushroom");
+        });
         showMushroomButton.setPrefSize(150,30);
-        //showMushroomButton.setText(( isMushroomvisible.get() ? "Hide" : "Show")+" mushroom" ).bind(isMushroomvisible);
         showMushroomButton.setOnAction(event->board4PlayViewModel.showMushroom());
         showMushroomButton.setFocusTraversable(false);
 

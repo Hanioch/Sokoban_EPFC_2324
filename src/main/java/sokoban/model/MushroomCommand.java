@@ -25,4 +25,9 @@ public class MushroomCommand implements Command{
         else
             cellMushroom.removeElement(mush);
     }
+
+    public void clicOnMushroom(int x, int y){
+        if (x == mushroom.getX() && y ==mushroom.getY())
+            grid.activeMushroom();
+    }
 }

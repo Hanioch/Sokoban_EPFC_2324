@@ -137,7 +137,7 @@ public class Grid4Play extends Grid {
 
     }
 
-    public void addBoxFreeCase(Box4Play elem){
+    private void addBoxFreeCase(Box4Play elem){
         int[] position = searchPositionfree(true);
         int x = position[0];
         int y = position[1];
@@ -149,7 +149,7 @@ public class Grid4Play extends Grid {
 
 
 
-    public void generateMushroom() {
+    private void generateMushroom() {
         Cell4Play oldCell = getCell(mushroom.getX(), mushroom.getY());
         if (oldCell.containsMushroom()){
             Mushroom elem = oldCell.getMushroom();
@@ -246,22 +246,17 @@ public class Grid4Play extends Grid {
         return commandManager.redo();
     }
 
-    public  BooleanBinding isMushroomVisible(){
+    public  BooleanProperty isMushroomVisible(){
         return mushroomManager.isMushroomShowing();
     }
 
-    public boolean  clicOnMushroom(){
-        return mushroomManager.clicOnMushroom();
+    public void clicOnMushroom(int x, int y ){
+         mushroomManager.clicOnMushroom(x,y);
     }
 
     public void showMushroom(){
         mushroomManager.showMushroom();
     }
-
-
-
-
-
 
     private class movePlayerCommand implements Command {
         private Box4Play movedBox = null;
@@ -293,7 +288,7 @@ public class Grid4Play extends Grid {
             boolean cellContainBoxAndCannotMove = false;
 
             if (cell.containsMushroom()){
-                activeMushroom();
+                //activeMushroom();
                 setIsStone();
             }
 

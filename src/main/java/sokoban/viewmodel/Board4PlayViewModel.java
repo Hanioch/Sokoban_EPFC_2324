@@ -41,11 +41,11 @@ public class Board4PlayViewModel extends BoardViewModel {
         }
     }
 
-    public BooleanBinding isMushroomVisible(){
+    public BooleanProperty isMushroomVisible(){
         return board.getGrid().isMushroomVisible();
     }
-    public void clicOnMushroom(){
-        board.getGrid().clicOnMushroom();
+    public void clicOnMushroom(int x , int y){
+        board.getGrid().clicOnMushroom(x,y);
     }
     public void showMushroom() {
         board.getGrid().showMushroom();
