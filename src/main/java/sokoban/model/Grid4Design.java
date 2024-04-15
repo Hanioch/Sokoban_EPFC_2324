@@ -53,9 +53,6 @@ public class Grid4Design extends Grid {
         sameNumberOfBoxAndTarget = isNotSameNumberBoxAndTarget();
         isAnError = checkErrorsProperty();
     }
-    public Grid4Design(int width, int height) {
-        this(width, height, new Player4Design());
-    }
     public void addElementsToCell(int x, int y, List<Element> elements) {
         Cell4Design cell4Design = getCell(x, y);
         for (Element element : elements) {
