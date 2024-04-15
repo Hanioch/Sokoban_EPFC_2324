@@ -155,8 +155,7 @@ Target <|-- Target4Design
 Target <|-- Target4Play
 Board <|-- Board4Design
 Board <|-- Board4Play
-Grid <|-- Grid4Design
-Grid <|-- Grid4Play
+
 
 Player4Play --|> Movable
 Box4Play --|> Movable
