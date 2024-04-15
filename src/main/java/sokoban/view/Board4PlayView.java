@@ -61,6 +61,7 @@ public class Board4PlayView extends BoardView {
         bottomContainer.setAlignment(Pos.CENTER);
         bottomContainer.setPadding(new Insets(10));
         bottomContainer.getChildren().addAll(finishButton, showMushroomButton);
+        bottomContainer.setSpacing(20);
 
         setBottom(bottomContainer);
 
