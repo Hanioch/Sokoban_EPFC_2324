@@ -83,7 +83,7 @@ public class Board4DesignView extends BoardView {
     }
     private void setupModificationListener() {
         board4DesignViewModel.isModifiedProperty().addListener((obs, oldVal, newVal) -> {
-                updateWindowTitle();
+            updateWindowTitle();
         });
     }
     private void createMenuBar() {
@@ -103,7 +103,7 @@ public class Board4DesignView extends BoardView {
         menuBar.getMenus().add(fileMenu);
         top.getChildren().add(menuBar);
         top.setSpacing(20);
-       // top.setStyle("-fx-border-color: red;");
+        // top.setStyle("-fx-border-color: red;");
     }
     private boolean confirmSaveChanges() {
         if (!board4DesignViewModel.isModifiedProperty().get()) {

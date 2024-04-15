@@ -30,7 +30,7 @@ public class MushroomManager {
 
     }
     public void showMushroom(){
-       showMushroom(false);
+        showMushroom(false);
     }
 
 }

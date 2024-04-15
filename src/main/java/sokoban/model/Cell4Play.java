@@ -28,8 +28,8 @@ public class Cell4Play extends Cell{
                 case "Ground4Design" -> this.stack.add(new Ground4Play());
                 case "Wall4Design" -> this.stack.add(new Wall4Play());
                 case "Player4Design" -> {this.player.setX(x);
-                                            this.player.setY(y);
-                                            this.stack.add(this.player);}
+                    this.player.setY(y);
+                    this.stack.add(this.player);}
                 case "Box4Design" -> this.stack.add(new Box4Play(boxNumber));
                 case "Target4Design" -> this.stack.add(new Target4Play());
             }
@@ -37,20 +37,20 @@ public class Cell4Play extends Cell{
     }
 
     public void addElement(Element element){
-            boolean containsTarget = containsTarget();
-            stack.clear();
-            stack.add(new Ground4Play());
-            stack.add(element);
+        boolean containsTarget = containsTarget();
+        stack.clear();
+        stack.add(new Ground4Play());
+        stack.add(element);
 
-            if (containsTarget)
-                stack.add(new Target4Play());
+        if (containsTarget)
+            stack.add(new Target4Play());
     }
     public boolean containsWall(){
         return stack.stream().anyMatch(item -> item instanceof Wall4Play);
     }
 
     public boolean containsOnlyTarget(){
-       return stack.size() == 2 && stack.get(1) instanceof Target4Play;
+        return stack.size() == 2 && stack.get(1) instanceof Target4Play;
     }
     public boolean containsTarget () {return stack.stream().anyMatch(item -> item instanceof Target4Play);}
 

@@ -102,9 +102,9 @@ public class Grid4Play extends Grid {
     public Player4Play getPlayer() {
         return player;
         /**Cell4Play cellPlayer = getCell(player.getX(),player.getY());
-        for (Element elem : cellPlayer.stack  )
-            if (elem instanceof Player4Play) return elem;
-        return null;*/
+         for (Element elem : cellPlayer.stack  )
+         if (elem instanceof Player4Play) return elem;
+         return null;*/
     }
 
 
@@ -251,7 +251,7 @@ public class Grid4Play extends Grid {
     }
 
     public void clicOnMushroom(int x, int y ){
-         mushroomManager.clicOnMushroom(x,y);
+        mushroomManager.clicOnMushroom(x,y);
     }
 
     public void showMushroom(){

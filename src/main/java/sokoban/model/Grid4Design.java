@@ -143,7 +143,7 @@ public class Grid4Design extends Grid {
                         if (type.isInstance(elem)) {
                             return false;
                         }
-                        }
+                    }
                 }
             }
             return true;
@@ -155,23 +155,23 @@ public class Grid4Design extends Grid {
 
         return Bindings.createBooleanBinding(()->{
 
-         int countTarget = 0;
-         int countBox = 0;
+            int countTarget = 0;
+            int countBox = 0;
 
-         for (int i = 0; i < getWidth(); i++) {
-             for (int j = 0; j < getHeight(); j++) {
-                 List stackCell = matrix[i][j].getStack();
-                 for (Object elem : stackCell) {
-                     if (elem instanceof Box4Design)
-                         countBox ++;
+            for (int i = 0; i < getWidth(); i++) {
+                for (int j = 0; j < getHeight(); j++) {
+                    List stackCell = matrix[i][j].getStack();
+                    for (Object elem : stackCell) {
+                        if (elem instanceof Box4Design)
+                            countBox ++;
 
-                     if (elem instanceof Target4Design)
-                         countTarget++;
+                        if (elem instanceof Target4Design)
+                            countTarget++;
 
-                 }
-             }
-         }
-         return  countTarget != countBox;
+                    }
+                }
+            }
+            return  countTarget != countBox;
         });
 
     }

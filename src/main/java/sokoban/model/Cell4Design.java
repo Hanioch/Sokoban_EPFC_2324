@@ -26,7 +26,7 @@ public class Cell4Design extends Cell{
             stack.add(element);
 
             if (containsTarget){
-                  stack.add(new Target4Design());
+                stack.add(new Target4Design());
             }
 
 
