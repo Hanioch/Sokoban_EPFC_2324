@@ -21,6 +21,7 @@ import java.util.Scanner;
 public class Board4DesignViewModel extends BoardViewModel{
     private Grid4DesignViewModel gridViewModel;
     private Board4Design board;
+    private static Player4Design player = new Player4Design();
     private  ObjectProperty<Element> selectedElement = new SimpleObjectProperty<>();
 
     public void setSelectedElement(Element element) {
@@ -159,7 +160,7 @@ public class Board4DesignViewModel extends BoardViewModel{
             int width = lines.stream().mapToInt(String::length).max().orElse(0);
             int height = lines.size();
 
-            Grid4Design newGrid4Design = new Grid4Design(width, height);
+            Grid4Design newGrid4Design = new Grid4Design(width, height, player);
 
             for (int y = 0; y < lines.size(); y++) {
                 String line = lines.get(y);
@@ -195,16 +196,18 @@ public class Board4DesignViewModel extends BoardViewModel{
                 elements.add(new Box4Design());
                 break;
             case '@':
-                Player4Design player4Design = new Player4Design(x, y);
-                elements.add(player4Design);
+                player.setX(x);
+                player.setY(y);
+                elements.add(player);
                 break;
             case '*':
                 elements.add(new Box4Design());
                 elements.add(new Target4Design());
                 break;
             case '+':
-                Player4Design player4DesignTarget = new Player4Design(x, y);
-                elements.add(player4DesignTarget);
+                player.setX(x);
+                player.setY(y);
+                elements.add(player);
                 elements.add(new Target4Design());
                 break;
         }
