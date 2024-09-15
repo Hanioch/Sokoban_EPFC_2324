@@ -6,6 +6,9 @@ public class CommandManager {
 
     private Stack<Command> undos = new Stack<Command>();
     private Stack<Command> redos = new Stack<Command>();
+    private Stack<MushroomCommand> undosMushroom = new Stack<MushroomCommand>();
+    private Stack<MushroomCommand> redosMushroom = new Stack<MushroomCommand>();
+    private boolean isMushroomActivated= false;
     public CommandManager() {}
     public boolean executeCommand(Command c) {
         boolean succesful = c.execute();
@@ -20,31 +23,59 @@ public class CommandManager {
     }
     public boolean isRedoAvailable() {
         return !redos.empty();
+    } public boolean isUndoMushroomAvailable() {
+        return !undosMushroom.empty();
+    }
+    public boolean isRedoMushroomAvailable() {
+        return !redosMushroom.empty();
     }
     public boolean undo() {
         if (isUndoAvailable()) {
             Command command = undos.pop();
-            command.undo();
+
+            if (command.isMushroomClicked()) undoMushroom();
+            else command.undo();
             redos.push(command);
+
             return true;
         }
+
+        if (isUndoMushroomAvailable()) undoMushroom();
+
         return false;
+    }
+
+    private void undoMushroom(){
+        MushroomCommand command = undosMushroom.pop();
+        command.undo();
+        redosMushroom.push(command);
     }
     public boolean redo(){
         if(isRedoAvailable()) {
             Command command = redos.pop();
-            command.execute();
+
+            if (command.isMushroomClicked()) redoMushroom();
+            else command.execute();
             undos.push(command);
+
             return true;
         }
+
+        if (isRedoMushroomAvailable())
+            redoMushroom();
+
         return false;
     }
 
-    public void clearUndos() {
-        undos.clear();
+    private void redoMushroom(){
+        MushroomCommand command = redosMushroom.pop();
+        command.redo();
+        undosMushroom.push(command);
     }
-    public void clearRedos() {
-        redos.clear();
+
+    public void clickedOnMushroom(Command c, MushroomCommand mc){
+        undos.push(c);
+        undosMushroom.push(mc);
     }
 
 }

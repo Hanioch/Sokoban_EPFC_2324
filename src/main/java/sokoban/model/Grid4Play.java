@@ -37,6 +37,8 @@ public class Grid4Play extends Grid {
         return boxesOnTargetsProperty;
     }
 
+    private MushroomCommand mushroomCommand;
+
     public Grid4Play(int width, int height, Grid4Design oldGrid, Player4Play player) {
         super(width, height);
         this.matrix = new Cell4Play[width][height];
@@ -53,6 +55,7 @@ public class Grid4Play extends Grid {
         recreateMatrix();
         recalculateBoxesAndTargets();
         generateMushroom();
+
     }
     public void recreateMatrix() {
         Cell4Design[][] oldMatrix = oldGrid.getMatrix();
@@ -107,66 +110,41 @@ public class Grid4Play extends Grid {
         return null;*/
     }
 
-
-
-    public void activeMushroom(){
-        ArrayList<int[]> boxPosition = new ArrayList<>();
-        for (int i = 0; i < width; i++){
-            for (int j = 0; j < height; j++){
-                Cell4Play cell = getCell(i,j);
-                for (Element elem : cell.getStack()) {
-                    if (elem instanceof Box4Play) {
-                        int[] position = new int[2];
-                        position[0] = i;
-                        position[1] = j;
-                        boxPosition.add(position);
-                    }
-                }
-            }
-        }
-
-        for (int[] position : boxPosition){
-            int x = position[0];
-            int y = position[1];
-            Cell4Play cell = getCell(x,y);
-            Box4Play box = cell.getBox();
-            cell.removeElement(box);
-            addBoxFreeCase((Box4Play) box);
-        }
-        generateMushroom();
-
-    }
-
-    private void addBoxFreeCase(Box4Play elem){
+    protected void addBoxFreeCase(Box4Play elem){
         int[] position = searchPositionfree(true);
         int x = position[0];
         int y = position[1];
+        changeBoxPosition(x,y,elem);
+    }
+
+    protected void changeBoxPosition(int x, int y, Box4Play elem ){
         Cell4Play cell = getCell(x, y);
 
         elem.setPosition(x,y);
         cell.getStack().add(elem);
     }
 
+    protected void generateMushroom() {
+        int[] position = searchPositionfree(true);
+        int x = position[0];
+        int y = position[1];
 
+       moveMushroom(x,y);
+       mushroomCommand = new MushroomCommand(this, mushroom);
+       mushroomManager.executeCommand(mushroomCommand);
 
-    private void generateMushroom() {
+    }
+    private void moveMushroom(int x, int y ){
         Cell4Play oldCell = getCell(mushroom.getX(), mushroom.getY());
         if (oldCell.containsMushroom()){
             Mushroom elem = oldCell.getMushroom();
             oldCell.removeElement(elem);
         }
 
-        int[] position = searchPositionfree(true);
-        int x = position[0];
-        int y = position[1];
-
         Cell4Play cell = getCell(x, y);
-
         mushroom.setX(x);
         mushroom.setY(y);
         cell.getStack().add(mushroom);
-
-        mushroomManager.executeCommand(new MushroomCommand(this, mushroom));
     }
 
     public int[] searchPositionfree(boolean noBorder){
@@ -236,7 +214,7 @@ public class Grid4Play extends Grid {
     }
 
     public boolean movePlayer(Direction direction) {
-        return commandManager.executeCommand(new movePlayerCommand(direction));
+        return commandManager.executeCommand(new MovePlayerCommand(direction));
     }
 
     public boolean undo(){
@@ -258,17 +236,28 @@ public class Grid4Play extends Grid {
         mushroomManager.showMushroom();
     }
 
-    private class movePlayerCommand implements Command {
+    public void setMushroomClicked(){
+        commandManager.clickedOnMushroom(new MovePlayerCommand(), mushroomCommand);
+    }
+
+    private class MovePlayerCommand implements Command {
         private Box4Play movedBox = null;
         private Direction direction;
         int[] newPosition = new int[2];
         int[] oldPosition = new int[2];
 
+        private boolean mushroomClicked = false;
 
+        private MovePlayerCommand(){
+            mushroomClicked=true;
+        }
 
-
-        private movePlayerCommand(Direction direction) {
+        private MovePlayerCommand(Direction direction) {
             this.direction = direction;
+        }
+
+        public boolean isMushroomClicked(){
+            return mushroomClicked;
         }
 
         public boolean execute() {

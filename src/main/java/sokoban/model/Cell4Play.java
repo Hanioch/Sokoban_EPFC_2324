@@ -38,8 +38,14 @@ public class Cell4Play extends Cell{
 
     public void addElement(Element element){
             boolean containsTarget = containsTarget();
+            boolean containsPlayer = stack.stream().anyMatch(item -> item instanceof Player4Play);
             stack.clear();
             stack.add(new Ground4Play());
+
+            //solution temporaire pour le cas ou on se deplace sur une case qui contient un mushroom
+            //if (containsPlayer)
+              //  stack.add(new Player4Play());
+
             stack.add(element);
 
             if (containsTarget)
@@ -48,6 +54,7 @@ public class Cell4Play extends Cell{
     public boolean containsWall(){
         return stack.stream().anyMatch(item -> item instanceof Wall4Play);
     }
+
 
     public boolean containsOnlyTarget(){
        return stack.size() == 2 && stack.get(1) instanceof Target4Play;
