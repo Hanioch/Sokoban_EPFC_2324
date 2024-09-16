@@ -6,6 +6,8 @@ Ce projet est une implémentation du célèbre jeu **Sokoban** en Java, avec des
 ## Fonctionnalités
 
 ### Création de la Map
+<img width="1068" alt="Capture d’écran 2024-09-15 à 11 41 38" src="https://github.com/user-attachments/assets/c226152d-074c-446c-b3e1-705222dbb7a0">
+
 - **Création manuelle de la map** : 
   - Ajoutez des murs, des cibles et des caisses.
   - Gestion d'erreurs avec des messages explicatifs :
@@ -14,6 +16,8 @@ Ce projet est une implémentation du célèbre jeu **Sokoban** en Java, avec des
     3. Il faut au moins **une cible**.
     4. Le nombre de **caisses** doit être égal au nombre de **cibles**.
     5. Le nombre total d'éléments sur la carte doit être inférieur à la **moitié du nombre total de cases** disponibles.
+
+<img width="1112" alt="Capture d’écran 2024-09-15 à 11 42 08" src="https://github.com/user-attachments/assets/2580ba12-01df-441f-b289-6c25b785b947">
 
 - **Sauvegarde de la configuration** : 
   - Vous pouvez sauvegarder la configuration actuelle de la map.
@@ -25,12 +29,15 @@ Ce projet est une implémentation du célèbre jeu **Sokoban** en Java, avec des
   - Générez automatiquement un terrain aléatoire avec des murs, des caisses et des cibles placés de manière aléatoire.
 
 ### Jouer à Sokoban
+<img width="1112" alt="Capture d’écran 2024-09-15 à 11 42 39" src="https://github.com/user-attachments/assets/d36f39e4-6428-406d-9209-d2b85fef3d40">
+
 - **Déplacement du joueur** :
   - Déplacez le personnage sur la map en poussant les caisses.
   
 - **Déplacement des caisses** :
   - Poussez les caisses sur les cibles pour terminer le niveau.
-  
+  <img width="1112" alt="Capture d’écran 2024-09-15 à 11 43 04" src="https://github.com/user-attachments/assets/984006ee-ad78-43b5-a8d1-0e7361fda580">
+
 - **Passage à travers les cibles** :
   - Le personnage peut passer à travers les cibles sans problème.
   
@@ -39,7 +46,8 @@ Ce projet est une implémentation du célèbre jeu **Sokoban** en Java, avec des
 
 - **Visualisation du champignon ("Show Mushroom")** :
   - Le jeu se met en pause et affiche l'emplacement d'un **champignon** sur la map.
-  
+  <img width="1112" alt="Capture d’écran 2024-09-15 à 11 43 14" src="https://github.com/user-attachments/assets/04a55498-366b-4299-bd82-47cabc81406b">
+
 - **Interagir avec le champignon** :
   - Cliquez sur le champignon pour que toutes les caisses soient déplacées à des positions aléatoires parmi celles disponibles.
 
