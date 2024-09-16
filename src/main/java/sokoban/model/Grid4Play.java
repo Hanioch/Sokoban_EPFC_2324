@@ -134,6 +134,8 @@ public class Grid4Play extends Grid {
             addBoxFreeCase((Box4Play) box);
         }
         generateMushroom();
+        boxesOnTargetsProperty.set(0);
+
 
     }
 
